@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>地区</title>
+	<#include "/header.html">
+		</head>
+<body>
+<div id="familyApp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2 col-md-2">
+				<input type="text" class="form-control" v-model="q.areaName" @keyup.enter="test.focus()" placeholder="地区名称">
+			</div>
+			<div class="form-group col-sm-1 col-md-2">
+				<select class="form-control" v-model="q.areaType" id="test">
+					<option value="" >地区类型 请选择...</option>
+					<optgroup label="地区类型">
+						<option value="1">省(直辖市)</option>
+						<option value="2">市</option>
+						<option value="3">县(区)</option>
+						<option value="4">乡镇</option>
+					</optgroup>
+				</select>
+			</div>
+			<a class="btn btn-default" @click="query"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;查询</a>
+
+			<#if shiro.hasPermission("pubarea:save")>
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("pubarea:update")>
+				<a class="btn btn-warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("pubarea:delete")>
+				<a class="btn btn-danger" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+		</div>
+		<table id="jqGrid"></table>
+		<div id="jqGridPager"></div>
+	</div>
+
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">上级地区代码</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="pubArea.parentAreaCode" placeholder="上级地区代码"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">地区代码</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="pubArea.areaCode" placeholder="地区代码" :disabled="!addNew"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">地区名称</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="pubArea.areaName" placeholder="地区名称"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">地区类型</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="pubArea.areaType">
+						<optgroup label="地区类型">
+							<option value="1">省(直辖市)</option>
+							<option value="2">市</option>
+							<option value="3">县(区)</option>
+							<option value="4">乡镇</option>
+						</optgroup>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;确定</a>
+				&nbsp;&nbsp;
+				<a class="btn btn-info" @click="reload"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;返回</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/pub/pubarea.js?_${.now?long}"></script>
+</body>
+</html>

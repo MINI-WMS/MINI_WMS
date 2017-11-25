@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.pub.dao.PubMaterialTypeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.pub.entity.PubMaterialTypeEntity" id="pubMaterialTypeMap">
+        <result property="materialTypeCode" column="material_type_code"/>
+        <result property="materialTypeDesc" column="material_type_desc"/>
+        <result property="isEnabled" column="is_enabled"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.pub.entity.PubMaterialTypeEntity">
+		select * from pub_material_type where material_type_code = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.pub.entity.PubMaterialTypeEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by material_type_code desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+		,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		from pub_material_type
+		<where>
+			<if test="materialTypeDesc != null and materialTypeDesc.trim() != ''">
+				and material_type_desc like concat('%',#{materialTypeDesc},'%')
+			</if>
+			<if test="isEnabled != null and isEnabled.trim() != ''">
+				and is_enabled = #{isEnabled}
+			</if>
+		</where>
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from pub_material_type 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.pub.entity.PubMaterialTypeEntity">
+		insert into pub_material_type
+		(
+			[material_type_code], 
+			[material_type_desc], 
+			[creator_id],
+			[create_date]
+		)
+		values
+		(
+			#{materialTypeCode}, 
+			#{materialTypeDesc}, 
+			#{creatorId},
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.pub.entity.PubMaterialTypeEntity">
+		update pub_material_type 
+		<set>
+			<if test="materialTypeDesc != null">[material_type_desc] = #{materialTypeDesc}, </if>
+			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where material_type_code = #{materialTypeCode}
+	</update>
+	
+	<delete id="delete">
+		UPDATE pub_material_type SET is_enabled = 0 material_type_code = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		UPDATE pub_material_type SET is_enabled = 0 where material_type_code in
+		<foreach item="materialTypeCode" collection="array" open="(" separator="," close=")">
+			#{materialTypeCode}
+		</foreach>
+	</delete>
+
+</mapper>

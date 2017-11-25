@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.sys.dao.SysDeptDao">
+
+    <select id="queryObject" resultType="com.ltsznh.modules.sys.entity.SysDeptEntity">
+		select * from sys_dept where dept_id = #{value}
+	</select>
+
+    <select id="queryList" resultType="com.ltsznh.modules.sys.entity.SysDeptEntity">
+        select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by a.${sidx} ${order}
+            </when>
+            <otherwise>
+                order by a.order_num asc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM, a.*
+        ,(SELECT username FROM sys_user where a.creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where a.modifier_id = user_id) as modifier_name
+        ,(select p.dept_name from sys_dept p where p.dept_id = a.parent_dept_id) as parentDeptName
+        from sys_dept a
+        <where>
+
+        </where>
+        <!--  数据过滤  -->
+        ${filterSql}
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+    </select>
+
+    <insert id="save" parameterType="com.ltsznh.modules.sys.entity.SysDeptEntity" useGeneratedKeys="true"
+            keyProperty="deptId">
+		insert into sys_dept(parent_dept_id,dept_name,order_num,dept_addr,dept_type,creator_id)
+		values
+		(
+			#{parentDeptId},
+			#{deptName},
+			#{orderNum},
+			#{deptAddr},
+			#{deptType},
+			#{creatorId}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.ltsznh.modules.sys.entity.SysDeptEntity">
+        update sys_dept
+        <set>
+            modify_date = getdate(),
+            <if test="modifierId != null">modifier_id = #{modifierId},</if>
+            <if test="isEnabled != null">is_enabled = #{isEnabled},</if>
+            <if test="parentDeptId != null">parent_dept_id = #{parentDeptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="deptType != null">dept_type = #{deptType},</if>
+        </set>
+        where dept_id = #{deptId}
+    </update>
+
+    <update id="delete">
+		update sys_dept set is_enabled = 0,modify_date = getdate(),modifier_id = #{modifierId} where dept_id = #{value}
+	</update>
+
+    <select id="queryDetpIdList" resultType="long">
+		select dept_id from sys_dept where parent_dept_id = #{value} and is_enabled = 1
+	</select>
+
+</mapper>

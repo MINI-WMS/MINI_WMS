@@ -1,0 +1,176 @@
+@charset "utf-8";
+/* 右侧主体区域 */
+.layui-body {
+    bottom: 0;
+    border-left: solid 2px #1AA094;
+}
+
+.layui-tab-content {
+    min-height: 150px;
+    /* padding: 5px 0 0 0; */
+}
+
+/* tab选项卡 */
+.layui-body {
+    padding-left: 0px;
+}
+
+.layui-layout-admin .layui-body {
+    top: 58px;
+}
+
+.larry-tab-menu {
+    width: 200px;
+    height: 40px;
+    display: none;
+}
+
+.larry-tab-box .layui-tab-title li em {
+    padding-left: 5px;
+    font-style: normal;
+}
+
+#admin-home i.layui-icon {
+    display: none;
+}
+
+.larry-tab-box {
+    box-shadow: none;
+}
+
+/* layui-tab-title start */
+.layui-tab-title .larry-tab-menu {
+    display: inline-block;
+    float: right;
+    border: 1px solid red;
+    position: relative;
+    font-size: 14px;
+}
+
+.larry-test {
+
+    height: 40px;
+    color: #000;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.refresh_iframe {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 1px;
+    height: 41px;
+    background: #33AB9F;
+    color: #FFFFFF;
+}
+
+/* layui-tab-title end */
+.layui-tab-content {
+    padding: 0px;
+    margin: 0px;
+}
+
+.layui-tab-content .layui-tab-item iframe {
+    width: 100%;
+    border: 0;
+    height: 100%;
+}
+
+.larry-tab-box > .layui-tab-title {
+    border-bottom: 1px solid #1AA094;
+}
+
+.larry-tab-box .layui-tab-title cite {
+    font-style: normal;
+    padding-left: 5px;
+}
+
+.larry-tab-box > .layui-tab-title .layui-this {
+    color: white;
+    background-color: #1AA094;
+}
+
+.larry-tab-box > .layui-tab-title .layui-this:after {
+    border-bottom: 0;
+}
+
+#time {
+    width: 100%;
+    color: #fff;
+    font-size: 60px;
+    margin-bottom: 80px;
+    display: inline-block;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.col-lg-12 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+::selection {
+    background: #FF6C60;
+    color: #fff;
+}
+
+.form-control {
+    height: 30px;
+}
+
+@media (min-width: 1200px) {
+    .col-lg-12 {
+        width: 100%;
+        float: left;
+    }
+}
+
+body .layui-layout-admin .layui-larry-foot {
+    height: 30px;
+    padding-left: 10px;
+    line-height: 30px;
+    background-color: #eee;
+    color: #666;
+    font-weight: 300;
+    border-left: 2px solid #1AA094;
+    z-index: 998;
+}
+
+body .layui-layout-admin .layui-larry-foot a {
+    padding: 0 5px;
+
+}
+
+.layui-form-item .layui-input-inline {
+    float: left;
+    width: 350px;
+    margin-right: 10px;
+}
+
+.laber-account {
+    padding: 3px 6px;
+    margin-top: 8px;
+    width: auto;
+    border-radius: 5px;
+    text-align: left;
+    background-color: #009688;
+    color: #fff;
+}
+
+.layui-tab {
+    margin: 0 !important;
+}
+
+.layui-tab-item {
+    padding: 1.2em 1.2em 0 1.2em;
+    margin: 0px;
+}

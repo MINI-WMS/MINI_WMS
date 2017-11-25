@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.gen.dao.SysGeneratorDao">
+    <select id="queryList" resultType="map">
+        SELECT ROW_NUMBER() OVER (ORDER BY a.name) AS ROW_NUM,
+        a.name AS tableName, '' AS engine, CAST(ISNULL(g.value, '-') AS VARCHAR(100)) AS tableComment, a.create_date AS
+        createTime
+        FROM sys.tables AS a LEFT OUTER JOIN sys.extended_properties AS g ON a.object_id = g.major_id AND g.minor_id = 0
+        <where>
+            <if test="tableName != null and tableName.trim() != ''">
+                a.name like concat('%', #{tableName}, '%')
+            </if>
+        </where>
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT COUNT(1)
+        FROM sys.tables AS a
+        <where>
+            <if test="tableName != null and tableName.trim() != ''">
+                a.name like concat('%', #{tableName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="queryTable" resultType="map">
+		SELECT a.name AS tableName, '' AS engine, CAST(ISNULL(g.value, '-') AS VARCHAR(100)) AS tableComment, a.create_date AS createTime
+		FROM sys.tables AS a LEFT OUTER JOIN sys.extended_properties AS g ON a.object_id = g.major_id AND g.minor_id = 0
+		WHERE a.name = #{tableName}
+	</select>
+
+    <select id="queryColumns" resultType="map">
+		SELECT   CAST(ISNULL(a.name, 'col') AS VARCHAR(100)) AS columnName, CAST(ISNULL(st.name, 'nvarchar') AS VARCHAR(100)) AS dataType,
+		CAST(ISNULL(g.value, 'colName') AS VARCHAR(100)) AS columnComment
+		,CASE  (
+		SELECT COUNT(1) AS Is_PK
+		 FROM  syscolumns
+		 JOIN  sysindexkeys  ON   syscolumns.id=sysindexkeys.id  AND  syscolumns.colid=sysindexkeys.colid
+		 JOIN  sysindexes   ON   syscolumns.id=sysindexes.id  AND  sysindexkeys.indid=sysindexes.indid
+		 JOIN  sysobjects   ON   sysindexes.name=sysobjects.name  AND  sysobjects.xtype='PK'
+		 WHERE syscolumns.name=a.name
+		) WHEN 1 THEN 'PRI' ELSE '' END  columnKey,CASE (a.is_identity) WHEN 1 THEN 'auto_increment'ELSE '' END  extra
+		FROM      sys.columns AS a LEFT OUTER JOIN
+						sys.extended_properties AS g ON a.object_id = g.major_id AND g.minor_id = a.column_id LEFT OUTER JOIN
+						sys.systypes AS st ON a.system_type_id = st.xusertype
+		WHERE   (a.object_id =
+							(SELECT   object_id
+							 FROM      sys.tables
+							 WHERE   (name = #{tableName})))
+		ORDER BY a.column_id
+	</select>
+</mapper>

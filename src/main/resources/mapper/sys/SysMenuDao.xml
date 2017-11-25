@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.sys.dao.SysMenuDao">
+
+    <select id="queryObject" resultType="com.ltsznh.modules.sys.entity.SysMenuEntity">
+		select * from sys_menu where menu_id = #{value}
+	</select>
+
+    <insert id="save" parameterType="com.ltsznh.modules.sys.entity.SysMenuEntity">
+		insert into sys_menu
+		(
+			parent_menu_id,
+			menu_name,
+			url,
+			perms,
+			menu_type,
+			icon,
+			order_num,
+			creator_id
+		)
+		values
+		(
+			#{parentMenuId},
+			#{menuName},
+			#{url}, 
+			#{perms}, 
+			#{menuType},
+			#{icon}, 
+			#{orderNum},
+			#{creatorId}
+		)
+	</insert>
+
+    <select id="queryListParentMenuId" resultType="com.ltsznh.modules.sys.entity.SysMenuEntity">
+		select * from sys_menu where is_enabled = 1 AND parent_menu_id = #{parentMenuId} order by order_num asc
+	</select>
+
+    <select id="queryNotButtonList" resultType="com.ltsznh.modules.sys.entity.SysMenuEntity">
+		select * from sys_menu where is_enabled = 1 AND menu_type != 2 order by order_num asc
+	</select>
+
+    <select id="queryList" resultType="com.ltsznh.modules.sys.entity.SysMenuEntity">
+        select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by a.${sidx} ${order}
+            </when>
+            <otherwise>
+                order by a.order_num asc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+        a.*,(select p.menu_name from sys_menu p where p.menu_id = a.parent_menu_id) as parent_menu_name
+        ,(SELECT username FROM sys_user where a.creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where a.modifier_id = user_id) as modifier_name
+        from sys_menu a
+        <where>
+            <if test="isEnabled != null and isEnabled.trim() != ''">
+                and is_enabled = #{isEnabled}
+            </if>
+        </where>
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+    </select>
+
+    <!-- 查询用户的权限列表 -->
+    <select id="queryUserList" resultType="com.ltsznh.modules.sys.entity.SysMenuEntity">
+		select distinct m.*,(select p.menu_name from sys_menu p where p.menu_id = m.parent_menu_id) as parentMenuName
+			from sys_user_role ur 
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id 
+		where ur.user_id = #{userId} order by m.order_num asc
+	</select>
+
+    <select id="queryTotal" resultType="int">
+		select count(*) from sys_menu
+	</select>
+
+    <update id="update" parameterType="com.ltsznh.modules.sys.entity.SysMenuEntity">
+        update sys_menu
+        <set>
+            modify_date = GETDATE(),
+            <if test="isEnabled != null">is_enabled = #{isEnabled},</if>
+            <if test="modifierId != null">modifier_id = #{modifierId},</if>
+            <if test="parentMenuId != null">parent_menu_id = #{parentMenuId},</if>
+            <if test="menuName != null">menu_name = #{menuName},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="perms != null">perms = #{perms},</if>
+            <if test="menuType != null">menu_type = #{menuType},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+
+        </set>
+        where menu_id = #{menuId}
+    </update>
+
+    <delete id="deleteBatch">
+        update sys_menu set is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where menu_id in
+        <foreach item="menuId" collection="array" open="(" separator="," close=")">
+            #{menuId}
+        </foreach>
+        <!--;-->
+        <!--delete from sys_role_menu where menu_id in-->
+        <!--<foreach item="menuId" collection="array" open="(" separator="," close=")">-->
+            <!--#{menuId}-->
+        <!--</foreach>-->
+    </delete>
+
+</mapper>

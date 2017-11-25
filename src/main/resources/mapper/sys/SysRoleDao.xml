@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.sys.dao.SysRoleDao">
+
+    <select id="queryObject" resultType="com.ltsznh.modules.sys.entity.SysRoleEntity">
+		select * from sys_role where role_id = #{value}
+	</select>
+
+    <select id="queryList" resultType="com.ltsznh.modules.sys.entity.SysRoleEntity">
+        select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by r.${sidx} ${order}
+            </when>
+            <otherwise>
+                order by r.role_id asc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+        r.*, (select d.dept_name from sys_dept d where d.dept_id = r.dept_id) deptName
+        ,(SELECT username FROM sys_user where r.creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where r.modifier_id = user_id) as modifier_name
+        from sys_role r
+        <where>
+            <if test="roleName != null and roleName.trim() != ''">
+                and r.role_name like concat('%',#{roleName},'%')
+            </if>
+
+            <!--  数据过滤  -->
+            ${filterSql}
+        </where>
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from sys_role r
+        <where>
+            <if test="roleName != null and roleName.trim() != ''">
+                and r.role_name like concat('%',#{roleName},'%')
+            </if>
+
+            <!--  数据过滤  -->
+            ${filterSql}
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.ltsznh.modules.sys.entity.SysRoleEntity" useGeneratedKeys="true"
+            keyProperty="roleId">
+		insert into sys_role
+		(
+			role_name,
+			remark,
+			dept_id,
+			creator_id
+		)
+		values
+		(
+			#{roleName},
+			#{remark},
+			#{deptId},
+			#{creatorId}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.ltsznh.modules.sys.entity.SysRoleEntity">
+        update sys_role
+        <set>modify_date = getdate(),
+            <if test="modifierId != null">modifier_id = #{modifierId},</if>
+            <if test="isEnabled != null">is_enabled = #{isEnabled},</if>
+            <if test="roleName != null">role_name = #{roleName},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </set>
+        where role_id = #{roleId}
+    </update>
+
+    <delete id="deleteBatch">
+        update sys_role set is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where role_id in
+        <foreach item="roleId" collection="array" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+        ;
+        <!--delete from sys_role_menu where role_id in -->
+        <!--<foreach item="roleId" collection="array" open="(" separator="," close=")">-->
+        <!--#{roleId}-->
+        <!--</foreach>-->
+        <!--;-->
+        <!--delete from sys_role_dept where role_id in-->
+        <!--<foreach item="roleId" collection="array" open="(" separator="," close=")">-->
+        <!--#{roleId}-->
+        <!--</foreach>-->
+        <!--;-->
+        <!--delete from sys_user_role where role_id in -->
+        <!--<foreach item="roleId" collection="array" open="(" separator="," close=")">-->
+        <!--#{roleId}-->
+        <!--</foreach>-->
+    </delete>
+
+</mapper>

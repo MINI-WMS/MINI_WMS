@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.pub.dao.PubEnterpriseDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.pub.entity.PubEnterpriseEntity" id="pubEnterpriseMap">
+        <result property="enterpriseCode" column="enterprise_code"/>
+        <result property="enterpriseDesc" column="enterprise_desc"/>
+        <result property="registeredAddr" column="registered_addr"/>
+        <result property="qtyDecimal" column="qty_decimal"/>
+        <result property="amountDecimal" column="amount_decimal"/>
+        <result property="priceDecimal" column="price_decimal"/>
+        <result property="taxRegistrationCertificate" column="tax_registration_certificate"/>
+        <result property="registeredBank" column="registered_bank"/>
+        <result property="bankAccount" column="bank_account"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="isEnabled" column="is_enabled"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.pub.entity.PubEnterpriseEntity">
+		select * from pub_enterprise where enterprise_code = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.pub.entity.PubEnterpriseEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by order_num
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+		,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+		,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		from pub_enterprise
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from pub_enterprise 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.pub.entity.PubEnterpriseEntity">
+		insert into pub_enterprise
+		(
+			[enterprise_code], 
+			[enterprise_desc], 
+			[registered_addr], 
+			[qty_decimal], 
+			[amount_decimal], 
+			[price_decimal], 
+			[tax_registration_certificate], 
+			[registered_bank], 
+			[bank_account], 
+			[order_num], 
+			[creator_id],
+			[create_date]
+		)
+		values
+		(
+			#{enterpriseCode}, 
+			#{enterpriseDesc}, 
+			#{registeredAddr}, 
+			#{qtyDecimal}, 
+			#{amountDecimal}, 
+			#{priceDecimal}, 
+			#{taxRegistrationCertificate}, 
+			#{registeredBank}, 
+			#{bankAccount}, 
+			#{orderNum}, 
+			#{creatorId},
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.pub.entity.PubEnterpriseEntity">
+		update pub_enterprise 
+		<set>
+			<if test="enterpriseDesc != null">[enterprise_desc] = #{enterpriseDesc}, </if>
+			<if test="registeredAddr != null">[registered_addr] = #{registeredAddr}, </if>
+			<if test="qtyDecimal != null">[qty_decimal] = #{qtyDecimal}, </if>
+			<if test="amountDecimal != null">[amount_decimal] = #{amountDecimal}, </if>
+			<if test="priceDecimal != null">[price_decimal] = #{priceDecimal}, </if>
+			<if test="taxRegistrationCertificate != null">[tax_registration_certificate] = #{taxRegistrationCertificate}, </if>
+			<if test="registeredBank != null">[registered_bank] = #{registeredBank}, </if>
+			<if test="bankAccount != null">[bank_account] = #{bankAccount}, </if>
+			<if test="orderNum != null">[order_num] = #{orderNum}, </if>
+			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where enterprise_code = #{enterpriseCode}
+	</update>
+	
+	<delete id="delete">
+		update pub_enterprise set is_enabled = 0 where enterprise_code = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		update pub_enterprise set is_enabled = 0 pub_enterprise where enterprise_code in
+		<foreach item="enterpriseCode" collection="array" open="(" separator="," close=")">
+			#{enterpriseCode}
+		</foreach>
+	</delete>
+
+</mapper>

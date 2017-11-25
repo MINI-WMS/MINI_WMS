@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.pub.dao.PubAreaDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.pub.entity.PubAreaEntity" id="pubAreaMap">
+        <result property="areaCode" column="area_code"/>
+        <result property="areaName" column="area_name"/>
+        <result property="parentAreaCode" column="parent_area_code"/>
+        <result property="areaType" column="area_type"/>
+        <result property="isEnabled" column="is_enabled"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.pub.entity.PubAreaEntity">
+		select * from pub_area where area_code = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.pub.entity.PubAreaEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by isnull(parent_area_code,area_code),parent_area_code,area_type, area_code
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+		,(SELECT username FROM sys_user where a.creator_id = user_id) as creator_name
+		,(SELECT username FROM sys_user where a.modifier_id = user_id) as modifier_name
+		,(SELECT area_name FROM pub_area where a.parent_area_code = area_code) as parent_area_name
+		from pub_area as a
+		<where>
+			<if test="areaName != null and areaName.trim() != ''">
+				and area_name = #{areaName}
+			</if>
+			<if test="areaType != null and areaType.trim() != ''">
+				and area_type = #{areaType}
+			</if>
+		</where>
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from pub_area
+		<where>
+			<if test="areaName != null and areaName.trim() != ''">
+				and area_name = #{areaName}
+			</if>
+			<if test="areaType != null and areaType.trim() != ''">
+				and area_type = #{areaType}
+			</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.pub.entity.PubAreaEntity">
+		insert into pub_area
+		(
+			[area_code], 
+			[area_name], 
+			[parent_area_code], 
+			[area_type], 
+			[is_enabled], 
+			[creator_id], 
+			[create_date], 
+			[modifier_id], 
+			[modify_date]
+		)
+		values
+		(
+			#{areaCode}, 
+			#{areaName}, 
+			#{parentAreaCode}, 
+			#{areaType}, 
+			#{isEnabled}, 
+			#{creatorId}, 
+			#{createDate}, 
+			#{modifierId}, 
+			#{modifyDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.pub.entity.PubAreaEntity">
+		update pub_area 
+		<set>
+			<if test="areaName != null">[area_name] = #{areaName}, </if>
+			<if test="parentAreaCode != null">[parent_area_code] = #{parentAreaCode}, </if>
+			<if test="areaType != null">[area_type] = #{areaType}, </if>
+			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
+			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
+			<if test="createDate != null">[create_date] = #{createDate}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where area_code = #{areaCode}
+	</update>
+	
+	<delete id="delete">
+		delete from pub_area where area_code = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from pub_area where area_code in 
+		<foreach item="areaCode" collection="array" open="(" separator="," close=")">
+			#{areaCode}
+		</foreach>
+	</delete>
+
+</mapper>
