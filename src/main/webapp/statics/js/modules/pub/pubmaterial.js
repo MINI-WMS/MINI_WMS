@@ -6,11 +6,13 @@ $(function () {
 			{ label: '物料代码', name: 'materialCode', index: 'material_code', width: 80, key: true },
 			{ label: '物料描述', name: 'materialDesc', index: 'material_desc', width: 110 },
 			{ label: '物料类型', name: 'materialTypeDesc', index: 'material_type_code', width: 80 },
+			{ label: '条码', name: 'barcode', index: 'barcode', width: 120 },
 			{ label: '库存单位', name: 'inventoryUnit', index: 'inventory_unit', width: 80 }, 
 			{ label: '采购单位', name: 'purchaseUnit', index: 'purchase_unit', width: 80 }, 
 			{ label: '销售单位', name: 'saleUnit', index: 'sale_unit', width: 80 }, 
 			{ label: '采购库存单位转换比', name: 'purchaseToInventory', index: 'purchase_to_inventory', width: 150 },
 			{ label: '销售库存单位转换比', name: 'saleToInventory', index: 'sale_to_inventory', width: 150 },
+			{ label: '指导单价', name: 'guidanceUnitPrice', index: 'guidance_unit_price', width: 80 }, 
 			{ label: '税率', name: 'taxRate', index: 'tax_rate', width: 80 },
 			{
 				label: '状态', name: 'isEnabled', width: 60, index: 'is_enabled', formatter: function (value, options, row) {

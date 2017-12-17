@@ -3,16 +3,18 @@
 
 <mapper namespace="com.ltsznh.modules.pub.dao.PubMaterialDao">
 
-    <!-- 可根据自己的需求，是否要使用 -->
+	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.ltsznh.modules.pub.entity.PubMaterialEntity" id="pubMaterialMap">
         <result property="materialCode" column="material_code"/>
         <result property="materialDesc" column="material_desc"/>
         <result property="materialTypeCode" column="material_type_code"/>
+        <result property="barcode" column="barcode"/>
         <result property="inventoryUnit" column="inventory_unit"/>
         <result property="purchaseUnit" column="purchase_unit"/>
         <result property="saleUnit" column="sale_unit"/>
         <result property="purchaseToInventory" column="purchase_to_inventory"/>
         <result property="saleToInventory" column="sale_to_inventory"/>
+        <result property="guidanceUnitPrice" column="guidance_unit_price"/>
         <result property="taxRate" column="tax_rate"/>
         <result property="isEnabled" column="is_enabled"/>
         <result property="creatorId" column="creator_id"/>
@@ -21,12 +23,12 @@
         <result property="modifyDate" column="modify_date"/>
     </resultMap>
 
-    <select id="queryObject" resultType="com.ltsznh.modules.pub.entity.PubMaterialEntity">
+	<select id="queryObject" resultType="com.ltsznh.modules.pub.entity.PubMaterialEntity">
 		select * from pub_material where material_code = #{value}
 	</select>
 
-    <select id="queryList" resultType="com.ltsznh.modules.pub.entity.PubMaterialEntity">
-        select ROW_NUMBER() OVER(
+	<select id="queryList" resultType="com.ltsznh.modules.pub.entity.PubMaterialEntity">
+		select ROW_NUMBER() OVER(
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
@@ -36,81 +38,93 @@
             </otherwise>
         </choose>
         ) AS ROW_NUM,
-        *
+		*
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
-        ,(SELECT material_type_desc from pub_material_type
-        where pub_material.material_type_code = pub_material_type.material_type_code) as material_type_desc
-        from pub_material
+		from pub_material
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
             OFFSET #{offset} ROWS
             FETCH NEXT #{limit} ROWS ONLY
         </if>
-    </select>
-
-    <select id="queryTotal" resultType="int">
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
 		select count(*) from pub_material 
 	</select>
-
-    <insert id="save" parameterType="com.ltsznh.modules.pub.entity.PubMaterialEntity">
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.pub.entity.PubMaterialEntity">
 		insert into pub_material
 		(
 			[material_code], 
 			[material_desc], 
 			[material_type_code], 
+			[barcode], 
 			[inventory_unit], 
 			[purchase_unit], 
 			[sale_unit], 
 			[purchase_to_inventory], 
 			[sale_to_inventory], 
+			[guidance_unit_price], 
 			[tax_rate], 
-			[creator_id],
-			[create_date]
+			[is_enabled], 
+			[creator_id], 
+			[create_date], 
+			[modifier_id], 
+			[modify_date]
 		)
 		values
 		(
 			#{materialCode}, 
 			#{materialDesc}, 
 			#{materialTypeCode}, 
+			#{barcode}, 
 			#{inventoryUnit}, 
 			#{purchaseUnit}, 
 			#{saleUnit}, 
 			#{purchaseToInventory}, 
 			#{saleToInventory}, 
+			#{guidanceUnitPrice}, 
 			#{taxRate}, 
-			#{creatorId},
-			#{createDate}
+			#{isEnabled}, 
+			#{creatorId}, 
+			#{createDate}, 
+			#{modifierId}, 
+			#{modifyDate}
 		)
 	</insert>
-
-    <update id="update" parameterType="com.ltsznh.modules.pub.entity.PubMaterialEntity">
-        update pub_material
-        <set>
-            <if test="materialDesc != null">[material_desc] = #{materialDesc},</if>
-            <if test="materialTypeCode != null">[material_type_code] = #{materialTypeCode},</if>
-            <if test="inventoryUnit != null">[inventory_unit] = #{inventoryUnit},</if>
-            <if test="purchaseUnit != null">[purchase_unit] = #{purchaseUnit},</if>
-            <if test="saleUnit != null">[sale_unit] = #{saleUnit},</if>
-            <if test="purchaseToInventory != null">[purchase_to_inventory] = #{purchaseToInventory},</if>
-            <if test="saleToInventory != null">[sale_to_inventory] = #{saleToInventory},</if>
-            <if test="taxRate != null">[tax_rate] = #{taxRate},</if>
-            <if test="isEnabled != null">[is_enabled] = #{isEnabled},</if>
-            <if test="modifierId != null">[modifier_id] = #{modifierId},</if>
-            <if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
-        </set>
-        where material_code = #{materialCode}
-    </update>
-
-    <delete id="delete">
-		UPDATE pub_material SET is_enabled = 0 where material_code = #{value}
+	 
+	<update id="update" parameterType="com.ltsznh.modules.pub.entity.PubMaterialEntity">
+		update pub_material 
+		<set>
+			<if test="materialDesc != null">[material_desc] = #{materialDesc}, </if>
+			<if test="materialTypeCode != null">[material_type_code] = #{materialTypeCode}, </if>
+			<if test="barcode != null">[barcode] = #{barcode}, </if>
+			<if test="inventoryUnit != null">[inventory_unit] = #{inventoryUnit}, </if>
+			<if test="purchaseUnit != null">[purchase_unit] = #{purchaseUnit}, </if>
+			<if test="saleUnit != null">[sale_unit] = #{saleUnit}, </if>
+			<if test="purchaseToInventory != null">[purchase_to_inventory] = #{purchaseToInventory}, </if>
+			<if test="saleToInventory != null">[sale_to_inventory] = #{saleToInventory}, </if>
+			<if test="guidanceUnitPrice != null">[guidance_unit_price] = #{guidanceUnitPrice}, </if>
+			<if test="taxRate != null">[tax_rate] = #{taxRate}, </if>
+			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
+			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
+			<if test="createDate != null">[create_date] = #{createDate}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where material_code = #{materialCode}
+	</update>
+	
+	<delete id="delete">
+		delete from pub_material where material_code = #{value}
 	</delete>
-
-    <delete id="deleteBatch">
-        UPDATE pub_material SET is_enabled = 0 where material_code in
-        <foreach item="materialCode" collection="array" open="(" separator="," close=")">
-            #{materialCode}
-        </foreach>
-    </delete>
+	
+	<delete id="deleteBatch">
+		delete from pub_material where material_code in 
+		<foreach item="materialCode" collection="array" open="(" separator="," close=")">
+			#{materialCode}
+		</foreach>
+	</delete>
 
 </mapper>

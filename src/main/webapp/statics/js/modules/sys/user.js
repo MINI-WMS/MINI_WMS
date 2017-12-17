@@ -145,6 +145,9 @@ var vm = new Vue({
 		},
 		saveOrUpdate: function () {
 			var url = vm.user.userId == null ? "sys/user/save" : "sys/user/update";
+			if(vm.user.password != null && vm.user.password.length>0){
+				vm.user.password = hex_sha1(hex_sha1(vm.user.password))
+			}
 			$.ajax({
 				type: "POST",
 				url: baseURL + url,

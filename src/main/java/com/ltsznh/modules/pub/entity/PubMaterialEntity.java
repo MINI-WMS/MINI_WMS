@@ -1,8 +1,9 @@
 package com.ltsznh.modules.pub.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.math.BigDecimal;
+import java.util.Date;
+
 
 
 /**
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
  * 
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-11-24 16:46:43
+ * @date 2017-12-15 11:29:48
  */
 public class PubMaterialEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -21,6 +22,8 @@ public class PubMaterialEntity implements Serializable {
 	private String materialDesc;
 	//物料类型
 	private String materialTypeCode;
+	//条码
+	private String barcode;
 	//库存单位
 	private String inventoryUnit;
 	//采购单位
@@ -31,6 +34,8 @@ public class PubMaterialEntity implements Serializable {
 	private BigDecimal purchaseToInventory;
 	//销售库存单位转换比
 	private BigDecimal saleToInventory;
+	//指导单价
+	private BigDecimal guidanceUnitPrice;
 	//税率
 	private BigDecimal taxRate;
 	//状态
@@ -84,6 +89,18 @@ public class PubMaterialEntity implements Serializable {
 	 */
 	public String getMaterialTypeCode() {
 		return materialTypeCode;
+	}
+	/**
+	 * 设置：条码
+	 */
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
+	/**
+	 * 获取：条码
+	 */
+	public String getBarcode() {
+		return barcode;
 	}
 	/**
 	 * 设置：库存单位
@@ -144,6 +161,18 @@ public class PubMaterialEntity implements Serializable {
 	 */
 	public BigDecimal getSaleToInventory() {
 		return saleToInventory;
+	}
+	/**
+	 * 设置：指导单价
+	 */
+	public void setGuidanceUnitPrice(BigDecimal guidanceUnitPrice) {
+		this.guidanceUnitPrice = guidanceUnitPrice;
+	}
+	/**
+	 * 获取：指导单价
+	 */
+	public BigDecimal getGuidanceUnitPrice() {
+		return guidanceUnitPrice;
 	}
 	/**
 	 * 设置：税率

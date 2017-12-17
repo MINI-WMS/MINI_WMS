@@ -66,9 +66,55 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<div class="col-sm-2 control-label">条码</div>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" v-model="pubMaterial.barcode" placeholder="条码"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label">库存单位</div>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" v-model="pubMaterial.inventoryUnit" placeholder="库存单位"/>
+							</div>
+						</div>
+						<!--<div class="form-group">-->
+							<!--<div class="col-sm-2 control-label">采购单位</div>-->
+							<!--<div class="col-sm-10">-->
+								<!--<input type="text" class="form-control" v-model="pubMaterial.purchaseUnit" placeholder="采购单位"/>-->
+							<!--</div>-->
+						<!--</div>-->
+						<!--<div class="form-group">-->
+							<!--<div class="col-sm-2 control-label">销售单位</div>-->
+							<!--<div class="col-sm-10">-->
+								<!--<input type="text" class="form-control" v-model="pubMaterial.saleUnit" placeholder="销售单位"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					</div>
+				</div>
+				<div class="col-md-6 ">
+					<div class="form-horizontal">
+						<!--<div class="form-group">-->
+							<!--<div class="col-sm-2 control-label">采购库存单位转换比</div>-->
+							<!--<div class="col-sm-10">-->
+								<!--<input type="text" class="form-control" v-model="pubMaterial.purchaseToInventory" placeholder="采购库存单位转换比"/>-->
+							<!--</div>-->
+						<!--</div>-->
+						<!--<div class="form-group">-->
+							<!--<div class="col-sm-2 control-label">销售库存单位转换比</div>-->
+							<!--<div class="col-sm-10">-->
+								<!--<input type="text" class="form-control" v-model="pubMaterial.saleToInventory" placeholder="销售库存单位转换比"/>-->
+							<!--</div>-->
+						<!--</div>-->
+						<div class="form-group">
+							<div class="col-sm-2 control-label">指导单价</div>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" v-model="pubMaterial.guidanceUnitPrice" placeholder="指导单价"/>
+							</div>
+						</div>
+						<div class="form-group">
 							<div class="col-sm-2 control-label">税率</div>
 							<div class="col-sm-10">
-								<input type="number" class="form-control" v-model="pubMaterial.taxRate" placeholder="税率"/>
+								<input type="text" class="form-control" v-model="pubMaterial.taxRate" placeholder="税率"/>
 							</div>
 						</div>
 						<div v-if="!addNew" class="form-group">
@@ -82,42 +128,6 @@
 								</select>
 							</div>
 						</div>
-
-					</div>
-				</div>
-				<div class="col-md-6 ">
-					<div class="form-horizontal">
-						<div class="form-group">
-							<div class="col-sm-2 control-label">库存单位</div>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" v-model="pubMaterial.inventoryUnit" placeholder="库存单位"/>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-2 control-label">采购单位</div>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" v-model="pubMaterial.purchaseUnit" placeholder="采购单位"/>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-2 control-label">销售单位</div>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" v-model="pubMaterial.saleUnit" placeholder="销售单位"/>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-2 control-label">采购库存单位转换比</div>
-							<div class="col-sm-10">
-								<input type="number" class="form-control" v-model="pubMaterial.purchaseToInventory" placeholder="采购库存单位转换比"/>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-2 control-label">销售库存单位转换比</div>
-							<div class="col-sm-10">
-								<input type="number" class="form-control" v-model="pubMaterial.saleToInventory" placeholder="销售库存单位转换比"/>
-							</div>
-						</div>
-
 					</div>
 				</div>
 			</div>

@@ -1,10 +1,10 @@
 package com.ltsznh.modules.sys.service.impl;
 
-import com.qiniu.util.StringUtils;
 import com.ltsznh.common.annotation.DataFilter;
 import com.ltsznh.modules.sys.dao.SysDeptDao;
 import com.ltsznh.modules.sys.entity.SysDeptEntity;
 import com.ltsznh.modules.sys.service.SysDeptService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

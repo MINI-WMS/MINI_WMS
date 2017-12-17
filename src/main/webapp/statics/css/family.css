@@ -1,14 +1,14 @@
-.has-feedback label~.form-control-feedback {
+/*.has-feedback label~.form-control-feedback {*/
     /*top: 0px !important;*/
-}
-.form-group {
+/*}*/
+/*.form-group {*/
     /*margin: 15px 0 0 0;*/
-}
+/*}*/
 
-.navbar .navbar-nav > li > a {
-    padding-top: 15px;
-    padding-bottom: 15px;
-}
+/*.navbar .navbar-nav > li > a {*/
+    /*padding-top: 15px;*/
+    /*padding-bottom: 15px;*/
+/*}*/
 
 .content {
     min-height: 250px;
@@ -16,15 +16,15 @@
     /*margin: 0px !important;*/
 }
 
-@media screen and (max-width: 767px) {
-    .table-responsive {
+/*@media screen and (max-width: 767px) {*/
+    /*.table-responsive {*/
         /*width: 100%;*/
-        margin-bottom: 0px !important;/*手机屏屏幕jqgrid底部设置为0，否则*/
+        /*margin-bottom: 0px !important;!*手机屏屏幕jqgrid底部设置为0，*/
         /*overflow-y: hidden;*/
         /*-ms-overflow-style: -ms-autohiding-scrollbar;*/
-        border: 0px !important;
-    }
-}
+        /*border: 0px !important;*/
+    /*}*/
+/*}*/
 
 jqgrid text ellipsis
 .ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td {
@@ -42,10 +42,10 @@ jqgrid text ellipsis
     /*background-color: #ffffff;*/
 /*}*/
 
-.login-page, .register-page {
+/*.login-page, .register-page {*/
     /*background: #D2D2D2;*/
-}
+/*}*/
 
 .login-box, .register-box {
-    /*margin: 2% auto;*/
+    margin: 2% auto;
 }

@@ -5,7 +5,7 @@ $(function () {
 		colModel: [
 			{label: 'ID', name: 'configId', width: 30, sortable: true, key: true, hidden: true, hidedlg: true},
 			{label: '参数名', name: 'configKey', width: 60, sortable: false},
-			{label: '参数值', name: 'configValue', width: 100, sortable: false},
+			{label: '参数值', name: 'configValue',  sortable: false},
 			{label: '备注', name: 'remark', width: 100, sortable: false},
 			{
 				label: '状态', name: 'isEnabled', width: 60, index: 'is_enabled', formatter: function (value, options, row) {
@@ -17,7 +17,7 @@ $(function () {
 			{label: '创建用户', name: 'creatorName', index: 'creator_id', width: 80},
 			{label: '创建时间', name: 'createDate', index: 'create_date', width: 150},
 			{label: '修改用户', name: 'modifierName', index: 'modifier_id', width: 80},
-			{label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 150}
+			{label: '修改时间', name: 'modifyDate', index: 'modify_date', width: vm.widthMap.modifyDate }
 		],
 		viewrecords: true,
 		height: 385,
@@ -27,7 +27,8 @@ $(function () {
 		rownumWidth: 25,
 		autowidth: true,
 		multiselect: true,
-		shrinkToFit: true,
+		shrinkToFit: false,
+		autowidth:true,
 		pager: "#jqGridPager",
 		jsonReader: {
 			root: "page.list",
@@ -42,6 +43,8 @@ $(function () {
 		},
 		gridComplete: function () {
 			$(window).resize();
+			var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+			// vm.widthMap = page.widthMap;
 			//隐藏grid底部滚动条
 			$("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
 		}
@@ -57,7 +60,8 @@ var vm = new Vue({
 		},
 		showList: true,
 		title: null,
-		config: {}
+		config: {},
+		widthMap: {modifyDate:30}
 	},
 	methods: {
 		query: function () {
@@ -132,6 +136,74 @@ var vm = new Vue({
 				postData: {'configKey': vm.q.configKey, 'isEnabled': vm.q.isEnabled},
 				page: page
 			}).trigger("reloadGrid");
+		},
+		excel: function (event) {
+			$.ajax({
+				type: "POST",
+				url: baseURL + "sys/config/excel",
+				contentType: "application/json",
+				data: JSON.stringify(vm.q),
+				success: function (r) {
+					if (r.code === 0) {
+						if (r.excelList != null) {
+							msg("导出成功，共" + r.excelList.length + "个文件。开始下载...");
+							for (var i = 0; i < r.excelList.length; i++) {
+								var url = baseURL + 'download/excel?fileName=' + r.excelList[i].fileName + '&downloadFileName=' + r.excelList[i].downloadFileName;
+								// // window.location.href = url;
+								// window.open(url,"_blank","");
+								// $.ajax({
+								// 	type: "POST",
+								// 	url: baseURL + "download/excel?fileName="+r.excelList[i].fileName+"&downloadFileName="+r.excelList[i].downloadFileName,
+								// 	contentType: "application/json",
+								// 	// data: JSON.stringify(r.excelList[i]),
+								// 	success: function (r) {
+								// 		if (r.code === 0) {
+								//
+								// 		} else {
+								// 			alert(r.msg);
+								// 		}
+								// 	},
+								// 	error: function (r) {
+								// 		alert(r.msg)
+								// 	}
+								// });
+
+								// $.get(url, function(r){
+								// 	// parent.layer.open({
+								// 	// 	title:'失败信息',
+								// 	// 	closeBtn:0,
+								// 	// 	content: r.log.error
+								// 	// });
+								// });
+
+								//定义一个form表单
+								var download = $("<form></form>");
+								download.attr('method', 'post')
+								download.attr('action', "/download/excel");
+
+								var fileName = $("<input type='hidden' name='fileName' />")
+								fileName.attr('value', r.excelList[i].fileName);
+
+								var downloadFileName = $("<input type='hidden' name='downloadFileName' />")
+								downloadFileName.attr('value', r.excelList[i].downloadFileName);
+
+								download.append(fileName);
+								download.append(downloadFileName);
+
+								download.appendTo('body').submit(); //must add this line for higher html spec
+
+							}
+						} else {
+							alert("excel导出错误，请联系管理员");
+						}
+					} else {
+						alert(r.msg);
+					}
+				},
+				error: function (r) {
+					alert(r.msg)
+				}
+			});
 		}
 	}
 });

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.ltsznh.modules.sys.dao.SysUserDao">
     <select id="queryObject" resultType="com.ltsznh.modules.sys.entity.SysUserEntity">
-		select *,creator as creator_id,modifier as modifier_id as modifier from sys_user where user_id = #{value}
+		select *,creator as creator_id,modifier as modifier_id from sys_user where user_id = #{value}
 	</select>
 
     <select id="queryList" resultType="com.ltsznh.modules.sys.entity.SysUserEntity">
@@ -71,7 +71,7 @@
 	</select>
 
     <select id="queryByPhone" resultType="com.ltsznh.modules.sys.entity.SysUserEntity">
-		select * from sys_user where phone = #{phone}
+		select * from sys_user where phone = #{phone} and is_enabled = 1
 	</select>
 
     <insert id="save" parameterType="com.ltsznh.modules.sys.entity.SysUserEntity" useGeneratedKeys="true"

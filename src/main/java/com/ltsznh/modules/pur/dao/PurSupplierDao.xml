@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.pur.dao.PurSupplierDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.pur.entity.PurSupplierEntity" id="purSupplierMap">
+        <result property="supplierCode" column="supplier_code"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="supplierTypeCode" column="supplier_type_code"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="supplierAddr" column="supplier_addr"/>
+        <result property="contactName" column="contact_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="taxRegistrationCertificate" column="tax_registration_certificate"/>
+        <result property="isEnabled" column="is_enabled"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.pur.entity.PurSupplierEntity">
+		select * from pur_supplier where supplier_code = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.pur.entity.PurSupplierEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by supplier_code desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		from pur_supplier
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from pur_supplier 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.pur.entity.PurSupplierEntity">
+		insert into pur_supplier
+		(
+			[supplier_code], 
+			[supplier_name], 
+			[supplier_type_code], 
+			[area_code], 
+			[supplier_addr], 
+			[contact_name], 
+			[contact_phone], 
+			[tax_registration_certificate], 
+			[is_enabled], 
+			[creator_id], 
+			[create_date], 
+			[modifier_id], 
+			[modify_date]
+		)
+		values
+		(
+			#{supplierCode}, 
+			#{supplierName}, 
+			#{supplierTypeCode}, 
+			#{areaCode}, 
+			#{supplierAddr}, 
+			#{contactName}, 
+			#{contactPhone}, 
+			#{taxRegistrationCertificate}, 
+			#{isEnabled}, 
+			#{creatorId}, 
+			#{createDate}, 
+			#{modifierId}, 
+			#{modifyDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.pur.entity.PurSupplierEntity">
+		update pur_supplier 
+		<set>
+			<if test="supplierName != null">[supplier_name] = #{supplierName}, </if>
+			<if test="supplierTypeCode != null">[supplier_type_code] = #{supplierTypeCode}, </if>
+			<if test="areaCode != null">[area_code] = #{areaCode}, </if>
+			<if test="supplierAddr != null">[supplier_addr] = #{supplierAddr}, </if>
+			<if test="contactName != null">[contact_name] = #{contactName}, </if>
+			<if test="contactPhone != null">[contact_phone] = #{contactPhone}, </if>
+			<if test="taxRegistrationCertificate != null">[tax_registration_certificate] = #{taxRegistrationCertificate}, </if>
+			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
+			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
+			<if test="createDate != null">[create_date] = #{createDate}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where supplier_code = #{supplierCode}
+	</update>
+	
+	<delete id="delete">
+		delete from pur_supplier where supplier_code = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from pur_supplier where supplier_code in 
+		<foreach item="supplierCode" collection="array" open="(" separator="," close=")">
+			#{supplierCode}
+		</foreach>
+	</delete>
+
+</mapper>

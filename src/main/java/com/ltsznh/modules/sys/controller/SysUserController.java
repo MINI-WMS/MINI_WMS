@@ -58,7 +58,10 @@ public class SysUserController extends AbstractController {
 	 */
 	@RequestMapping("/info")
 	public R info() {
-		return R.ok().put("user", getUser());
+		//只返回用户名信息，防止用户密码等敏感信息泄露
+		SysUserEntity user = new SysUserEntity();
+		user.setUsername(getUser().getUsername());
+		return R.ok().put("user", user);
 	}
 
 	/**
@@ -136,16 +139,16 @@ public class SysUserController extends AbstractController {
 	@SysLog("禁用用户")
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:user:delete")
-	public R delete(@RequestBody Long[] userIds){
-		if(ArrayUtils.contains(userIds, 1L)){
+	public R delete(@RequestBody Long[] userIds) {
+		if (ArrayUtils.contains(userIds, 1L)) {
 			return R.error("系统管理员不能禁用");
 		}
 
-		if(ArrayUtils.contains(userIds, getUserId())){
+		if (ArrayUtils.contains(userIds, getUserId())) {
 			return R.error("当前用户不能禁用");
 		}
 
-		sysUserService.deleteBatch(userIds,getUserId());
+		sysUserService.deleteBatch(userIds, getUserId());
 
 		return R.ok();
 	}

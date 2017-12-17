@@ -3,7 +3,7 @@ var menuItem = Vue.extend({
     name: 'menu-item',
     props:{item:{}},
     template:[
-        '<li>',
+        '<li  class="treeview" >',
         '	<a v-if="item.menuType === 0" href="javascript:;">',
         '		<i v-if="item.icon != null" :class="item.icon"></i>',
         '		<span>{{item.menuName}}</span>',
@@ -107,6 +107,9 @@ function routerList(router, menuList){
 		if(menu.menuType == 0){
 			routerList(router, menu.list);
 		}else if(menu.menuType == 1){
+			if(menu.list == null){
+				$(".treeview-menu li").removeClass("treeview");
+			}
 			router.add('#'+menu.url, function() {
 				var url = window.location.hash;
 				
