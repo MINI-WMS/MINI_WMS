@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>库存移动类型</title>
+<#include "/header.html">
+</head>
+<body>
+<div id="familyApp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+		  <a class="btn btn-default" @click="reload"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;刷新</a>
+			<#if shiro.hasPermission("wmsmovetype:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("wmsmovetype:update")>
+            <a class="btn btn-warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("wmsmovetype:delete")>
+            <a class="btn btn-danger" @click="del"><i class="fa fa-trash-o"></i>&nbsp;禁用</a>
+			</#if>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">移动类型代码</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="wmsMoveType.moveTypeCode" placeholder="移动类型代码" :disabled="!addNew"/>
+				</div>
+			</div>
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">移动类型名称</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsMoveType.moveTypeDesc" placeholder="移动类型名称"/>
+			    </div>
+			</div>
+									<!--<div class="form-group">-->
+			   	<!--<div class="col-sm-2 control-label">移动方向</div>-->
+			   	<!--<div class="col-sm-10">-->
+			      <!--<input type="text" class="form-control" v-model="wmsMoveType.moveDirection" placeholder="移动方向"/>-->
+			    <!--</div>-->
+			<!--</div>-->
+			<div class="form-group">
+				<div class="col-sm-2 control-label">移动方向</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="wmsMoveType.moveDirection">
+						<optgroup label="状态">
+							<option value="1">入库</option>
+							<option value="-1">出库</option>
+							<!--<option value="1">移库入库</option>-->
+							<!--<option value="-1">移库出库</option>-->
+						</optgroup>
+					</select>
+				</div>
+			</div>
+
+			<div v-if="!addNew" class="form-group">
+				<div class="col-sm-2 control-label">状态</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="wmsMoveType.isEnabled">
+						<optgroup label="状态">
+							<option value="1">正常</option>
+							<option value="0">禁用</option>
+						</optgroup>
+					</select>
+				</div>
+			</div>
+
+
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+			  <a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;确定</a>
+              &nbsp;&nbsp;
+              <a class="btn btn-info" @click="reload"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;返回</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/wms/wmsmovetype.js?_${.now?long}"></script>
+</body>
+</html>

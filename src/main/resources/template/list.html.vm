@@ -13,6 +13,8 @@ $header
 <div id="familyApp" v-cloak>
 	<div v-show="showList">
 		<div class="grid-btn">
+		  <a class="btn btn-default" @click="reload"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;刷新</a>
+		  <a class="btn btn-default" @click="query"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;查询</a>
 			$save
             <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			$end

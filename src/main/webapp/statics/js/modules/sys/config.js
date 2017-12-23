@@ -28,7 +28,6 @@ $(function () {
 		autowidth: true,
 		multiselect: true,
 		shrinkToFit: false,
-		autowidth:true,
 		pager: "#jqGridPager",
 		jsonReader: {
 			root: "page.list",

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.wms.dao.WmsMoveTypeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.wms.entity.WmsMoveTypeEntity" id="wmsMoveTypeMap">
+        <result property="moveTypeCode" column="move_type_code"/>
+        <result property="moveTypeDesc" column="move_type_desc"/>
+        <result property="moveDirection" column="move_direction"/>
+        <result property="isEnabled" column="is_enabled"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.wms.entity.WmsMoveTypeEntity">
+		select * from wms_move_type where move_type_code = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.wms.entity.WmsMoveTypeEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by move_type_code desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		from wms_move_type
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from wms_move_type 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.wms.entity.WmsMoveTypeEntity">
+		insert into wms_move_type
+		(
+			[move_type_code], 
+			[move_type_desc], 
+			[move_direction], 
+			[creator_id],
+			[create_date]
+		)
+		values
+		(
+			#{moveTypeCode}, 
+			#{moveTypeDesc}, 
+			#{moveDirection}, 
+			#{creatorId},
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.wms.entity.WmsMoveTypeEntity">
+		update wms_move_type 
+		<set>
+			<if test="moveTypeDesc != null">[move_type_desc] = #{moveTypeDesc}, </if>
+			<if test="moveDirection != null">[move_direction] = #{moveDirection}, </if>
+			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where move_type_code = #{moveTypeCode}
+	</update>
+	
+	<delete id="delete">
+		UPDATE wms_move_type SET is_enabled = 0,[modifier_id] = #{modifierId},[modify_date] = #{modifyDate} where move_type_code = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		UPDATE wms_move_type SET is_enabled = 0,[modifier_id] = #{modifierId},[modify_date] = #{modifyDate} where move_type_code in
+		<foreach item="moveTypeCode" collection="array" open="(" separator="," close=")">
+			#{moveTypeCode}
+		</foreach>
+	</delete>
+
+</mapper>

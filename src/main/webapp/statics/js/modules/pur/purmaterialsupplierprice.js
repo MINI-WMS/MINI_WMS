@@ -8,12 +8,18 @@ $(function () {
 			{ label: '供应商代码', name: 'supplierCode', index: 'supplier_code', width: 80 }, 
 			{ label: '采购单价', name: 'purchaseUnitPrice', index: 'purchase_unit_price', width: 80 }, 
 			{ label: '合同开始日期', name: 'contractStartDate', index: 'contract_start_date', width: 80 }, 
-			{ label: '合同截止日期', name: 'contractEndDate', index: 'contract_end_date', width: 80 }, 
-			{ label: '状态', name: 'isEnabled', index: 'is_enabled', width: 80 }, 
-			{ label: '创建用户', name: 'creatorId', index: 'creator_id', width: 80 }, 
-			{ label: '创建时间', name: 'createDate', index: 'create_date', width: 80 }, 
-			{ label: '修改用户', name: 'modifierId', index: 'modifier_id', width: 80 }, 
-			{ label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 80 }
+			{ label: '合同截止日期', name: 'contractEndDate', index: 'contract_end_date', width: 80 },
+			{
+				label: '状态', name: 'isEnabled', width: 60, index: 'is_enabled', formatter: function (value, options, row) {
+					return value === 0 ?
+						'<span class="label label-danger">禁用</span>' :
+						'<span class="label label-success">正常</span>';
+				}
+			},
+			{label: '创建用户', name: 'creatorName', index: 'creator_id', width: 80},
+			{label: '创建时间', name: 'createDate', index: 'create_date', width: 150},
+			{label: '修改用户', name: 'modifierName', index: 'modifier_id', width: 80},
+			{label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 150}
         ],
 		viewrecords: true,
         height: 385,

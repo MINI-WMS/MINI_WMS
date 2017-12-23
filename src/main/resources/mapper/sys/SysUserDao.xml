@@ -29,6 +29,12 @@
             <if test="phone != null and phone.trim() != ''">
                 and u.phone like concat('%',#{phone},'%')
             </if>
+            <if test="deptId != null and deptId.trim() != ''">
+                and u.dept_id = #{deptId}
+            </if>
+            <if test="isEnabled != null and isEnabled.trim() != ''">
+                and u.is_enabled = #{isEnabled}
+            </if>
             <!--  数据过滤  -->
             ${filterSql}
         </where>

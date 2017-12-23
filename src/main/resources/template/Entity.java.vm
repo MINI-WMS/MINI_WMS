@@ -23,6 +23,10 @@ public class ${className}Entity implements Serializable {
 	private $column.attrType $column.attrname;
 #end
 
+
+	private String creatorName;
+	private String modifierName;
+
 #foreach ($column in $columns)
 	/**
 	 * 设置：${column.comments}
@@ -37,4 +41,20 @@ public class ${className}Entity implements Serializable {
 		return $column.attrname;
 	}
 #end
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
+	public String getModifierName() {
+		return modifierName;
+	}
+
+	public void setModifierName(String modifierName) {
+		this.modifierName = modifierName;
+	}
 }

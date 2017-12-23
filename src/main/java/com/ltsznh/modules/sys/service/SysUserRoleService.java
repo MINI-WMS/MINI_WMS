@@ -1,5 +1,6 @@
 package com.ltsznh.modules.sys.service;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public interface SysUserRoleService {
 	
-	void saveOrUpdate(Long userId, List<Long> roleIdList,Long modifierId);
+	void saveOrUpdate(Long userId, List<Long> roleIdList, Long creatorId, Date createDate);
 	
 	/**
 	 * 根据用户ID，获取角色ID列表

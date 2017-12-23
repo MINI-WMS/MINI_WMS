@@ -42,6 +42,12 @@ public class PurSupplierEntity implements Serializable {
 	//修改时间
 	private Date modifyDate;
 
+	private  String supplierTypeDesc;
+	private String areaName;
+
+	private String creatorName;
+	private String modifierName;
+
 	/**
 	 * 设置：供应商代码
 	 */

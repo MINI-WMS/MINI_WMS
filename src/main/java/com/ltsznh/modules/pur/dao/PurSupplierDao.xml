@@ -38,6 +38,8 @@
 		*
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		,(SELECT area_name FROM pub_area where pur_supplier.area_code = pub_area.area_code) as area_name
+		,(SELECT supplier_type_desc FROM pur_supplier_type where pur_supplier.supplier_type_code = pur_supplier_type.supplier_type_code) as supplier_type_desc
 		from pur_supplier
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
@@ -61,11 +63,8 @@
 			[contact_name], 
 			[contact_phone], 
 			[tax_registration_certificate], 
-			[is_enabled], 
-			[creator_id], 
-			[create_date], 
-			[modifier_id], 
-			[modify_date]
+			[creator_id],
+			[create_date]
 		)
 		values
 		(
@@ -77,11 +76,8 @@
 			#{contactName}, 
 			#{contactPhone}, 
 			#{taxRegistrationCertificate}, 
-			#{isEnabled}, 
-			#{creatorId}, 
-			#{createDate}, 
-			#{modifierId}, 
-			#{modifyDate}
+			#{creatorId},
+			#{createDate}
 		)
 	</insert>
 	 
@@ -96,8 +92,6 @@
 			<if test="contactPhone != null">[contact_phone] = #{contactPhone}, </if>
 			<if test="taxRegistrationCertificate != null">[tax_registration_certificate] = #{taxRegistrationCertificate}, </if>
 			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
-			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
-			<if test="createDate != null">[create_date] = #{createDate}, </if>
 			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
 			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
 		</set>
@@ -105,11 +99,11 @@
 	</update>
 	
 	<delete id="delete">
-		delete from pur_supplier where supplier_code = #{value}
+		UPDATE pur_supplier set is_enabled = 0 where supplier_code = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from pur_supplier where supplier_code in 
+		UPDATE pur_supplier set is_enabled = 0 where supplier_code in
 		<foreach item="supplierCode" collection="array" open="(" separator="," close=")">
 			#{supplierCode}
 		</foreach>

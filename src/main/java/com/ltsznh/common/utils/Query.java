@@ -26,10 +26,13 @@ public class Query extends LinkedHashMap<String, Object> {
 		//分页参数
 		if (params.containsKey("page")) {
 			this.page = Integer.parseInt(params.get("page").toString());
-		}
+		}else
+			this.page = 1;
 		if (params.containsKey("limit")) {
 			this.limit = Integer.parseInt(params.get("limit").toString());
-		}
+		}else
+			this.limit = 10000;
+
 		this.put("offset", (page - 1) * limit);
 		this.put("page", page);
 		this.put("limit", limit);

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.wms.dao.WmsWarehouseUserDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.wms.entity.WmsWarehouseUserEntity" id="wmsWarehouseUserMap">
+        <result property="wmsUserId" column="wms_user_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.wms.entity.WmsWarehouseUserEntity">
+		select z.* ,(SELECT username FROM sys_user where z.creator_id = user_id) as creator_name
+        ,a.username,b.dept_id,b.dept_name
+        from wms_warehouse_user as z inner join sys_user as a on a.user_id = z.user_id
+        inner JOIN sys_dept as b on b.dept_id = a.dept_id  where wms_user_id = #{value}
+	</select>
+
+	<select id="queryWarehouseCodeList" resultType="String">
+		select warehouse_code from wms_warehouse_user where user_id = #{userId}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.wms.entity.WmsWarehouseUserEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by wms_user_id desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+		,(SELECT username FROM sys_user where user_id = wms_warehouse_user.user_id) as username
+		,(SELECT warehouse_name FROM wms_warehouse where wms_warehouse_user.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
+		from wms_warehouse_user
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from wms_warehouse_user 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.wms.entity.WmsWarehouseUserEntity" useGeneratedKeys="true" keyProperty="wmsUserId">
+		insert into wms_warehouse_user
+		(
+			[user_id], 
+			[warehouse_code], 
+			[creator_id], 
+			[create_date]
+		)
+		values
+		<foreach collection="warehouseCodeList" item="item" index="index" separator=",">
+			(
+			#{userId},
+			#{item},
+			#{creatorId},
+			#{createDate}
+			)
+		</foreach>
+	</insert>
+	 
+	<!--<update id="update" parameterType="com.ltsznh.modules.wms.entity.WmsWarehouseUserEntity">-->
+		<!--update wms_warehouse_user -->
+		<!--<set>-->
+			<!--<if test="userId != null">[user_id] = #{userId}, </if>-->
+			<!--<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode}, </if>-->
+			<!--<if test="creatorId != null">[creator_id] = #{creatorId}, </if>-->
+			<!--<if test="createDate != null">[create_date] = #{createDate}, </if>-->
+			<!--<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>-->
+			<!--<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>-->
+		<!--</set>-->
+		<!--where wms_user_id = #{wmsUserId}-->
+	<!--</update>-->
+	
+	<delete id="delete">
+		delete from wms_warehouse_user where user_id = #{modifierId}
+	</delete>
+	
+
+
+</mapper>

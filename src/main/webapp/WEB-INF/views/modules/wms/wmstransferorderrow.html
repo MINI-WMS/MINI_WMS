@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>仓库入出库单明细</title>
+<#include "/header.html">
+</head>
+<body>
+<div id="familyApp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+		  <a class="btn btn-default" @click="reload"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;刷新</a>
+		  <a class="btn btn-default" @click="query"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;查询</a>
+			<#if shiro.hasPermission("wmstransferorderrow:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("wmstransferorderrow:update")>
+            <a class="btn btn-warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("wmstransferorderrow:delete")>
+            <a class="btn btn-danger" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+							<div class="form-group">
+			   	<div class="col-sm-2 control-label">转储单编号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.toId" placeholder="转储单编号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">colName</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.sourToId" placeholder="colName"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">转储单日期</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.toDate" placeholder="转储单日期"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">转储单号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.toNo" placeholder="转储单号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">转储单序号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.toSeq" placeholder="转储单序号"/>
+			    </div>
+			</div>
+													<div class="form-group">
+			   	<div class="col-sm-2 control-label">来源仓库</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.sourWarehouseCode" placeholder="来源仓库"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">目标仓库</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.destWarehouseCode" placeholder="目标仓库"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">所属工程师</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.engineer" placeholder="所属工程师"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">来源工程师</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.sourEngineer" placeholder="来源工程师"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">目标工程师</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.destEngineer" placeholder="目标工程师"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">物料代码</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.materialCode" placeholder="物料代码"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">供应商代码</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.supplierCode" placeholder="供应商代码"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">指导单价</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.guidanceUnitPrice" placeholder="指导单价"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">单价</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.unitPrice" placeholder="单价"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">数量</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.qty" placeholder="数量"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">总金额</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.totalAmount" placeholder="总金额"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">移动类型</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.moveTypeCode" placeholder="移动类型"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">状态</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.dataStatus" placeholder="状态"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">确认用户</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.confirmId" placeholder="确认用户"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">确认时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.confirmTime" placeholder="确认时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建用户</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.creatorId" placeholder="创建用户"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.createDate" placeholder="创建时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">修改用户</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.modifierId" placeholder="修改用户"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">修改时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderRow.modifyDate" placeholder="修改时间"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+			  <a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;确定</a>
+              &nbsp;&nbsp;
+              <a class="btn btn-info" @click="reload"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;返回</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/wms/wmstransferorderrow.js?_${.now?long}"></script>
+</body>
+</html>

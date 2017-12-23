@@ -1,110 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>供应商</title>
-<#include "/header.html">
+	<title>供应商</title>
+	<#include "/header.html">
 </head>
 <body>
 <div id="familyApp" v-cloak>
 	<div v-show="showList">
 		<div class="grid-btn">
+			<a class="btn btn-default" @click="query"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;查询</a>
 			<#if shiro.hasPermission("pursupplier:save")>
-            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			</#if>
-			<#if shiro.hasPermission("pursupplier:update")>
-            <a class="btn btn-warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			</#if>
-			<#if shiro.hasPermission("pursupplier:delete")>
-            <a class="btn btn-danger" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if>
-		</div>
-	    <table id="jqGrid"></table>
-	    <div id="jqGridPager"></div>
-    </div>
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+		</#if>
+		<#if shiro.hasPermission("pursupplier:update")>
+		<a class="btn btn-warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+	</#if>
+	<#if shiro.hasPermission("pursupplier:delete")>
+	<a class="btn btn-danger" @click="del"><i class="fa fa-trash-o"></i>&nbsp;禁用</a>
+</#if>
+</div>
+<table id="jqGrid"></table>
+<div id="jqGridPager"></div>
+</div>
 
-    <div v-show="!showList" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
-											<div class="form-group">
-			   	<div class="col-sm-2 control-label">供应商名称</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.supplierName" placeholder="供应商名称"/>
-			    </div>
+<div v-show="!showList" class="panel panel-default">
+	<div class="panel-heading">{{title}}</div>
+	<form class="form-horizontal">
+		<div class="form-group">
+			<div class="col-sm-2 control-label">供应商代码</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="purSupplier.supplierCode" placeholder="供应商代码" :disabled="!addNew"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">供应商类型代码</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.supplierTypeCode" placeholder="供应商类型代码"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">供应商名称</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="purSupplier.supplierName" placeholder="供应商名称"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">地区代码</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.areaCode" placeholder="地区代码"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">供应商类型代码</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="purSupplier.supplierTypeCode" placeholder="供应商类型代码"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">供应商地址</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.supplierAddr" placeholder="供应商地址"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">地区代码</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="purSupplier.areaCode" placeholder="地区代码"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">联系人姓名</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.contactName" placeholder="联系人姓名"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">联系人姓名</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="purSupplier.contactName" placeholder="联系人姓名"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">联系人电话</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.contactPhone" placeholder="联系人电话"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">联系人电话</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="purSupplier.contactPhone" placeholder="联系人电话"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">税务登记证号</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.taxRegistrationCertificate" placeholder="税务登记证号"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">税务登记证号</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="purSupplier.taxRegistrationCertificate" placeholder="税务登记证号"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">状态</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.isEnabled" placeholder="状态"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">供应商地址</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="purSupplier.supplierAddr" placeholder="供应商地址"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">创建用户</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.creatorId" placeholder="创建用户"/>
-			    </div>
+		</div>
+		<!--<div class="form-group">-->
+			<!--<div class="col-sm-2 control-label">状态</div>-->
+			<!--<div class="col-sm-10">-->
+				<!--<input type="text" class="form-control" v-model="purSupplier.isEnabled" placeholder="状态"/>-->
+			<!--</div>-->
+		<!--</div>-->
+		<div v-if="!addNew" class="form-group">
+			<div class="col-sm-2 control-label">状态</div>
+			<div class="col-sm-10">
+				<select class="form-control" v-model="purSupplier.isEnabled">
+					<optgroup label="状态">
+						<option value="1">正常</option>
+						<option value="0">禁用</option>
+					</optgroup>
+				</select>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">创建时间</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.createDate" placeholder="创建时间"/>
-			    </div>
-			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">修改用户</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.modifierId" placeholder="修改用户"/>
-			    </div>
-			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">修改时间</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="purSupplier.modifyDate" placeholder="修改时间"/>
-			    </div>
-			</div>
-							<div class="form-group">
-				<div class="col-sm-2 control-label"></div>
-			  <a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;确定</a>
-              &nbsp;&nbsp;
-              <a class="btn btn-info" @click="reload"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;返回</a>
-			</div>
-		</form>
-	</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-2 control-label"></div>
+			<a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;确定</a>
+			&nbsp;&nbsp;
+			<a class="btn btn-info" @click="reload"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;返回</a>
+		</div>
+	</form>
+</div>
 </div>
 
 <script src="${request.contextPath}/statics/js/modules/pur/pursupplier.js?_${.now?long}"></script>

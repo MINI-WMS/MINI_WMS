@@ -1,89 +1,99 @@
 $(function () {
-    $("#jqGrid").jqGrid({
-        url: baseURL + 'pursupplier/list',
-        datatype: "json",
-        colModel: [
-			{ label: '供应商代码', name: 'supplierCode', index: 'supplier_code', width: 50, key: true },
-			{ label: '供应商名称', name: 'supplierName', index: 'supplier_name', width: 80 }, 
-			{ label: '供应商类型代码', name: 'supplierTypeCode', index: 'supplier_type_code', width: 80 }, 
-			{ label: '地区代码', name: 'areaCode', index: 'area_code', width: 80 }, 
-			{ label: '供应商地址', name: 'supplierAddr', index: 'supplier_addr', width: 80 }, 
-			{ label: '联系人姓名', name: 'contactName', index: 'contact_name', width: 80 }, 
-			{ label: '联系人电话', name: 'contactPhone', index: 'contact_phone', width: 80 }, 
-			{ label: '税务登记证号', name: 'taxRegistrationCertificate', index: 'tax_registration_certificate', width: 80 }, 
-			{ label: '状态', name: 'isEnabled', index: 'is_enabled', width: 80 }, 
-			{ label: '创建用户', name: 'creatorId', index: 'creator_id', width: 80 }, 
-			{ label: '创建时间', name: 'createDate', index: 'create_date', width: 80 }, 
-			{ label: '修改用户', name: 'modifierId', index: 'modifier_id', width: 80 }, 
-			{ label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 80 }
-        ],
+	$("#jqGrid").jqGrid({
+		url: baseURL + 'pursupplier/list',
+		datatype: "json",
+		colModel: [
+			{label: '供应商代码', name: 'supplierCode', index: 'supplier_code', width: 100, key: true},
+			{label: '供应商名称', name: 'supplierName', index: 'supplier_name', width: 130},
+			{label: '供应商类型', name: 'supplierTypeDesc', index: 'supplier_type_code', width: 80},
+			{label: '地区', name: 'areaName', index: 'area_code', width: 100},
+			{label: '联系人姓名', name: 'contactName', index: 'contact_name', width: 90},
+			{label: '联系人电话', name: 'contactPhone', index: 'contact_phone', width: 120},
+			{label: '税务登记证号', name: 'taxRegistrationCertificate', index: 'tax_registration_certificate', width: 120},
+			{label: '供应商地址', name: 'supplierAddr', index: 'supplier_addr', width: 180},
+			{
+				label: '状态', name: 'isEnabled', width: 60, index: 'is_enabled', formatter: function (value, options, row) {
+					return value === 0 ?
+						'<span class="label label-danger">禁用</span>' :
+						'<span class="label label-success">正常</span>';
+				}
+			},
+			{label: '创建用户', name: 'creatorName', index: 'creator_id', width: 80},
+			{label: '创建时间', name: 'createDate', index: 'create_date', width: 150},
+			{label: '修改用户', name: 'modifierName', index: 'modifier_id', width: 80},
+			{label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 150}
+		],
 		viewrecords: true,
-        height: 385,
-        rowNum: 10,
-		rowList : [10,30,50],
-        rownumbers: true,
-        rownumWidth: 25,
-        autowidth:true,
-        multiselect: true,
-        pager: "#jqGridPager",
-        jsonReader : {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
-        },
-        prmNames : {
-            page:"page",
-            rows:"limit",
-            order: "order"
-        },
-        gridComplete:function(){
-        	$(window).resize();
-        	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
-        }
-    });
+		height: 385,
+		rowNum: 10,
+		rowList: [10, 30, 50],
+		rownumbers: true,
+		rownumWidth: 25,
+		autowidth: true,
+		multiselect: true,
+		shrinkToFit: false,
+		pager: "#jqGridPager",
+		jsonReader: {
+			root: "page.list",
+			page: "page.currPage",
+			total: "page.totalPage",
+			records: "page.totalCount"
+		},
+		prmNames: {
+			page: "page",
+			rows: "limit",
+			order: "order"
+		},
+		gridComplete: function () {
+			$(window).resize();
+			//隐藏grid底部滚动条
+			// $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+		}
+	});
 });
 
 var vm = new Vue({
-	el:'#familyApp',
-	data:{
+	el: '#familyApp',
+	data: {
 		showList: true,
 		title: null,
-		purSupplier: {}
+		purSupplier: {},
+		addNew: false
 	},
 	methods: {
 		query: function () {
 			vm.reload();
 		},
-		add: function(){
+		add: function () {
 			vm.showList = false;
 			vm.title = "新增";
 			vm.purSupplier = {};
+			vm.addNew = true;
 		},
 		update: function (event) {
 			var supplierCode = getSelectedRow();
-			if(supplierCode == null){
-				return ;
+			if (supplierCode == null) {
+				return;
 			}
 			vm.showList = false;
-            vm.title = "修改";
+			vm.title = "修改";
+			vm.addNew = false;
 
-            vm.getInfo(supplierCode)
+			vm.getInfo(supplierCode)
 		},
 		saveOrUpdate: function (event) {
-			var url = vm.purSupplier.supplierCode == null ? "pursupplier/save" : "pursupplier/update";
+			var url = vm.addNew ? "pursupplier/save" : "pursupplier/update";
 			$.ajax({
 				type: "POST",
-			    url: baseURL + url,
-			    contentType: "application/json",
-			    data: JSON.stringify(vm.purSupplier),
-			    success: function(r){
-			    	if(r.code === 0){
-						alert('操作成功', function(index){
+				url: baseURL + url,
+				contentType: "application/json",
+				data: JSON.stringify(vm.purSupplier),
+				success: function (r) {
+					if (r.code === 0) {
+						alert('操作成功', function (index) {
 							vm.reload();
 						});
-					}else{
+					} else {
 						alert(r.msg);
 					}
 				}
@@ -91,39 +101,39 @@ var vm = new Vue({
 		},
 		del: function (event) {
 			var supplierCodes = getSelectedRows();
-			if(supplierCodes == null){
-				return ;
+			if (supplierCodes == null) {
+				return;
 			}
 
-			confirm('确定要删除选中的记录？', function(){
+			confirm('确定要禁用选中的记录？', function () {
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "pursupplier/delete",
-				    contentType: "application/json",
-				    data: JSON.stringify(supplierCodes),
-				    success: function(r){
-						if(r.code == 0){
-							alert('操作成功', function(index){
+					url: baseURL + "pursupplier/delete",
+					contentType: "application/json",
+					data: JSON.stringify(supplierCodes),
+					success: function (r) {
+						if (r.code == 0) {
+							alert('操作成功', function (index) {
 								$("#jqGrid").trigger("reloadGrid");
 							});
-						}else{
+						} else {
 							alert(r.msg);
 						}
 					}
 				});
 			});
 		},
-		getInfo: function(supplierCode){
-			$.get(baseURL + "pursupplier/info/"+supplierCode, function(r){
-                vm.purSupplier = r.purSupplier;
-            });
+		getInfo: function (supplierCode) {
+			$.get(baseURL + "pursupplier/info/" + supplierCode, function (r) {
+				vm.purSupplier = r.purSupplier;
+			});
 		},
 		reload: function (event) {
 			vm.showList = true;
-			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{
-                page:page
-            }).trigger("reloadGrid");
+			var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+			$("#jqGrid").jqGrid('setGridParam', {
+				page: page
+			}).trigger("reloadGrid");
 		}
 	}
 });

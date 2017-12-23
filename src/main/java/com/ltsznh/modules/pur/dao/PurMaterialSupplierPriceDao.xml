@@ -19,7 +19,7 @@
     </resultMap>
 
 	<select id="queryObject" resultType="com.ltsznh.modules.pur.entity.PurMaterialSupplierPriceEntity">
-		select * from pur_material_supplier_price where msp_id = #{value}
+		select * from pur_supplier_material_price where msp_id = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.ltsznh.modules.pur.entity.PurMaterialSupplierPriceEntity">
@@ -36,7 +36,7 @@
 		*
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
-		from pur_material_supplier_price
+		from pur_supplier_material_price
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
             OFFSET #{offset} ROWS
@@ -45,11 +45,11 @@
 	</select>
 	
  	<select id="queryTotal" resultType="int">
-		select count(*) from pur_material_supplier_price 
+		select count(*) from pur_supplier_material_price
 	</select>
 	 
 	<insert id="save" parameterType="com.ltsznh.modules.pur.entity.PurMaterialSupplierPriceEntity" useGeneratedKeys="true" keyProperty="mspId">
-		insert into pur_material_supplier_price
+		insert into pur_supplier_material_price
 		(
 			[material_code], 
 			[supplier_code], 
@@ -78,7 +78,7 @@
 	</insert>
 	 
 	<update id="update" parameterType="com.ltsznh.modules.pur.entity.PurMaterialSupplierPriceEntity">
-		update pur_material_supplier_price 
+		update pur_supplier_material_price
 		<set>
 			<if test="materialCode != null">[material_code] = #{materialCode}, </if>
 			<if test="supplierCode != null">[supplier_code] = #{supplierCode}, </if>
@@ -95,11 +95,11 @@
 	</update>
 	
 	<delete id="delete">
-		delete from pur_material_supplier_price where msp_id = #{value}
+		delete from pur_supplier_material_price where msp_id = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from pur_material_supplier_price where msp_id in 
+		delete from pur_supplier_material_price where msp_id in
 		<foreach item="mspId" collection="array" open="(" separator="," close=")">
 			#{mspId}
 		</foreach>

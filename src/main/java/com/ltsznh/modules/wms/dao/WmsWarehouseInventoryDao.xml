@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.wms.dao.WmsWarehouseInventoryDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.wms.entity.WmsWarehouseInventoryEntity" id="wmsWarehouseInventoryMap">
+        <result property="wiId" column="wi_id"/>
+        <result property="inventoryDate" column="inventory_date"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="materialCode" column="material_code"/>
+        <result property="qty" column="qty"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="dataStatus" column="data_status"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.wms.entity.WmsWarehouseInventoryEntity">
+		select * from wms_warehouse_inventory where wi_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.wms.entity.WmsWarehouseInventoryEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by wi_id desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		from wms_warehouse_inventory
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from wms_warehouse_inventory 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.wms.entity.WmsWarehouseInventoryEntity" useGeneratedKeys="true" keyProperty="wiId">
+		insert into wms_warehouse_inventory
+		(
+			[inventory_date], 
+			[warehouse_code], 
+			[material_code], 
+			[qty], 
+			[total_amount], 
+			[data_status], 
+			[creator_id], 
+			[create_date], 
+			[modifier_id], 
+			[modify_date]
+		)
+		values
+		(
+			#{inventoryDate}, 
+			#{warehouseCode}, 
+			#{materialCode}, 
+			#{qty}, 
+			#{totalAmount}, 
+			#{dataStatus}, 
+			#{creatorId}, 
+			#{createDate}, 
+			#{modifierId}, 
+			#{modifyDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.wms.entity.WmsWarehouseInventoryEntity">
+		update wms_warehouse_inventory 
+		<set>
+			<if test="inventoryDate != null">[inventory_date] = #{inventoryDate}, </if>
+			<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode}, </if>
+			<if test="materialCode != null">[material_code] = #{materialCode}, </if>
+			<if test="qty != null">[qty] = #{qty}, </if>
+			<if test="totalAmount != null">[total_amount] = #{totalAmount}, </if>
+			<if test="dataStatus != null">[data_status] = #{dataStatus}, </if>
+			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
+			<if test="createDate != null">[create_date] = #{createDate}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where wi_id = #{wiId}
+	</update>
+	
+	<delete id="delete">
+		delete from wms_warehouse_inventory where wi_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from wms_warehouse_inventory where wi_id in 
+		<foreach item="wiId" collection="array" open="(" separator="," close=")">
+			#{wiId}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -49,21 +49,15 @@
 		(
 			[supplier_type_code], 
 			[supplier_type_desc], 
-			[is_enabled], 
-			[creator_id], 
-			[create_date], 
-			[modifier_id], 
-			[modify_date]
+			[creator_id],
+			[create_date]
 		)
 		values
 		(
 			#{supplierTypeCode}, 
-			#{supplierTypeDesc}, 
-			#{isEnabled}, 
+			#{supplierTypeDesc},
 			#{creatorId}, 
-			#{createDate}, 
-			#{modifierId}, 
-			#{modifyDate}
+			#{createDate}
 		)
 	</insert>
 	 
@@ -72,8 +66,6 @@
 		<set>
 			<if test="supplierTypeDesc != null">[supplier_type_desc] = #{supplierTypeDesc}, </if>
 			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
-			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
-			<if test="createDate != null">[create_date] = #{createDate}, </if>
 			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
 			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
 		</set>
@@ -81,11 +73,11 @@
 	</update>
 	
 	<delete id="delete">
-		delete from pur_supplier_type where supplier_type_code = #{value}
+		UPDATE pur_supplier_type SET is_enabled = 0 where supplier_type_code = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from pur_supplier_type where supplier_type_code in 
+		UPDATE pur_supplier_type SET is_enabled = 0 where supplier_type_code in
 		<foreach item="supplierTypeCode" collection="array" open="(" separator="," close=")">
 			#{supplierTypeCode}
 		</foreach>

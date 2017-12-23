@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.sal.dao.SalCustomerDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.sal.entity.SalCustomerEntity" id="salCustomerMap">
+        <result property="customerCode" column="customer_code"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="customerTypeCode" column="customer_type_code"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="customerAddr" column="customer_addr"/>
+        <result property="contactName" column="contact_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="isEnabled" column="is_enabled"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.sal.entity.SalCustomerEntity">
+		select * from sal_customer where customer_code = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.sal.entity.SalCustomerEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by customer_code desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		,(SELECT area_name FROM pub_area where pur_supplier.area_code = pub_area.area_code) as area_name
+        ,(SELECT customer_type_desc FROM sal_customer_type where sal_customer_type.customer_type_code = sal_customer.customer_type_code) as customer_type_desc
+		from sal_customer
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from sal_customer 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.sal.entity.SalCustomerEntity">
+		insert into sal_customer
+		(
+			[customer_code], 
+			[customer_name], 
+			[customer_type_code], 
+			[area_code], 
+			[customer_addr], 
+			[contact_name], 
+			[contact_phone], 
+			[creator_id],
+			[create_date]
+		)
+		values
+		(
+			#{customerCode}, 
+			#{customerName}, 
+			#{customerTypeCode}, 
+			#{areaCode}, 
+			#{customerAddr}, 
+			#{contactName}, 
+			#{contactPhone}, 
+			#{creatorId},
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.sal.entity.SalCustomerEntity">
+		update sal_customer 
+		<set>
+			<if test="customerName != null">[customer_name] = #{customerName}, </if>
+			<if test="customerTypeCode != null">[customer_type_code] = #{customerTypeCode}, </if>
+			<if test="areaCode != null">[area_code] = #{areaCode}, </if>
+			<if test="customerAddr != null">[customer_addr] = #{customerAddr}, </if>
+			<if test="contactName != null">[contact_name] = #{contactName}, </if>
+			<if test="contactPhone != null">[contact_phone] = #{contactPhone}, </if>
+			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where customer_code = #{customerCode}
+	</update>
+	
+	<delete id="delete">
+		UPDATE sal_customer SET is_enabled = 0 where customer_code = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		UPDATE sal_customer SET is_enabled = 0 where customer_code in
+		<foreach item="customerCode" collection="array" open="(" separator="," close=")">
+			#{customerCode}
+		</foreach>
+	</delete>
+
+</mapper>

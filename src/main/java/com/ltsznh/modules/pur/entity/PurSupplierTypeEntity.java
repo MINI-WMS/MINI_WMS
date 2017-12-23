@@ -30,6 +30,9 @@ public class PurSupplierTypeEntity implements Serializable {
 	//修改时间
 	private Date modifyDate;
 
+	private String creatorName;
+	private String modifierName;
+
 	/**
 	 * 设置：地区代码
 	 */
@@ -113,5 +116,21 @@ public class PurSupplierTypeEntity implements Serializable {
 	 */
 	public Date getModifyDate() {
 		return modifyDate;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
+	public String getModifierName() {
+		return modifierName;
+	}
+
+	public void setModifierName(String modifierName) {
+		this.modifierName = modifierName;
 	}
 }

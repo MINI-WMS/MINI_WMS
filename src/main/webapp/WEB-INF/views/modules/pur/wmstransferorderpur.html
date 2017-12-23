@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>采购入库单</title>
+<#include "/header.html">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
+<link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
+<script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
+<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
+<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
+<script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+</head>
+<body>
+<div id="familyApp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+		  <a class="btn btn-default" @click="query"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;查询</a>
+			<#if shiro.hasPermission("wmstransferorderpur:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+		<#if shiro.hasPermission("wmstransferorderpur:save")>
+		<a class="btn btn-danger" @click="showRowList"><i class="fa fa-trash-o"></i>&nbsp;明细</a>
+		</#if>
+			<#if shiro.hasPermission("wmstransferorderpur:update")>
+            <a class="btn btn-warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("wmstransferorderpur:delete")>
+            <a class="btn btn-danger" @click="del"><i class="fa fa-trash-o"></i>&nbsp;作废</a>
+			</#if>
+
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+</div>
+
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+
+			 <div class="form-group">
+			   	<div class="col-sm-2 control-label">采购单日期</div>
+			   	<div class="col-sm-10">
+			      <input type="date" class="form-control" v-model="wmsTransferOrderPur.toDate" placeholder="转储单日期"/>
+			    </div>
+			</div>
+
+						 <div class="form-group">
+			   	<div class="col-sm-2 control-label">供应商代码</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="wmsTransferOrderPur.supplierCode" placeholder="供应商代码"/>
+			    </div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">采购单号</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="wmsTransferOrderPur.toNo" placeholder="采购单号" readonly="true" :disabled="true"/>
+				</div>
+			</div>
+
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+			  <a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;确定</a>
+              &nbsp;&nbsp;
+              <a class="btn btn-info" @click="reload"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;返回</a>
+			</div>
+		</form>
+	</div>
+
+	<div id="rowListLayer" style="display: none;">
+
+		<table id="deptTable" data-mobile-responsive="true" data-click-to-select="true">
+			<thead>
+			<tr>
+				<th data-field="selectItem" data-checkbox="true"></th>
+			</tr>
+			</thead>
+		</table>
+
+	</div>
+
+
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/pur/wmstransferorderpur.js?_${.now?long}"></script>
+</body>
+</html>

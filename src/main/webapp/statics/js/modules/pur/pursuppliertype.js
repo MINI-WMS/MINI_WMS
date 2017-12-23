@@ -5,11 +5,17 @@ $(function () {
         colModel: [
 			{ label: '供应商类型代码', name: 'supplierTypeCode', index: 'supplier_type_code', width: 50, key: true },
 			{ label: '供应商类型描述', name: 'supplierTypeDesc', index: 'supplier_type_desc', width: 80 },
-			{ label: '状态', name: 'isEnabled', index: 'is_enabled', width: 80 }, 
-			{ label: '创建用户', name: 'creatorId', index: 'creator_id', width: 80 }, 
-			{ label: '创建时间', name: 'createDate', index: 'create_date', width: 80 }, 
-			{ label: '修改用户', name: 'modifierId', index: 'modifier_id', width: 80 }, 
-			{ label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 80 }
+			{
+				label: '状态', name: 'isEnabled', width: 60, index: 'is_enabled', formatter: function (value, options, row) {
+					return value === 0 ?
+						'<span class="label label-danger">禁用</span>' :
+						'<span class="label label-success">正常</span>';
+				}
+			},
+			{label: '创建用户', name: 'creatorName', index: 'creator_id', width: 80},
+			{label: '创建时间', name: 'createDate', index: 'create_date', width: 150},
+			{label: '修改用户', name: 'modifierName', index: 'modifier_id', width: 80},
+			{label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 150}
         ],
 		viewrecords: true,
         height: 385,
@@ -19,6 +25,7 @@ $(function () {
         rownumWidth: 25,
         autowidth:true,
         multiselect: true,
+		shrinkToFit: true,
         pager: "#jqGridPager",
         jsonReader : {
             root: "page.list",
@@ -44,7 +51,8 @@ var vm = new Vue({
 	data:{
 		showList: true,
 		title: null,
-		purSupplierType: {}
+		purSupplierType: {},
+		addNew: false
 	},
 	methods: {
 		query: function () {
@@ -54,6 +62,7 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.purSupplierType = {};
+			vm.addNew = true;
 		},
 		update: function (event) {
 			var supplierTypeCode = getSelectedRow();
@@ -62,11 +71,12 @@ var vm = new Vue({
 			}
 			vm.showList = false;
             vm.title = "修改";
+			vm.addNew = false;
 
             vm.getInfo(supplierTypeCode)
 		},
 		saveOrUpdate: function (event) {
-			var url = vm.purSupplierType.supplierTypeCode == null ? "pursuppliertype/save" : "pursuppliertype/update";
+			var url = vm.addNew ? "pursuppliertype/save" : "pursuppliertype/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -89,7 +99,7 @@ var vm = new Vue({
 				return ;
 			}
 
-			confirm('确定要删除选中的记录？', function(){
+			confirm('确定要禁用选中的记录？', function(){
 				$.ajax({
 					type: "POST",
 				    url: baseURL + "pursuppliertype/delete",

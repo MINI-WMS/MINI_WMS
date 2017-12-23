@@ -142,18 +142,21 @@ Dept.initColumn = function () {
 		{
 			title: '类型', field: 'deptType', align: 'center', valign: 'middle', sortable: true, width: '60px',
 			formatter: function (item, index) {
-				if (item.deptType === 1) {
-					return '<span class="label label-primary">集团</span>';
-				}
+				// if (item.deptType === 1) {
+				// 	return '<span class="label label-primary">集团</span>';
+				// }
 				if (item.deptType === 2) {
 					return '<span class="label label-info">公司</span>';
 				}
+				// if (item.deptType === 3) {
+				// 	return '<span class="label label-warning">部门</span>';
+				// }
 				if (item.deptType === 3) {
-					return '<span class="label label-warning">部门</span>';
+					return '<span class="label label-warning">门店</span>';
 				}
-				if (item.deptType === 4) {
-					return '<span class="label label-warning">车间</span>';
-				}
+				// if (item.deptType === 4) {
+				// 	return '<span class="label label-warning">车间</span>';
+				// }
 				if (item.deptType === 5) {
 					return '<span class="label label-warning">班组</span>';
 				}

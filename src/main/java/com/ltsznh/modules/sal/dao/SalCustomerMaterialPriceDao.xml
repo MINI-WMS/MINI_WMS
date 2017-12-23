@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.sal.dao.SalCustomerMaterialPriceDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.sal.entity.SalCustomerMaterialPriceEntity" id="salCustomerMaterialPriceMap">
+        <result property="mcpId" column="mcp_id"/>
+        <result property="materialCode" column="material_code"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="saleUnitPrice" column="sale_unit_price"/>
+        <result property="contractStartDate" column="contract_start_date"/>
+        <result property="contractEndDate" column="contract_end_date"/>
+        <result property="isEnabled" column="is_enabled"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.sal.entity.SalCustomerMaterialPriceEntity">
+		select * from sal_customer_material_price where mcp_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.sal.entity.SalCustomerMaterialPriceEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by mcp_id desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		from sal_customer_material_price
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from sal_customer_material_price 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.sal.entity.SalCustomerMaterialPriceEntity" useGeneratedKeys="true" keyProperty="mcpId">
+		insert into sal_customer_material_price
+		(
+			[material_code], 
+			[customer_code], 
+			[sale_unit_price], 
+			[contract_start_date], 
+			[contract_end_date], 
+			[is_enabled], 
+			[creator_id], 
+			[create_date], 
+			[modifier_id], 
+			[modify_date]
+		)
+		values
+		(
+			#{materialCode}, 
+			#{customerCode}, 
+			#{saleUnitPrice}, 
+			#{contractStartDate}, 
+			#{contractEndDate}, 
+			#{isEnabled}, 
+			#{creatorId}, 
+			#{createDate}, 
+			#{modifierId}, 
+			#{modifyDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.sal.entity.SalCustomerMaterialPriceEntity">
+		update sal_customer_material_price 
+		<set>
+			<if test="materialCode != null">[material_code] = #{materialCode}, </if>
+			<if test="customerCode != null">[customer_code] = #{customerCode}, </if>
+			<if test="saleUnitPrice != null">[sale_unit_price] = #{saleUnitPrice}, </if>
+			<if test="contractStartDate != null">[contract_start_date] = #{contractStartDate}, </if>
+			<if test="contractEndDate != null">[contract_end_date] = #{contractEndDate}, </if>
+			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
+			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
+			<if test="createDate != null">[create_date] = #{createDate}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where mcp_id = #{mcpId}
+	</update>
+	
+	<delete id="delete">
+		delete from sal_customer_material_price where mcp_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from sal_customer_material_price where mcp_id in 
+		<foreach item="mcpId" collection="array" open="(" separator="," close=")">
+			#{mcpId}
+		</foreach>
+	</delete>
+
+</mapper>

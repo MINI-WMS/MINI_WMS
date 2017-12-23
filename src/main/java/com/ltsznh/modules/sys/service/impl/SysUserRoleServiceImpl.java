@@ -6,6 +6,7 @@ import com.ltsznh.modules.sys.service.SysUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
 	private SysUserRoleDao sysUserRoleDao;
 
 	@Override
-	public void saveOrUpdate(Long userId, List<Long> roleIdList,Long modifierId) {
+	public void saveOrUpdate(Long userId, List<Long> roleIdList, Long modifierId, Date modifyDate) {
 		if(roleIdList.size() == 0){
 			return ;
 		}
@@ -36,7 +37,8 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", userId);
 		map.put("roleIdList", roleIdList);
-		map.put("modifierId",modifierId);
+		map.put("creatorId",modifierId);
+		map.put("createDate", modifyDate);
 		sysUserRoleDao.save(map);
 	}
 

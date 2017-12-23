@@ -61,7 +61,7 @@ var vm = new Vue({
 				type: 1,
 				skin: 'layui-layer-molv',
 				title: "修改密码",
-				area: ['550px', '380px'],
+				area: ['390px', '300px'],
 				shadeClose: false,
 				content: jQuery("#passwordLayer"),
 				btn: ['修改','取消'],
