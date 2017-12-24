@@ -34,10 +34,15 @@ public class WmsTransferOrderPurEntity implements Serializable {
 	//修改时间
 	private Date modifyDate;
 
+	private String warehouseCode;
+	private String warehouseName;
+
+	//状态
+	private Integer dataStatus;
 
 	private String creatorName;
 	private String modifierName;
-	private String supplier_name;
+	private String supplierName;
 	/**
 	 * 设置：转储单编号
 	 */
@@ -151,11 +156,35 @@ public class WmsTransferOrderPurEntity implements Serializable {
 		this.modifierName = modifierName;
 	}
 
-	public String getSupplier_name() {
-		return supplier_name;
+	public String getSupplierName() {
+		return supplierName;
 	}
 
-	public void setSupplier_name(String supplier_name) {
-		this.supplier_name = supplier_name;
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+
+	public String getWarehouseCode() {
+		return warehouseCode;
+	}
+
+	public void setWarehouseCode(String warehouseCode) {
+		this.warehouseCode = warehouseCode;
+	}
+
+	public String getWarehouseName() {
+		return warehouseName;
+	}
+
+	public void setWarehouseName(String warehouseName) {
+		this.warehouseName = warehouseName;
+	}
+
+	public Integer getDataStatus() {
+		return dataStatus;
+	}
+
+	public void setDataStatus(Integer dataStatus) {
+		this.dataStatus = dataStatus;
 	}
 }

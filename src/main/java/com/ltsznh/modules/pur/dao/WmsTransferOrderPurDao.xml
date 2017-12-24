@@ -34,6 +34,7 @@
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
         ,(SELECT supplier_name FROM pur_supplier where wms_transfer_order_pur.supplier_code = pur_supplier.supplier_code) as supplier_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_warehouse.warehouse_code = wms_transfer_order_pur.warehouse_code) as warehouse_name
 		from wms_transfer_order_pur
 		<where>
 			<if test="toPurId != null and toPurId.trim() != ''">
@@ -55,27 +56,38 @@
 	EXEC	[dbo].[SP_TO_PUR]
 			@to_date = #{toDate},
 			@supplier_code = #{supplierCode},
-			@creator_id = #{creatorId}
+			@creator_id = #{creatorId},
+			@warehouse_code = #{warehouseCode}
 	</insert>
 	 
 	<update id="update" parameterType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurEntity">
 		update wms_transfer_order_pur 
 		<set>
 			<if test="toDate != null">[to_date] = #{toDate}, </if>
-			<if test="toNo != null">[to_no] = #{toNo}, </if>
 			<if test="supplierCode != null">[supplier_code] = #{supplierCode}, </if>
 			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
 			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
 		</set>
-		where to_pur_id = #{toPurId}
+		where to_pur_id = #{toPurId};
+		update wms_transfer_order_pur_row
+		<set>
+			<if test="toDate != null">[to_date] = #{toDate}, </if>
+			<if test="supplierCode != null">[supplier_code] = #{supplierCode}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where to_no = #{toNo}
 	</update>
 	
 	<delete id="delete">
-		delete from wms_transfer_order_pur where to_pur_id = #{value}
+		UPDATE wms_transfer_order_pur set data_status = 0 where to_pur_id = #{value}
+
+-- 		UPDATE wms_transfer_order_pur_row set data_status = 0
+-- 		FROM  to_pur_id = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from wms_transfer_order_pur where to_pur_id in 
+		UPDATE wms_transfer_order_pur set data_status = 0 where to_pur_id in
 		<foreach item="toPurId" collection="array" open="(" separator="," close=")">
 			#{toPurId}
 		</foreach>

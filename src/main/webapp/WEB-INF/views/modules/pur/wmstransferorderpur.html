@@ -3,16 +3,17 @@
 <head>
 <title>采购入库单</title>
 <#include "/header.html">
-<link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
-<link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
-<script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
-<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
-<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
-<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
-<script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+<!--<link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">-->
+<!--<link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">-->
+<!--<script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>-->
+<!--<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>-->
+<!--<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>-->
+<!--<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>-->
+<!--<script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>-->
 </head>
 <body>
-<div id="familyApp" v-cloak>
+<div id="familyApp" v-cloak  >
+	<div v-show="!showRow">
 	<div v-show="showList">
 		<div class="grid-btn">
 		  <a class="btn btn-default" @click="query"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;查询</a>
@@ -20,7 +21,7 @@
             <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			</#if>
 		<#if shiro.hasPermission("wmstransferorderpur:save")>
-		<a class="btn btn-danger" @click="showRowList"><i class="fa fa-trash-o"></i>&nbsp;明细</a>
+		<a class="btn btn-primary" @click="showRowList"><i class="fa fa-trash-o"></i>&nbsp;明细</a>
 		</#if>
 			<#if shiro.hasPermission("wmstransferorderpur:update")>
             <a class="btn btn-warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
@@ -45,6 +46,13 @@
 			    </div>
 			</div>
 
+			<div class="form-group">
+				<div class="col-sm-2 control-label">仓库代码</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="wmsTransferOrderPur.warehouseCode" placeholder="仓库代码"/>
+				</div>
+			</div>
+
 						 <div class="form-group">
 			   	<div class="col-sm-2 control-label">供应商代码</div>
 			   	<div class="col-sm-10">
@@ -67,19 +75,93 @@
 			</div>
 		</form>
 	</div>
+</div>
 
-	<div id="rowListLayer" style="display: none;">
 
-		<table id="deptTable" data-mobile-responsive="true" data-click-to-select="true">
-			<thead>
-			<tr>
-				<th data-field="selectItem" data-checkbox="true"></th>
-			</tr>
-			</thead>
-		</table>
 
+<div v-show="showRow">
+	<h4>采购入库单明细</h4>
+	<a class="btn btn-primary" @click="backToPur"><i class="fa fa-plus"></i>&nbsp;返回</a>
+	<#if shiro.hasPermission("wmstransferorderpur:save")>
+	<a class="btn btn-primary" @click="addRow"><i class="fa fa-plus"></i>&nbsp;新增</a>
+</#if>
+<#if shiro.hasPermission("wmstransferorderpur:delete")>
+<a class="btn btn-danger" @click="delRow"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+</#if>
+
+	<table id="jqGridRow"></table>
+	<div id="jqGridPagerRow"></div>
+
+	<div id="addRowLayer" style="display: none;">
+
+		<div class="panel-heading">{{title}}</div>
+		<div class="row">
+			<div class="col-md-6 ">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">转储单日期</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.toDate" placeholder="转储单日期" readonly="true"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">转储单号</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.toNo" placeholder="转储单号" readonly="true"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">仓库代码</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.warehouseCode" placeholder="仓库代码" readonly="true"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">供应商代码</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.supplierCode" placeholder="供应商代码" readonly="true"/>
+				</div>
+			</div>
+
+		</form>
+			</div>
+
+			<div class="col-md-6 ">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<div class="col-sm-2 control-label">物料代码</div>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.materialCode" placeholder="物料代码"/>
+						</div>
+					</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">单价</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.unitPrice" placeholder="单价"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">数量</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.qty" placeholder="数量"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">所属工程师</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.engineer" placeholder="所属工程师"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;保存并继续添加</a>
+
+			</div>
+		</form>
+			</div>
 	</div>
-
+	</div>
 
 </div>
 
