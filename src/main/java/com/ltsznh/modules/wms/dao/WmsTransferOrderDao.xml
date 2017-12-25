@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.wms.dao.WmsTransferOrderDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.wms.entity.WmsTransferOrderEntity" id="wmsTransferOrderMap">
+        <result property="toId" column="to_id"/>
+        <result property="toDate" column="to_date"/>
+        <result property="toNo" column="to_no"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="sourWarehouseCode" column="sour_warehouse_code"/>
+        <result property="destWarehouseCode" column="dest_warehouse_code"/>
+        <result property="dataStatus" column="data_status"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.wms.entity.WmsTransferOrderEntity">
+		select *,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.sour_warehouse_code = wms_warehouse.warehouse_code) as sour_warehouse_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.dest_warehouse_code = wms_warehouse.warehouse_code) as dest_warehouse_name
+		from wms_transfer_order where to_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.wms.entity.WmsTransferOrderEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by to_id desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.sour_warehouse_code = wms_warehouse.warehouse_code) as sour_warehouse_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.dest_warehouse_code = wms_warehouse.warehouse_code) as dest_warehouse_name
+		from wms_transfer_order
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from wms_transfer_order 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.wms.entity.WmsTransferOrderEntity">
+		EXEC	[dbo].[SP_TO]
+				@to_date = #{toDate},
+				@to_type = N'YK',
+				@sour_warehouse_code = #{sourWarehouseCode},
+				@dest_warehouse_code = #{destWarehouseCode},
+				@creator_id = #{creatorId}
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.wms.entity.WmsTransferOrderEntity">
+		update wms_transfer_order 
+		<set>
+			<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode}, </if>
+			<if test="toDate != null">[to_date] = #{toDate}, </if>
+			<if test="sourWarehouseCode != null">[sour_warehouse_code] = #{sourWarehouseCode}, </if>
+			<if test="destWarehouseCode != null">[dest_warehouse_code] = #{destWarehouseCode}, </if>
+			<if test="dataStatus != null">[data_status] = #{dataStatus}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where to_id = #{toId}
+	</update>
+	
+	<delete id="delete">
+		UPDATE wms_transfer_order set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_id = #{value};
+
+		UPDATE  wms_transfer_order_row
+		SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId}
+		FROM      wms_transfer_order AS a INNER JOIN
+		wms_transfer_order_row ON a.to_no = wms_transfer_order_row.to_no
+		WHERE   (a.to_id = #{value});
+	</delete>
+	
+	<delete id="deleteBatch">
+		UPDATE wms_transfer_order set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_id in
+		<foreach item="toId" collection="array" open="(" separator="," close=")">
+			#{toId}
+		</foreach>;
+
+		UPDATE  wms_transfer_order_row
+		SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId}
+		FROM      wms_transfer_order AS a INNER JOIN
+		wms_transfer_order_row ON a.to_no = wms_transfer_order_row.to_no
+		WHERE   (a.to_sal_id in
+		<foreach item="toId" collection="array" open="(" separator="," close=")">
+			#{toId}
+		</foreach>);
+
+	</delete>
+
+</mapper>
