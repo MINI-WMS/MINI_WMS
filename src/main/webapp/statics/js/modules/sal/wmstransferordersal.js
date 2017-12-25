@@ -186,7 +186,7 @@ var vm = new Vue({
 			layer.open({
 				type: 1,
 				skin: 'layui-layer-molv',
-				title: "新增销售库单明细",
+				title: "新增销售单明细",
 				area: ['700px', '400px'],
 				shadeClose: false,
 				content: jQuery("#addRowLayer")
@@ -256,8 +256,8 @@ $(function () {
 			{ label: '销售日期', name: 'toDate', index: 'to_date', width: 120 },
 			{ label: '销售单号', name: 'toNo', index: 'to_no', width: 150 },
 			{ label: '序号', name: 'toSeq', index: 'to_seq', width: 80 },
-			{ label: '物料代码', name: 'materialCode', index: 'material_code', width: 120 },
-			{ label: '物料', name: 'materialName', index: 'material_code', width: 150 },
+			{ label: '商品代码', name: 'materialCode', index: 'material_code', width: 120 },
+			{ label: '商品', name: 'materialName', index: 'material_code', width: 150 },
 			{ label: '指导单价', name: 'guidanceUnitPrice', index: 'guidance_unit_price', width: 80 },
 			{ label: '单价', name: 'unitPrice', index: 'unit_price', width: 80 },
 			{ label: '数量', name: 'qty', index: 'qty', width: 80 },

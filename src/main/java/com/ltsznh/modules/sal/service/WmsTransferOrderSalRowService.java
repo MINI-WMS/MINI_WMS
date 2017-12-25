@@ -1,4 +1,4 @@
-package com.ltsznh.modules.wms.service;
+package com.ltsznh.modules.sal.service;
 
 import com.ltsznh.modules.sal.entity.WmsTransferOrderSalRowEntity;
 

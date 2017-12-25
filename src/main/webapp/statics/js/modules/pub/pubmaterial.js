@@ -3,9 +3,9 @@ $(function () {
         url: baseURL + 'pubmaterial/list',
         datatype: "json",
         colModel: [
-			{ label: '物料代码', name: 'materialCode', index: 'material_code', width: 80, key: true },
-			{ label: '物料描述', name: 'materialDesc', index: 'material_desc', width: 110 },
-			{ label: '物料类型', name: 'materialTypeDesc', index: 'material_type_code', width: 80 },
+			{ label: '商品代码', name: 'materialCode', index: 'material_code', width: 80, key: true },
+			{ label: '商品描述', name: 'materialDesc', index: 'material_desc', width: 110 },
+			{ label: '商品类型', name: 'materialTypeDesc', index: 'material_type_code', width: 80 },
 			{ label: '条码', name: 'barcode', index: 'barcode', width: 120 },
 			{ label: '库存单位', name: 'inventoryUnit', index: 'inventory_unit', width: 80 }, 
 			{ label: '采购单位', name: 'purchaseUnit', index: 'purchase_unit', width: 80 }, 

@@ -4,7 +4,7 @@ $(function () {
         datatype: "json",
         colModel: [
 			{ label: '编号', name: 'mspId', index: 'msp_id', width: 50, key: true },
-			{ label: '物料代码', name: 'materialCode', index: 'material_code', width: 80 }, 
+			{ label: '商品代码', name: 'materialCode', index: 'material_code', width: 80 },
 			{ label: '供应商代码', name: 'supplierCode', index: 'supplier_code', width: 80 }, 
 			{ label: '采购单价', name: 'purchaseUnitPrice', index: 'purchase_unit_price', width: 80 }, 
 			{ label: '合同开始日期', name: 'contractStartDate', index: 'contract_start_date', width: 80 }, 

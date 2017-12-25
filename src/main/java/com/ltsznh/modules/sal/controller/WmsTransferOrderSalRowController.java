@@ -19,7 +19,7 @@ import com.ltsznh.common.utils.Query;
 import com.ltsznh.common.utils.R;
 
 import com.ltsznh.modules.sal.entity.WmsTransferOrderSalRowEntity;
-import com.ltsznh.modules.wms.service.WmsTransferOrderSalRowService;
+import com.ltsznh.modules.sal.service.WmsTransferOrderSalRowService;
 
 
 /**

@@ -3,8 +3,8 @@ $(function () {
         url: baseURL + 'pubmaterialtype/list',
         datatype: "json",
         colModel: [
-			{ label: '物料类型代码', name: 'materialTypeCode', index: 'material_type_code', width: 50, key: true },
-			{ label: '物料类型名称', name: 'materialTypeDesc', index: 'material_type_desc', width: 80 },
+			{ label: '商品类型代码', name: 'materialTypeCode', index: 'material_type_code', width: 50, key: true },
+			{ label: '商品类型名称', name: 'materialTypeDesc', index: 'material_type_desc', width: 80 },
 			{
 				label: '状态', name: 'isEnabled', width: 60, index: 'is_enabled', formatter: function (value, options, row) {
 				return value === 0 ?

@@ -61,21 +61,24 @@
 			@creator_id = #{creatorId}
 	</insert>
 	 
-	<!--<update id="update" parameterType="com.ltsznh.modules.sal.entity.WmsTransferOrderSalEntity">-->
-		<!--update wms_transfer_order_sal -->
-		<!--<set>-->
-			<!--<if test="toDate != null">[to_date] = #{toDate}, </if>-->
-			<!--<if test="toNo != null">[to_no] = #{toNo}, </if>-->
-			<!--<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode}, </if>-->
-			<!--<if test="customerCode != null">[customer_code] = #{customerCode}, </if>-->
-			<!--<if test="dataStatus != null">[data_status] = #{dataStatus}, </if>-->
-			<!--<if test="creatorId != null">[creator_id] = #{creatorId}, </if>-->
-			<!--<if test="createDate != null">[create_date] = #{createDate}, </if>-->
-			<!--<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>-->
-			<!--<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>-->
-		<!--</set>-->
-		<!--where to_sal_id = #{toSalId}-->
-	<!--</update>-->
+	<update id="update" parameterType="com.ltsznh.modules.sal.entity.WmsTransferOrderSalEntity">
+		update wms_transfer_order_sal
+		<set>
+			<if test="toDate != null">[to_date] = #{toDate}, </if>
+			<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode}, </if>
+			<if test="customerCode != null">[customer_code] = #{customerCode}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where to_sal_id = #{toSalId};
+		update wms_transfer_order_sal_row
+		<set>
+			<if test="toDate != null">[to_date] = #{toDate}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where to_no = #{toNo};
+	</update>
 	
 	<delete id="delete">
 		UPDATE wms_transfer_order_sal SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_sal_id = #{value};

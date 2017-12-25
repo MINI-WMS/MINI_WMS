@@ -7,7 +7,7 @@ $(function () {
 			{ label: '转储单日期', name: 'toDate', index: 'to_date', width: 80 }, 
 			{ label: '转储单号', name: 'toNo', index: 'to_no', width: 80 }, 
 			{ label: '转储单序号', name: 'toSeq', index: 'to_seq', width: 80 }, 
-			{ label: '物料代码', name: 'materialCode', index: 'material_code', width: 80 }, 
+			{ label: '商品代码', name: 'materialCode', index: 'material_code', width: 80 }, 
 			{ label: '指导单价', name: 'guidanceUnitPrice', index: 'guidance_unit_price', width: 80 }, 
 			{ label: '单价', name: 'unitPrice', index: 'unit_price', width: 80 }, 
 			{ label: '数量', name: 'qty', index: 'qty', width: 80 }, 

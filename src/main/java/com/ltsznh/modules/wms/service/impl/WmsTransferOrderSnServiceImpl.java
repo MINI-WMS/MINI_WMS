@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.ltsznh.modules.wms.dao.WmsTransferOrderSnDao;
 import com.ltsznh.modules.wms.entity.WmsTransferOrderSnEntity;
-import com.ltsznh.modules.sal.service.WmsTransferOrderSnService;
+import com.ltsznh.modules.wms.service.WmsTransferOrderSnService;
 
 
 

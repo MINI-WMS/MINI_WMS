@@ -1,4 +1,4 @@
-package com.ltsznh.modules.wms.service.impl;
+package com.ltsznh.modules.sal.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.ltsznh.modules.sal.dao.WmsTransferOrderSalRowDao;
 import com.ltsznh.modules.sal.entity.WmsTransferOrderSalRowEntity;
-import com.ltsznh.modules.wms.service.WmsTransferOrderSalRowService;
+import com.ltsznh.modules.sal.service.WmsTransferOrderSalRowService;
 
 
 

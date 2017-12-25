@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>物料类型</title>
+	<title>商品类型</title>
 	<#include "/header.html">
 		</head>
 <body>
@@ -40,15 +40,15 @@
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal" :disabled="!addNew">
 			<div class="form-group">
-				<div class="col-sm-2 control-label">物料类型代码</div>
+				<div class="col-sm-2 control-label">商品类型代码</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="pubMaterialType.materialTypeCode" placeholder="物料类型代码" :disabled="!addNew"/>
+					<input type="text" class="form-control" v-model="pubMaterialType.materialTypeCode" placeholder="商品类型代码" :disabled="!addNew"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 control-label">物料类型名称</div>
+				<div class="col-sm-2 control-label">商品类型名称</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="pubMaterialType.materialTypeDesc" placeholder="物料类型名称"/>
+					<input type="text" class="form-control" v-model="pubMaterialType.materialTypeDesc" placeholder="商品类型名称"/>
 				</div>
 			</div>
 			<div v-if="!addNew" class="form-group">

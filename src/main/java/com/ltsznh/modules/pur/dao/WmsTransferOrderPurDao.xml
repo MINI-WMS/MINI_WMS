@@ -76,11 +76,10 @@
 		update wms_transfer_order_pur_row
 		<set>
 			<if test="toDate != null">[to_date] = #{toDate}, </if>
-			<if test="supplierCode != null">[supplier_code] = #{supplierCode}, </if>
 			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
 			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
 		</set>
-		where to_no = #{toNo}
+		where to_no = #{toNo};
 	</update>
 	
 	<delete id="delete">

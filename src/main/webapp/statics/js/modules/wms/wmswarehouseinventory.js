@@ -6,7 +6,7 @@ $(function () {
 			{ label: 'wiId', name: 'wiId', index: 'wi_id', width: 50, key: true },
 			{ label: '结存日期', name: 'inventoryDate', index: 'inventory_date', width: 80 }, 
 			{ label: '仓库编号', name: 'warehouseCode', index: 'warehouse_code', width: 80 }, 
-			{ label: '物料代码', name: 'materialCode', index: 'material_code', width: 80 }, 
+			{ label: '商品代码', name: 'materialCode', index: 'material_code', width: 80 },
 			{ label: '数量', name: 'qty', index: 'qty', width: 80 }, 
 			{ label: '总金额', name: 'totalAmount', index: 'total_amount', width: 80 },
 			{

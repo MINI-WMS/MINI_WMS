@@ -4,7 +4,7 @@ $(function () {
         datatype: "json",
         colModel: [
 			{ label: 'mcpId', name: 'mcpId', index: 'mcp_id', width: 50, key: true },
-			{ label: '物料代码', name: 'materialCode', index: 'material_code', width: 80 }, 
+			{ label: '商品代码', name: 'materialCode', index: 'material_code', width: 80 },
 			{ label: '客户代码', name: 'customerCode', index: 'customer_code', width: 80 }, 
 			{ label: '销售单价', name: 'saleUnitPrice', index: 'sale_unit_price', width: 80 }, 
 			{ label: '开始日期', name: 'contractStartDate', index: 'contract_start_date', width: 80 }, 
