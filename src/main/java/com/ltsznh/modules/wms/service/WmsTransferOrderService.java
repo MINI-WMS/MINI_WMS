@@ -10,11 +10,11 @@ import java.util.Map;
  * 
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 14:14:53
+ * @date 2017-12-25 17:43:16
  */
 public interface WmsTransferOrderService {
 	
-	WmsTransferOrderEntity queryObject(Long toId);
+	WmsTransferOrderEntity queryObject(String warehouseCode);
 	
 	List<WmsTransferOrderEntity> queryList(Map<String, Object> map);
 	
@@ -24,7 +24,7 @@ public interface WmsTransferOrderService {
 	
 	void update(WmsTransferOrderEntity wmsTransferOrder);
 	
-	void delete(Long toId,Long userId);
+	void delete(String warehouseCode,Long userId);
 	
-	void deleteBatch(Long[] toIds,Long userId);
+	void deleteBatch(String[] warehouseCodes,Long userId);
 }

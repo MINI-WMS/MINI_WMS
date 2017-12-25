@@ -1,4 +1,4 @@
-package com.ltsznh.modules.wms.service.impl;
+package com.ltsznh.modules.sal.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ public class WmsTransferOrderServiceImpl implements WmsTransferOrderService {
 	private WmsTransferOrderDao wmsTransferOrderDao;
 
 	@Override
-	public WmsTransferOrderEntity queryObject(Long toId){
-		return wmsTransferOrderDao.queryObject(toId);
+	public WmsTransferOrderEntity queryObject(String warehouseCode){
+		return wmsTransferOrderDao.queryObject(warehouseCode);
 	}
 
 	@Override
@@ -43,11 +43,11 @@ public class WmsTransferOrderServiceImpl implements WmsTransferOrderService {
 	}
 
 	@Override
-	public void delete(Long toId,Long userId){
-		wmsTransferOrderDao.delete(toId,userId);
+	public void delete(String warehouseCode,Long userId){
+		wmsTransferOrderDao.delete(warehouseCode,userId);
 	}
 
 	@Override
-	public void deleteBatch(Long[] toIds,Long userId){	wmsTransferOrderDao.deleteBatch(toIds,userId);}
+	public void deleteBatch(String[] warehouseCodes,Long userId){	wmsTransferOrderDao.deleteBatch(warehouseCodes,userId);}
 
 }

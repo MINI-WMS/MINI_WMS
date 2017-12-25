@@ -78,11 +78,11 @@
 	</update>
 	
 	<delete id="delete">
-		UPDATE wms_warehouse SET is_enabled = 0 where warehouse_code = #{value}
+		UPDATE wms_warehouse SET is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where warehouse_code = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		UPDATE wms_warehouse SET is_enabled = 0 where warehouse_code in
+		UPDATE wms_warehouse SET is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where warehouse_code in
 		<foreach item="warehouseCode" collection="array" open="(" separator="," close=")">
 			#{warehouseCode}
 		</foreach>

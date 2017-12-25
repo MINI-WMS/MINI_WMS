@@ -3,7 +3,7 @@
 
 <mapper namespace="com.ltsznh.modules.pur.dao.WmsTransferOrderPurRowDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.ltsznh.modules.pur.entity.WmsTransferOrderPurRowEntity" id="wmsTransferOrderPurRowMap">
         <result property="toPurRowId" column="to_pur_row_id"/>
         <result property="toDate" column="to_date"/>
@@ -25,118 +25,108 @@
         <result property="modifyDate" column="modify_date"/>
     </resultMap>
 
-	<select id="queryObject" resultType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurRowEntity">
+    <select id="queryObject" resultType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurRowEntity">
 		select * from wms_transfer_order_pur_row where to_pur_row_id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurRowEntity">
-		select ROW_NUMBER() OVER(
+    <select id="queryList" resultType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurRowEntity">
+        select ROW_NUMBER() OVER(
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by to_pur_row_id desc
+                order by to_seq desc
             </otherwise>
         </choose>
         ) AS ROW_NUM,
-		b.*
+        b.*
         ,(SELECT username FROM sys_user where b.creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where b.modifier_id = user_id) as modifier_name
-		FROM      wms_transfer_order_pur AS a INNER JOIN
-		wms_transfer_order_pur_row AS b ON a.to_no = b.to_no
-		<where>
-			<if test="toPurId != null and toPurId.trim() != ''">
-				and a.to_pur_id = #{toPurId}
-			</if>
-		</where>
+        ,(SELECT material_desc FROM pub_material where b.material_code = pub_material.material_code) as material_desc
+        ,(SELECT username FROM sys_user where b.engineer = user_id) as engineer_name
+        FROM wms_transfer_order_pur_row AS b
+        <where>
+            <if test="toNo != null and toNo.trim() != ''">
+                and to_no = #{toNo}
+            </if>
+        </where>
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
             OFFSET #{offset} ROWS
             FETCH NEXT #{limit} ROWS ONLY
         </if>
-	</select>
-	
- 	<select id="queryTotal" resultType="int">
+    </select>
+
+    <select id="queryTotal" resultType="int">
 		select count(*) from wms_transfer_order_pur_row 
 	</select>
-	 
-	<insert id="save" parameterType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurRowEntity" useGeneratedKeys="true" keyProperty="toPurRowId">
+
+    <insert id="save" parameterType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurRowEntity" useGeneratedKeys="true"
+            keyProperty="toPurRowId">
 		insert into wms_transfer_order_pur_row
 		(
 			[to_date], 
 			[to_no], 
-			[to_seq], 
-			[warehouse_code], 
-			[material_code], 
-			[supplier_code], 
+			[to_seq],
+			[material_code],
 			[guidance_unit_price], 
 			[unit_price], 
 			[qty], 
 			[total_amount], 
-			[move_type_code], 
-			[data_status], 
-			[engineer], 
+			[move_type_code],
+			[engineer],
 			[creator_id], 
-			[create_date], 
-			[modifier_id], 
-			[modify_date]
+			[create_date]
 		)
 		values
 		(
 			#{toDate}, 
-			#{toNo}, 
-			#{toSeq}, 
-			#{warehouseCode}, 
-			#{materialCode}, 
-			#{supplierCode}, 
-			#{guidanceUnitPrice}, 
+			#{toNo},
+			(SELECT ISNULL(MAX([to_seq]),0)+1 AS toSeq FROM wms_transfer_order_pur_row WHERE [to_no] = #{toNo}),
+			#{materialCode},
+			(SELECT guidance_unit_price from pub_material where [material_code] = #{materialCode}),
 			#{unitPrice}, 
 			#{qty}, 
-			#{totalAmount}, 
-			#{moveTypeCode}, 
-			#{dataStatus}, 
+			#{unitPrice}*#{qty},
+			#{moveTypeCode},
 			#{engineer}, 
 			#{creatorId}, 
-			#{createDate}, 
-			#{modifierId}, 
-			#{modifyDate}
+			#{createDate}
 		)
 	</insert>
-	 
-	<update id="update" parameterType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurRowEntity">
-		update wms_transfer_order_pur_row 
-		<set>
-			<if test="toDate != null">[to_date] = #{toDate}, </if>
-			<if test="toNo != null">[to_no] = #{toNo}, </if>
-			<if test="toSeq != null">[to_seq] = #{toSeq}, </if>
-			<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode}, </if>
-			<if test="materialCode != null">[material_code] = #{materialCode}, </if>
-			<if test="supplierCode != null">[supplier_code] = #{supplierCode}, </if>
-			<if test="guidanceUnitPrice != null">[guidance_unit_price] = #{guidanceUnitPrice}, </if>
-			<if test="unitPrice != null">[unit_price] = #{unitPrice}, </if>
-			<if test="qty != null">[qty] = #{qty}, </if>
-			<if test="totalAmount != null">[total_amount] = #{totalAmount}, </if>
-			<if test="moveTypeCode != null">[move_type_code] = #{moveTypeCode}, </if>
-			<if test="dataStatus != null">[data_status] = #{dataStatus}, </if>
-			<if test="engineer != null">[engineer] = #{engineer}, </if>
-			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
-			<if test="createDate != null">[create_date] = #{createDate}, </if>
-			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
-			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
-		</set>
-		where to_pur_row_id = #{toPurRowId}
-	</update>
-	
-	<delete id="delete">
-		delete from wms_transfer_order_pur_row where to_pur_row_id = #{value}
+
+    <!--<update id="update" parameterType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurRowEntity">-->
+        <!--update wms_transfer_order_pur_row-->
+        <!--<set>-->
+            <!--<if test="toDate != null">[to_date] = #{toDate},</if>-->
+            <!--<if test="toNo != null">[to_no] = #{toNo},</if>-->
+            <!--<if test="toSeq != null">[to_seq] = #{toSeq},</if>-->
+            <!--<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode},</if>-->
+            <!--<if test="materialCode != null">[material_code] = #{materialCode},</if>-->
+            <!--<if test="supplierCode != null">[supplier_code] = #{supplierCode},</if>-->
+            <!--<if test="guidanceUnitPrice != null">[guidance_unit_price] = #{guidanceUnitPrice},</if>-->
+            <!--<if test="unitPrice != null">[unit_price] = #{unitPrice},</if>-->
+            <!--<if test="qty != null">[qty] = #{qty},</if>-->
+            <!--<if test="totalAmount != null">[total_amount] = #{totalAmount},</if>-->
+            <!--<if test="moveTypeCode != null">[move_type_code] = #{moveTypeCode},</if>-->
+            <!--<if test="dataStatus != null">[data_status] = #{dataStatus},</if>-->
+            <!--<if test="engineer != null">[engineer] = #{engineer},</if>-->
+            <!--<if test="modifierId != null">[modifier_id] = #{modifierId},</if>-->
+            <!--<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>-->
+        <!--</set>-->
+        <!--where to_pur_row_id = #{toPurRowId}-->
+    <!--</update>-->
+
+    <delete id="delete">
+		UPDATE wms_transfer_order_pur_row set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_row_id = #{value};
 	</delete>
-	
-	<delete id="deleteBatch">
-		delete from wms_transfer_order_pur_row where to_pur_row_id in 
-		<foreach item="toPurRowId" collection="array" open="(" separator="," close=")">
-			#{toPurRowId}
-		</foreach>
-	</delete>
+
+    <delete id="deleteBatch">
+        UPDATE wms_transfer_order_pur_row set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_row_id in
+        <foreach item="toPurRowId" collection="array" open="(" separator="," close=")">
+            #{toPurRowId}
+        </foreach>;
+    </delete>
 
 </mapper>

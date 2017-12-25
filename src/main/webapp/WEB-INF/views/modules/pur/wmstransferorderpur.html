@@ -60,7 +60,7 @@
 			    </div>
 			</div>
 
-			<div class="form-group">
+			<div v-if="!addNew" class="form-group">
 				<div class="col-sm-2 control-label">采购单号</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" v-model="wmsTransferOrderPur.toNo" placeholder="采购单号" readonly="true" :disabled="true"/>
@@ -81,14 +81,24 @@
 
 <div v-show="showRow">
 	<h4>采购入库单明细</h4>
-	<a class="btn btn-primary" @click="backToPur"><i class="fa fa-plus"></i>&nbsp;返回</a>
+	<div class="grid-btn">
+		<div class="col-sm-2">
+			<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.toNo" placeholder="采购单号" readonly="true"/>
+		</div>
+		<div class="col-sm-2">
+			<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.warehouseName" placeholder="仓库" readonly="true"/>
+		</div>
+		<div class="col-sm-2">
+			<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.supplierName" placeholder="供应商" readonly="true"/>
+		</div>
+		<a class="btn btn-primary" @click="backToPur"><i class="fa fa-angle-left" aria-hidden="true"></i>&nbsp;返回</a>
 	<#if shiro.hasPermission("wmstransferorderpur:save")>
 	<a class="btn btn-primary" @click="addRow"><i class="fa fa-plus"></i>&nbsp;新增</a>
 </#if>
 <#if shiro.hasPermission("wmstransferorderpur:delete")>
-<a class="btn btn-danger" @click="delRow"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+<a class="btn btn-danger" @click="delRow"><i class="fa fa-trash-o"></i>&nbsp;作废</a>
 </#if>
-
+</div>
 	<table id="jqGridRow"></table>
 	<div id="jqGridPagerRow"></div>
 
@@ -99,27 +109,27 @@
 			<div class="col-md-6 ">
 		<form class="form-horizontal">
 			<div class="form-group">
-				<div class="col-sm-2 control-label">转储单日期</div>
+				<div class="col-sm-2 control-label">采购日期</div>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.toDate" placeholder="转储单日期" readonly="true"/>
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.toDate" placeholder="采购日期" readonly="true"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 control-label">转储单号</div>
+				<div class="col-sm-2 control-label">采购单号</div>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.toNo" placeholder="转储单号" readonly="true"/>
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.toNo" placeholder="采购单号" readonly="true"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 control-label">仓库代码</div>
+				<div class="col-sm-2 control-label">仓库</div>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.warehouseCode" placeholder="仓库代码" readonly="true"/>
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.warehouseName" placeholder="仓库" readonly="true"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 control-label">供应商代码</div>
+				<div class="col-sm-2 control-label">供应商</div>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.supplierCode" placeholder="供应商代码" readonly="true"/>
+					<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.supplierName" placeholder="供应商" readonly="true"/>
 				</div>
 			</div>
 
@@ -131,7 +141,7 @@
 					<div class="form-group">
 						<div class="col-sm-2 control-label">物料代码</div>
 						<div class="col-sm-4">
-							<input type="text" class="form-control" v-model="wmsTransferOrderPurRow.materialCode" placeholder="物料代码"/>
+							<input type="text" id="materialCodeRow" class="form-control" v-model="wmsTransferOrderPurRow.materialCode" placeholder="物料代码"/>
 						</div>
 					</div>
 			<div class="form-group">
@@ -155,7 +165,7 @@
 
 			<div class="form-group">
 				<div class="col-sm-2 control-label"></div>
-				<a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;保存并继续添加</a>
+				<a class="btn btn-warning" @click="saveOrUpdateRow"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;保存并继续添加</a>
 
 			</div>
 		</form>

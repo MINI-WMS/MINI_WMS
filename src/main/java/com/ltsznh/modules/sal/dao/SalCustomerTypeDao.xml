@@ -73,11 +73,11 @@
 	</update>
 	
 	<delete id="delete">
-		UPDATE sal_customer_type SET is_enabled = 0 WHERE customer_type_code = #{value}
+		UPDATE sal_customer_type SET is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} WHERE customer_type_code = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		UPDATE sal_customer_type SET is_enabled = 0 where customer_type_code in
+		UPDATE sal_customer_type SET is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where customer_type_code in
 		<foreach item="customerTypeCode" collection="array" open="(" separator="," close=")">
 			#{customerTypeCode}
 		</foreach>

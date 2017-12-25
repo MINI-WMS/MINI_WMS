@@ -8,6 +8,10 @@
         <result property="toId" column="to_id"/>
         <result property="toDate" column="to_date"/>
         <result property="toNo" column="to_no"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="sourWarehouseCode" column="sour_warehouse_code"/>
+        <result property="destWarehouseCode" column="dest_warehouse_code"/>
+        <result property="dataStatus" column="data_status"/>
         <result property="creatorId" column="creator_id"/>
         <result property="createDate" column="create_date"/>
         <result property="modifierId" column="modifier_id"/>
@@ -15,7 +19,7 @@
     </resultMap>
 
 	<select id="queryObject" resultType="com.ltsznh.modules.wms.entity.WmsTransferOrderEntity">
-		select * from wms_transfer_order where to_id = #{value}
+		select * from wms_transfer_order where warehouse_code = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.ltsznh.modules.wms.entity.WmsTransferOrderEntity">
@@ -25,7 +29,7 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by to_id desc
+                order by warehouse_code desc
             </otherwise>
         </choose>
         ) AS ROW_NUM,
@@ -50,6 +54,10 @@
 			[to_id], 
 			[to_date], 
 			[to_no], 
+			[warehouse_code], 
+			[sour_warehouse_code], 
+			[dest_warehouse_code], 
+			[data_status], 
 			[creator_id], 
 			[create_date], 
 			[modifier_id], 
@@ -60,6 +68,10 @@
 			#{toId}, 
 			#{toDate}, 
 			#{toNo}, 
+			#{warehouseCode}, 
+			#{sourWarehouseCode}, 
+			#{destWarehouseCode}, 
+			#{dataStatus}, 
 			#{creatorId}, 
 			#{createDate}, 
 			#{modifierId}, 
@@ -70,24 +82,28 @@
 	<update id="update" parameterType="com.ltsznh.modules.wms.entity.WmsTransferOrderEntity">
 		update wms_transfer_order 
 		<set>
+			<if test="toId != null">[to_id] = #{toId}, </if>
 			<if test="toDate != null">[to_date] = #{toDate}, </if>
 			<if test="toNo != null">[to_no] = #{toNo}, </if>
+			<if test="sourWarehouseCode != null">[sour_warehouse_code] = #{sourWarehouseCode}, </if>
+			<if test="destWarehouseCode != null">[dest_warehouse_code] = #{destWarehouseCode}, </if>
+			<if test="dataStatus != null">[data_status] = #{dataStatus}, </if>
 			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
 			<if test="createDate != null">[create_date] = #{createDate}, </if>
 			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
 			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
 		</set>
-		where to_id = #{toId}
+		where warehouse_code = #{warehouseCode}
 	</update>
 	
 	<delete id="delete">
-		delete from wms_transfer_order where to_id = #{value}
+		delete from wms_transfer_order where warehouse_code = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from wms_transfer_order where to_id in 
-		<foreach item="toId" collection="array" open="(" separator="," close=")">
-			#{toId}
+		delete from wms_transfer_order where warehouse_code in 
+		<foreach item="warehouseCode" collection="array" open="(" separator="," close=")">
+			#{warehouseCode}
 		</foreach>
 	</delete>
 

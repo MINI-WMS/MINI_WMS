@@ -1,5 +1,7 @@
 package com.ltsznh.modules.pur.entity;
 
+import com.ltsznh.common.utils.DateUtils;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -53,6 +55,14 @@ public class WmsTransferOrderPurRowEntity implements Serializable {
 	//修改时间
 	private Date modifyDate;
 
+	private String creatorName;
+	private String modifierName;
+
+	private String materialDesc;
+	private String engineerName;
+
+
+
 	/**
 	 * 设置：转储单编号
 	 */
@@ -74,8 +84,8 @@ public class WmsTransferOrderPurRowEntity implements Serializable {
 	/**
 	 * 获取：转储单日期
 	 */
-	public Date getToDate() {
-		return toDate;
+	public String getToDate() {
+		return DateUtils.formatToDate(toDate);
 	}
 	/**
 	 * 设置：转储单号
@@ -268,5 +278,37 @@ public class WmsTransferOrderPurRowEntity implements Serializable {
 	 */
 	public Date getModifyDate() {
 		return modifyDate;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
+	public String getModifierName() {
+		return modifierName;
+	}
+
+	public void setModifierName(String modifierName) {
+		this.modifierName = modifierName;
+	}
+
+	public String getMaterialDesc() {
+		return materialDesc;
+	}
+
+	public void setMaterialDesc(String materialDesc) {
+		this.materialDesc = materialDesc;
+	}
+
+	public String getEngineerName() {
+		return engineerName;
+	}
+
+	public void setEngineerName(String engineerName) {
+		this.engineerName = engineerName;
 	}
 }

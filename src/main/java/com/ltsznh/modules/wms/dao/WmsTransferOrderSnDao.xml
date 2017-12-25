@@ -11,6 +11,7 @@
         <result property="toSeq" column="to_seq"/>
         <result property="materialCode" column="material_code"/>
         <result property="materialSn" column="material_sn"/>
+        <result property="dataStatus" column="data_status"/>
         <result property="creatorId" column="creator_id"/>
         <result property="createDate" column="create_date"/>
         <result property="modifierId" column="modifier_id"/>
@@ -18,7 +19,7 @@
     </resultMap>
 
 	<select id="queryObject" resultType="com.ltsznh.modules.wms.entity.WmsTransferOrderSnEntity">
-		select * from wms_transfer_order_sn where material_code = #{value}
+		select * from wms_transfer_order_sn where to_sn_id = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.ltsznh.modules.wms.entity.WmsTransferOrderSnEntity">
@@ -28,7 +29,7 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by material_code desc
+                order by to_sn_id desc
             </otherwise>
         </choose>
         ) AS ROW_NUM,
@@ -47,15 +48,15 @@
 		select count(*) from wms_transfer_order_sn 
 	</select>
 	 
-	<insert id="save" parameterType="com.ltsznh.modules.wms.entity.WmsTransferOrderSnEntity">
+	<insert id="save" parameterType="com.ltsznh.modules.wms.entity.WmsTransferOrderSnEntity" useGeneratedKeys="true" keyProperty="toSnId">
 		insert into wms_transfer_order_sn
 		(
-			[to_sn_id], 
 			[to_date], 
 			[to_no], 
 			[to_seq], 
 			[material_code], 
 			[material_sn], 
+			[data_status], 
 			[creator_id], 
 			[create_date], 
 			[modifier_id], 
@@ -63,12 +64,12 @@
 		)
 		values
 		(
-			#{toSnId}, 
 			#{toDate}, 
 			#{toNo}, 
 			#{toSeq}, 
 			#{materialCode}, 
 			#{materialSn}, 
+			#{dataStatus}, 
 			#{creatorId}, 
 			#{createDate}, 
 			#{modifierId}, 
@@ -79,27 +80,28 @@
 	<update id="update" parameterType="com.ltsznh.modules.wms.entity.WmsTransferOrderSnEntity">
 		update wms_transfer_order_sn 
 		<set>
-			<if test="toSnId != null">[to_sn_id] = #{toSnId}, </if>
 			<if test="toDate != null">[to_date] = #{toDate}, </if>
 			<if test="toNo != null">[to_no] = #{toNo}, </if>
 			<if test="toSeq != null">[to_seq] = #{toSeq}, </if>
+			<if test="materialCode != null">[material_code] = #{materialCode}, </if>
 			<if test="materialSn != null">[material_sn] = #{materialSn}, </if>
+			<if test="dataStatus != null">[data_status] = #{dataStatus}, </if>
 			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
 			<if test="createDate != null">[create_date] = #{createDate}, </if>
 			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
 			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
 		</set>
-		where material_code = #{materialCode}
+		where to_sn_id = #{toSnId}
 	</update>
 	
 	<delete id="delete">
-		delete from wms_transfer_order_sn where material_code = #{value}
+		delete from wms_transfer_order_sn where to_sn_id = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from wms_transfer_order_sn where material_code in 
-		<foreach item="materialCode" collection="array" open="(" separator="," close=")">
-			#{materialCode}
+		delete from wms_transfer_order_sn where to_sn_id in 
+		<foreach item="toSnId" collection="array" open="(" separator="," close=")">
+			#{toSnId}
 		</foreach>
 	</delete>
 

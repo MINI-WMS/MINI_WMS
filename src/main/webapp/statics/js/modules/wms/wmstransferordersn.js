@@ -3,16 +3,17 @@ $(function () {
         url: baseURL + 'wmstransferordersn/list',
         datatype: "json",
         colModel: [
-			{ label: 'colName', name: 'toSnId', index: 'to_sn_id', width: 80 }, 
+			{ label: 'toSnId', name: 'toSnId', index: 'to_sn_id', width: 50, key: true },
 			{ label: '转储单日期', name: 'toDate', index: 'to_date', width: 80 }, 
 			{ label: '转储单号', name: 'toNo', index: 'to_no', width: 80 }, 
 			{ label: '转储单序号', name: 'toSeq', index: 'to_seq', width: 80 }, 
-			{ label: 'materialCode', name: 'materialCode', index: 'material_code', width: 50, key: true },
-			{ label: '物料SN', name: 'materialSn', index: 'material_sn', width: 80 },
-			{label: '创建用户', name: 'creatorName', index: 'creator_id', width: 80},
-			{label: '创建时间', name: 'createDate', index: 'create_date', width: 150},
-			{label: '修改用户', name: 'modifierName', index: 'modifier_id', width: 80},
-			{label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 150}
+			{ label: '物料代码', name: 'materialCode', index: 'material_code', width: 80 }, 
+			{ label: '物料SN', name: 'materialSn', index: 'material_sn', width: 80 }, 
+			{ label: '状态', name: 'dataStatus', index: 'data_status', width: 80 }, 
+			{ label: '创建用户', name: 'creatorId', index: 'creator_id', width: 80 }, 
+			{ label: '创建时间', name: 'createDate', index: 'create_date', width: 80 }, 
+			{ label: '修改用户', name: 'modifierId', index: 'modifier_id', width: 80 }, 
+			{ label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 80 }
         ],
 		viewrecords: true,
         height: 385,
@@ -62,18 +63,18 @@ var vm = new Vue({
 			vm.wmsTransferOrderSn = {};
 		},
 		update: function (event) {
-			var materialCode = getSelectedRow();
-			if(materialCode == null){
+			var toSnId = getSelectedRow();
+			if(toSnId == null){
 				return ;
 			}
 			vm.showList = false;
             vm.title = "修改";
 			vm.addNew = false;
 
-            vm.getInfo(materialCode)
+            vm.getInfo(toSnId)
 		},
 		saveOrUpdate: function (event) {
-			var url = vm.addNew ? "wmstransferordersn/save" : "wmstransferordersn/update";
+			var url = vm.wmsTransferOrderSn.toSnId == null ? "wmstransferordersn/save" : "wmstransferordersn/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -91,8 +92,8 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
-			var materialCodes = getSelectedRows();
-			if(materialCodes == null){
+			var toSnIds = getSelectedRows();
+			if(toSnIds == null){
 				return ;
 			}
 
@@ -101,7 +102,7 @@ var vm = new Vue({
 					type: "POST",
 				    url: baseURL + "wmstransferordersn/delete",
 				    contentType: "application/json",
-				    data: JSON.stringify(materialCodes),
+				    data: JSON.stringify(toSnIds),
 				    success: function(r){
 						if(r.code == 0){
 							alert('操作成功', function(index){
@@ -114,8 +115,8 @@ var vm = new Vue({
 				});
 			});
 		},
-		getInfo: function(materialCode){
-			$.get(baseURL + "wmstransferordersn/info/"+materialCode, function(r){
+		getInfo: function(toSnId){
+			$.get(baseURL + "wmstransferordersn/info/"+toSnId, function(r){
                 vm.wmsTransferOrderSn = r.wmsTransferOrderSn;
             });
 		},

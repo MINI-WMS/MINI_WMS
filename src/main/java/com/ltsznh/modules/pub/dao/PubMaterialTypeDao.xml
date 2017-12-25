@@ -80,11 +80,11 @@
 	</update>
 	
 	<delete id="delete">
-		UPDATE pub_material_type SET is_enabled = 0 material_type_code = #{value}
+		UPDATE pub_material_type SET is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} material_type_code = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		UPDATE pub_material_type SET is_enabled = 0 where material_type_code in
+		UPDATE pub_material_type SET is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where material_type_code in
 		<foreach item="materialTypeCode" collection="array" open="(" separator="," close=")">
 			#{materialTypeCode}
 		</foreach>

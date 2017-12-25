@@ -19,7 +19,7 @@ import com.ltsznh.common.utils.Query;
 import com.ltsznh.common.utils.R;
 
 import com.ltsznh.modules.wms.entity.WmsTransferOrderSnEntity;
-import com.ltsznh.modules.wms.service.WmsTransferOrderSnService;
+import com.ltsznh.modules.sal.service.WmsTransferOrderSnService;
 
 
 /**
@@ -27,7 +27,7 @@ import com.ltsznh.modules.wms.service.WmsTransferOrderSnService;
  *
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 14:14:53
+ * @date 2017-12-25 17:43:17
  */
 @RestController
 @RequestMapping("wmstransferordersn")
@@ -56,10 +56,10 @@ public class WmsTransferOrderSnController  extends AbstractController {
 	/**
 	 * 信息
 	 */
-	@RequestMapping("/info/{materialCode}")
+	@RequestMapping("/info/{toSnId}")
 	@RequiresPermissions("wmstransferordersn:info")
-	public R info(@PathVariable("materialCode") String materialCode){
-		WmsTransferOrderSnEntity wmsTransferOrderSn = wmsTransferOrderSnService.queryObject(materialCode);
+	public R info(@PathVariable("toSnId") Long toSnId){
+		WmsTransferOrderSnEntity wmsTransferOrderSn = wmsTransferOrderSnService.queryObject(toSnId);
 
 		return R.ok().put("wmsTransferOrderSn", wmsTransferOrderSn);
 	}
@@ -100,8 +100,8 @@ public class WmsTransferOrderSnController  extends AbstractController {
 	@SysLog("删除物料SN明细")
 	@RequestMapping("/delete")
 	@RequiresPermissions("wmstransferordersn:delete")
-	public R delete(@RequestBody String[] materialCodes){
-		wmsTransferOrderSnService.deleteBatch(materialCodes,getUserId());
+	public R delete(@RequestBody Long[] toSnIds){
+		wmsTransferOrderSnService.deleteBatch(toSnIds,getUserId());
 
 		return R.ok();
 	}

@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 14:14:53
+ * @date 2017-12-25 17:43:17
  */
 public class WmsTransferOrderSnEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -27,6 +27,8 @@ public class WmsTransferOrderSnEntity implements Serializable {
 	private String materialCode;
 	//物料SN
 	private String materialSn;
+	//状态
+	private Integer dataStatus;
 	//创建用户
 	private Long creatorId;
 	//创建时间
@@ -35,6 +37,10 @@ public class WmsTransferOrderSnEntity implements Serializable {
 	private Long modifierId;
 	//修改时间
 	private Date modifyDate;
+
+
+	private String creatorName;
+	private String modifierName;
 
 	/**
 	 * 设置：colName
@@ -109,6 +115,18 @@ public class WmsTransferOrderSnEntity implements Serializable {
 		return materialSn;
 	}
 	/**
+	 * 设置：状态
+	 */
+	public void setDataStatus(Integer dataStatus) {
+		this.dataStatus = dataStatus;
+	}
+	/**
+	 * 获取：状态
+	 */
+	public Integer getDataStatus() {
+		return dataStatus;
+	}
+	/**
 	 * 设置：创建用户
 	 */
 	public void setCreatorId(Long creatorId) {
@@ -155,5 +173,21 @@ public class WmsTransferOrderSnEntity implements Serializable {
 	 */
 	public Date getModifyDate() {
 		return modifyDate;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
+	public String getModifierName() {
+		return modifierName;
+	}
+
+	public void setModifierName(String modifierName) {
+		this.modifierName = modifierName;
 	}
 }

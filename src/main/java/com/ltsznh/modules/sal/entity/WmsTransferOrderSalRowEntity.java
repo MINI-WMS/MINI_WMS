@@ -1,5 +1,7 @@
 package com.ltsznh.modules.sal.entity;
 
+import com.ltsznh.common.utils.DateUtils;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,7 +13,7 @@ import java.util.Date;
  * 
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 10:46:27
+ * @date 2017-12-25 17:43:17
  */
 public class WmsTransferOrderSalRowEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -24,12 +26,8 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 	private String toNo;
 	//转储单序号
 	private Integer toSeq;
-	//仓库代码
-	private String warehouseCode;
 	//物料代码
 	private String materialCode;
-	//客户代码
-	private String customerCode;
 	//指导单价
 	private BigDecimal guidanceUnitPrice;
 	//单价
@@ -53,6 +51,13 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 	//修改时间
 	private Date modifyDate;
 
+
+	private String creatorName;
+	private String modifierName;
+
+	private String materialDesc;
+	private String engineerName;
+
 	/**
 	 * 设置：转储单编号
 	 */
@@ -74,8 +79,8 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 	/**
 	 * 获取：转储单日期
 	 */
-	public Date getToDate() {
-		return toDate;
+	public String getToDate() {
+		return DateUtils.formatToDate(toDate);
 	}
 	/**
 	 * 设置：转储单号
@@ -102,18 +107,6 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 		return toSeq;
 	}
 	/**
-	 * 设置：仓库代码
-	 */
-	public void setWarehouseCode(String warehouseCode) {
-		this.warehouseCode = warehouseCode;
-	}
-	/**
-	 * 获取：仓库代码
-	 */
-	public String getWarehouseCode() {
-		return warehouseCode;
-	}
-	/**
 	 * 设置：物料代码
 	 */
 	public void setMaterialCode(String materialCode) {
@@ -124,18 +117,6 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 	 */
 	public String getMaterialCode() {
 		return materialCode;
-	}
-	/**
-	 * 设置：客户代码
-	 */
-	public void setCustomerCode(String customerCode) {
-		this.customerCode = customerCode;
-	}
-	/**
-	 * 获取：客户代码
-	 */
-	public String getCustomerCode() {
-		return customerCode;
 	}
 	/**
 	 * 设置：指导单价
@@ -268,5 +249,37 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 	 */
 	public Date getModifyDate() {
 		return modifyDate;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
+	public String getModifierName() {
+		return modifierName;
+	}
+
+	public void setModifierName(String modifierName) {
+		this.modifierName = modifierName;
+	}
+
+	public String getMaterialDesc() {
+		return materialDesc;
+	}
+
+	public void setMaterialDesc(String materialDesc) {
+		this.materialDesc = materialDesc;
+	}
+
+	public String getEngineerName() {
+		return engineerName;
+	}
+
+	public void setEngineerName(String engineerName) {
+		this.engineerName = engineerName;
 	}
 }

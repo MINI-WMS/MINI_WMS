@@ -9,9 +9,7 @@
         <result property="toDate" column="to_date"/>
         <result property="toNo" column="to_no"/>
         <result property="toSeq" column="to_seq"/>
-        <result property="warehouseCode" column="warehouse_code"/>
         <result property="materialCode" column="material_code"/>
-        <result property="customerCode" column="customer_code"/>
         <result property="guidanceUnitPrice" column="guidance_unit_price"/>
         <result property="unitPrice" column="unit_price"/>
         <result property="qty" column="qty"/>
@@ -36,14 +34,21 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by to_sal_row_id desc
+                order by to_seq
             </otherwise>
         </choose>
         ) AS ROW_NUM,
 		*
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		,(SELECT material_desc FROM pub_material where wms_transfer_order_sal_row.material_code = pub_material.material_code) as material_desc
+		,(SELECT username FROM sys_user where engineer = user_id) as engineer_name
 		from wms_transfer_order_sal_row
+		<where>
+			<if test="toNo != null and toNo.trim() != ''">
+				and to_no = #{toNo}
+			</if>
+		</where>
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
             OFFSET #{offset} ROWS
@@ -58,78 +63,64 @@
 	<insert id="save" parameterType="com.ltsznh.modules.sal.entity.WmsTransferOrderSalRowEntity">
 		insert into wms_transfer_order_sal_row
 		(
-			[to_sal_row_id], 
-			[to_date], 
+			[to_date],
 			[to_no], 
 			[to_seq], 
-			[warehouse_code], 
 			[material_code], 
-			[customer_code], 
 			[guidance_unit_price], 
 			[unit_price], 
 			[qty], 
 			[total_amount], 
-			[move_type_code], 
-			[data_status], 
+			[move_type_code],
 			[engineer], 
 			[creator_id], 
-			[create_date], 
-			[modifier_id], 
-			[modify_date]
+			[create_date]
 		)
 		values
 		(
-			#{toSalRowId}, 
-			#{toDate}, 
+			#{toDate},
 			#{toNo}, 
-			#{toSeq}, 
-			#{warehouseCode}, 
+			(SELECT ISNULL(MAX([to_seq]),0)+1 AS toSeq FROM wms_transfer_order_sal_row WHERE [to_no] = #{toNo}),
 			#{materialCode}, 
-			#{customerCode}, 
 			#{guidanceUnitPrice}, 
 			#{unitPrice}, 
 			#{qty}, 
-			#{totalAmount}, 
-			#{moveTypeCode}, 
-			#{dataStatus}, 
+			#{unitPrice}*#{qty},
+			#{moveTypeCode},
 			#{engineer}, 
 			#{creatorId}, 
-			#{createDate}, 
-			#{modifierId}, 
-			#{modifyDate}
+			#{createDate}
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.ltsznh.modules.sal.entity.WmsTransferOrderSalRowEntity">
-		update wms_transfer_order_sal_row 
-		<set>
-			<if test="toDate != null">[to_date] = #{toDate}, </if>
-			<if test="toNo != null">[to_no] = #{toNo}, </if>
-			<if test="toSeq != null">[to_seq] = #{toSeq}, </if>
-			<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode}, </if>
-			<if test="materialCode != null">[material_code] = #{materialCode}, </if>
-			<if test="customerCode != null">[customer_code] = #{customerCode}, </if>
-			<if test="guidanceUnitPrice != null">[guidance_unit_price] = #{guidanceUnitPrice}, </if>
-			<if test="unitPrice != null">[unit_price] = #{unitPrice}, </if>
-			<if test="qty != null">[qty] = #{qty}, </if>
-			<if test="totalAmount != null">[total_amount] = #{totalAmount}, </if>
-			<if test="moveTypeCode != null">[move_type_code] = #{moveTypeCode}, </if>
-			<if test="dataStatus != null">[data_status] = #{dataStatus}, </if>
-			<if test="engineer != null">[engineer] = #{engineer}, </if>
-			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
-			<if test="createDate != null">[create_date] = #{createDate}, </if>
-			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
-			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
-		</set>
-		where to_sal_row_id = #{toSalRowId}
-	</update>
+	<!--<update id="update" parameterType="com.ltsznh.modules.sal.entity.WmsTransferOrderSalRowEntity">-->
+		<!--update wms_transfer_order_sal_row -->
+		<!--<set>-->
+			<!--<if test="toDate != null">[to_date] = #{toDate}, </if>-->
+			<!--<if test="toNo != null">[to_no] = #{toNo}, </if>-->
+			<!--<if test="toSeq != null">[to_seq] = #{toSeq}, </if>-->
+			<!--<if test="materialCode != null">[material_code] = #{materialCode}, </if>-->
+			<!--<if test="guidanceUnitPrice != null">[guidance_unit_price] = #{guidanceUnitPrice}, </if>-->
+			<!--<if test="unitPrice != null">[unit_price] = #{unitPrice}, </if>-->
+			<!--<if test="qty != null">[qty] = #{qty}, </if>-->
+			<!--<if test="totalAmount != null">[total_amount] = #{totalAmount}, </if>-->
+			<!--<if test="moveTypeCode != null">[move_type_code] = #{moveTypeCode}, </if>-->
+			<!--<if test="dataStatus != null">[data_status] = #{dataStatus}, </if>-->
+			<!--<if test="engineer != null">[engineer] = #{engineer}, </if>-->
+			<!--<if test="creatorId != null">[creator_id] = #{creatorId}, </if>-->
+			<!--<if test="createDate != null">[create_date] = #{createDate}, </if>-->
+			<!--<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>-->
+			<!--<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>-->
+		<!--</set>-->
+		<!--where to_sal_row_id = #{toSalRowId}-->
+	<!--</update>-->
 	
 	<delete id="delete">
-		delete from wms_transfer_order_sal_row where to_sal_row_id = #{value}
+		UPDATE wms_transfer_order_sal_row SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_sal_row_id = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from wms_transfer_order_sal_row where to_sal_row_id in 
+		UPDATE wms_transfer_order_sal_row SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_sal_row_id in
 		<foreach item="toSalRowId" collection="array" open="(" separator="," close=")">
 			#{toSalRowId}
 		</foreach>

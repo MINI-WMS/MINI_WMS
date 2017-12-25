@@ -20,21 +20,14 @@ $(function () {
 			{ label: '单价', name: 'unitPrice', index: 'unit_price', width: 80 }, 
 			{ label: '数量', name: 'qty', index: 'qty', width: 80 }, 
 			{ label: '总金额', name: 'totalAmount', index: 'total_amount', width: 80 }, 
-			{ label: '移动类型', name: 'moveTypeCode', index: 'move_type_code', width: 80 },
-			{ label: '确认用户', name: 'confirmId', index: 'confirm_id', width: 80 },
-			{ label: '确认时间', name: 'confirmTime', index: 'confirm_time', width: 80 },
-
-			{
-				label: '状态', name: 'dataStatus', width: 60, index: 'dataStatus', formatter: function (value, options, row) {
-					return value === 0 ?
-						'<span class="label label-danger">禁用</span>' :
-						'<span class="label label-success">正常</span>';
-				}
-			},
-			{label: '创建用户', name: 'creatorName', index: 'creator_id', width: 80},
-			{label: '创建时间', name: 'createDate', index: 'create_date', width: 150},
-			{label: '修改用户', name: 'modifierName', index: 'modifier_id', width: 80},
-			{label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 150}
+			{ label: '移动类型', name: 'moveTypeCode', index: 'move_type_code', width: 80 }, 
+			{ label: '状态', name: 'dataStatus', index: 'data_status', width: 80 }, 
+			{ label: '确认用户', name: 'confirmId', index: 'confirm_id', width: 80 }, 
+			{ label: '确认时间', name: 'confirmTime', index: 'confirm_time', width: 80 }, 
+			{ label: '创建用户', name: 'creatorId', index: 'creator_id', width: 80 }, 
+			{ label: '创建时间', name: 'createDate', index: 'create_date', width: 80 }, 
+			{ label: '修改用户', name: 'modifierId', index: 'modifier_id', width: 80 }, 
+			{ label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 80 }
         ],
 		viewrecords: true,
         height: 385,

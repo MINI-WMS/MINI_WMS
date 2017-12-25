@@ -1,4 +1,4 @@
-package com.ltsznh.modules.wms.service;
+package com.ltsznh.modules.sal.service;
 
 import com.ltsznh.modules.wms.entity.WmsTransferOrderSnEntity;
 
@@ -10,11 +10,11 @@ import java.util.Map;
  * 
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 14:14:53
+ * @date 2017-12-25 17:43:17
  */
 public interface WmsTransferOrderSnService {
 	
-	WmsTransferOrderSnEntity queryObject(String materialCode);
+	WmsTransferOrderSnEntity queryObject(Long toSnId);
 	
 	List<WmsTransferOrderSnEntity> queryList(Map<String, Object> map);
 	
@@ -24,7 +24,7 @@ public interface WmsTransferOrderSnService {
 	
 	void update(WmsTransferOrderSnEntity wmsTransferOrderSn);
 	
-	void delete(String materialCode,Long userId);
+	void delete(Long toSnId,Long userId);
 	
-	void deleteBatch(String[] materialCodes,Long userId);
+	void deleteBatch(Long[] toSnIds,Long userId);
 }

@@ -16,7 +16,11 @@
     </resultMap>
 
 	<select id="queryObject" resultType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurEntity">
-		select * from wms_transfer_order_pur where to_pur_id = #{value}
+		select *
+		,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+        ,(SELECT supplier_name FROM pur_supplier where wms_transfer_order_pur.supplier_code = pur_supplier.supplier_code) as supplier_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_warehouse.warehouse_code = wms_transfer_order_pur.warehouse_code) as warehouse_name from wms_transfer_order_pur where to_pur_id = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurEntity">
@@ -80,17 +84,31 @@
 	</update>
 	
 	<delete id="delete">
-		UPDATE wms_transfer_order_pur set data_status = 0 where to_pur_id = #{value}
+		UPDATE wms_transfer_order_pur set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_id = #{value};
+		UPDATE  wms_transfer_order_pur_row
+		SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId}
+		FROM      wms_transfer_order_pur AS a INNER JOIN
+						wms_transfer_order_pur_row ON a.to_no = wms_transfer_order_pur_row.to_no
+		WHERE   (a.to_pur_id = #{value});
 
 -- 		UPDATE wms_transfer_order_pur_row set data_status = 0
 -- 		FROM  to_pur_id = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		UPDATE wms_transfer_order_pur set data_status = 0 where to_pur_id in
+		UPDATE wms_transfer_order_pur set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_id in
 		<foreach item="toPurId" collection="array" open="(" separator="," close=")">
 			#{toPurId}
-		</foreach>
+		</foreach>;
+
+		UPDATE  wms_transfer_order_pur_row
+		SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId}
+		FROM      wms_transfer_order_pur AS a INNER JOIN
+		wms_transfer_order_pur_row ON a.to_no = wms_transfer_order_pur_row.to_no
+		WHERE   (a.to_pur_id in
+		<foreach item="toPurId" collection="array" open="(" separator="," close=")">
+			#{toPurId}
+		</foreach>);
 	</delete>
 
 </mapper>

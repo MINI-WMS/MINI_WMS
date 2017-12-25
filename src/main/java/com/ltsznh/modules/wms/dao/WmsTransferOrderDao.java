@@ -8,7 +8,7 @@ import com.ltsznh.modules.wms.entity.WmsTransferOrderEntity;
  * 
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 14:14:53
+ * @date 2017-12-25 17:43:16
  */
 public interface WmsTransferOrderDao extends BaseDao<WmsTransferOrderEntity> {
 	

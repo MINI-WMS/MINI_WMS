@@ -37,7 +37,7 @@
 		*
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
-		,(SELECT area_name FROM pub_area where pur_supplier.area_code = pub_area.area_code) as area_name
+		,(SELECT area_name FROM pub_area where sal_customer.area_code = pub_area.area_code) as area_name
         ,(SELECT customer_type_desc FROM sal_customer_type where sal_customer_type.customer_type_code = sal_customer.customer_type_code) as customer_type_desc
 		from sal_customer
         ORDER BY ROW_NUM
@@ -95,11 +95,11 @@
 	</update>
 	
 	<delete id="delete">
-		UPDATE sal_customer SET is_enabled = 0 where customer_code = #{value}
+		UPDATE sal_customer SET is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where customer_code = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		UPDATE sal_customer SET is_enabled = 0 where customer_code in
+		UPDATE sal_customer SET is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where customer_code in
 		<foreach item="customerCode" collection="array" open="(" separator="," close=")">
 			#{customerCode}
 		</foreach>

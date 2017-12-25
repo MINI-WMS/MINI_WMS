@@ -3,13 +3,17 @@ $(function () {
         url: baseURL + 'wmstransferorder/list',
         datatype: "json",
         colModel: [
-			{ label: 'toId', name: 'toId', index: 'to_id', width: 50, key: true },
+			{ label: '转储单编号', name: 'toId', index: 'to_id', width: 80 }, 
 			{ label: '转储单日期', name: 'toDate', index: 'to_date', width: 80 }, 
-			{ label: '转储单号', name: 'toNo', index: 'to_no', width: 80 },
-			{label: '创建用户', name: 'creatorName', index: 'creator_id', width: 80},
-			{label: '创建时间', name: 'createDate', index: 'create_date', width: 150},
-			{label: '修改用户', name: 'modifierName', index: 'modifier_id', width: 80},
-			{label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 150}
+			{ label: '转储单号', name: 'toNo', index: 'to_no', width: 80 }, 
+			{ label: 'warehouseCode', name: 'warehouseCode', index: 'warehouse_code', width: 50, key: true },
+			{ label: '来源仓库', name: 'sourWarehouseCode', index: 'sour_warehouse_code', width: 80 }, 
+			{ label: '目标仓库', name: 'destWarehouseCode', index: 'dest_warehouse_code', width: 80 }, 
+			{ label: '状态', name: 'dataStatus', index: 'data_status', width: 80 }, 
+			{ label: '创建用户', name: 'creatorId', index: 'creator_id', width: 80 }, 
+			{ label: '创建时间', name: 'createDate', index: 'create_date', width: 80 }, 
+			{ label: '修改用户', name: 'modifierId', index: 'modifier_id', width: 80 }, 
+			{ label: '修改时间', name: 'modifyDate', index: 'modify_date', width: 80 }
         ],
 		viewrecords: true,
         height: 385,
@@ -59,18 +63,18 @@ var vm = new Vue({
 			vm.wmsTransferOrder = {};
 		},
 		update: function (event) {
-			var toId = getSelectedRow();
-			if(toId == null){
+			var warehouseCode = getSelectedRow();
+			if(warehouseCode == null){
 				return ;
 			}
 			vm.showList = false;
             vm.title = "修改";
 			vm.addNew = false;
 
-            vm.getInfo(toId)
+            vm.getInfo(warehouseCode)
 		},
 		saveOrUpdate: function (event) {
-			var url = vm.addNew ? "wmstransferorder/save" : "wmstransferorder/update";
+			var url = vm.wmsTransferOrder.warehouseCode == null ? "wmstransferorder/save" : "wmstransferorder/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -88,17 +92,17 @@ var vm = new Vue({
 			});
 		},
 		del: function (event) {
-			var toIds = getSelectedRows();
-			if(toIds == null){
+			var warehouseCodes = getSelectedRows();
+			if(warehouseCodes == null){
 				return ;
 			}
 
-			confirm('确定要作废选中的记录？', function(){
+			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
 				    url: baseURL + "wmstransferorder/delete",
 				    contentType: "application/json",
-				    data: JSON.stringify(toIds),
+				    data: JSON.stringify(warehouseCodes),
 				    success: function(r){
 						if(r.code == 0){
 							alert('操作成功', function(index){
@@ -111,8 +115,8 @@ var vm = new Vue({
 				});
 			});
 		},
-		getInfo: function(toId){
-			$.get(baseURL + "wmstransferorder/info/"+toId, function(r){
+		getInfo: function(warehouseCode){
+			$.get(baseURL + "wmstransferorder/info/"+warehouseCode, function(r){
                 vm.wmsTransferOrder = r.wmsTransferOrder;
             });
 		},

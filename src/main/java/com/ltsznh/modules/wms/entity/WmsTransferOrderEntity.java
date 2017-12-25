@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 14:14:53
+ * @date 2017-12-25 17:43:16
  */
 public class WmsTransferOrderEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -21,6 +21,14 @@ public class WmsTransferOrderEntity implements Serializable {
 	private Date toDate;
 	//转储单号
 	private String toNo;
+	//仓库代码
+	private String warehouseCode;
+	//来源仓库
+	private String sourWarehouseCode;
+	//目标仓库
+	private String destWarehouseCode;
+	//状态
+	private Integer dataStatus;
 	//创建用户
 	private Long creatorId;
 	//创建时间
@@ -29,6 +37,10 @@ public class WmsTransferOrderEntity implements Serializable {
 	private Long modifierId;
 	//修改时间
 	private Date modifyDate;
+
+
+	private String creatorName;
+	private String modifierName;
 
 	/**
 	 * 设置：转储单编号
@@ -65,6 +77,54 @@ public class WmsTransferOrderEntity implements Serializable {
 	 */
 	public String getToNo() {
 		return toNo;
+	}
+	/**
+	 * 设置：仓库代码
+	 */
+	public void setWarehouseCode(String warehouseCode) {
+		this.warehouseCode = warehouseCode;
+	}
+	/**
+	 * 获取：仓库代码
+	 */
+	public String getWarehouseCode() {
+		return warehouseCode;
+	}
+	/**
+	 * 设置：来源仓库
+	 */
+	public void setSourWarehouseCode(String sourWarehouseCode) {
+		this.sourWarehouseCode = sourWarehouseCode;
+	}
+	/**
+	 * 获取：来源仓库
+	 */
+	public String getSourWarehouseCode() {
+		return sourWarehouseCode;
+	}
+	/**
+	 * 设置：目标仓库
+	 */
+	public void setDestWarehouseCode(String destWarehouseCode) {
+		this.destWarehouseCode = destWarehouseCode;
+	}
+	/**
+	 * 获取：目标仓库
+	 */
+	public String getDestWarehouseCode() {
+		return destWarehouseCode;
+	}
+	/**
+	 * 设置：状态
+	 */
+	public void setDataStatus(Integer dataStatus) {
+		this.dataStatus = dataStatus;
+	}
+	/**
+	 * 获取：状态
+	 */
+	public Integer getDataStatus() {
+		return dataStatus;
 	}
 	/**
 	 * 设置：创建用户
@@ -113,5 +173,21 @@ public class WmsTransferOrderEntity implements Serializable {
 	 */
 	public Date getModifyDate() {
 		return modifyDate;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
+	public String getModifierName() {
+		return modifierName;
+	}
+
+	public void setModifierName(String modifierName) {
+		this.modifierName = modifierName;
 	}
 }

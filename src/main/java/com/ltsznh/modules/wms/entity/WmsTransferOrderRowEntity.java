@@ -11,7 +11,7 @@ import java.util.Date;
  * 
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 14:14:53
+ * @date 2017-12-25 17:43:17
  */
 public class WmsTransferOrderRowEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -66,6 +66,10 @@ public class WmsTransferOrderRowEntity implements Serializable {
 	private Long modifierId;
 	//修改时间
 	private Date modifyDate;
+
+
+	private String creatorName;
+	private String modifierName;
 
 	/**
 	 * 设置：转储单编号
@@ -366,5 +370,21 @@ public class WmsTransferOrderRowEntity implements Serializable {
 	 */
 	public Date getModifyDate() {
 		return modifyDate;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
+	public String getModifierName() {
+		return modifierName;
+	}
+
+	public void setModifierName(String modifierName) {
+		this.modifierName = modifierName;
 	}
 }

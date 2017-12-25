@@ -105,11 +105,11 @@
 	</update>
 	
 	<delete id="delete">
-		update pub_enterprise set is_enabled = 0 where enterprise_code = #{value}
+		update pub_enterprise set is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where enterprise_code = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		update pub_enterprise set is_enabled = 0 pub_enterprise where enterprise_code in
+		update pub_enterprise set is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} pub_enterprise where enterprise_code in
 		<foreach item="enterpriseCode" collection="array" open="(" separator="," close=")">
 			#{enterpriseCode}
 		</foreach>

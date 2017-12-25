@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.ltsznh.modules.wms.dao.WmsTransferOrderSnDao;
 import com.ltsznh.modules.wms.entity.WmsTransferOrderSnEntity;
-import com.ltsznh.modules.wms.service.WmsTransferOrderSnService;
+import com.ltsznh.modules.sal.service.WmsTransferOrderSnService;
 
 
 
@@ -18,8 +18,8 @@ public class WmsTransferOrderSnServiceImpl implements WmsTransferOrderSnService 
 	private WmsTransferOrderSnDao wmsTransferOrderSnDao;
 
 	@Override
-	public WmsTransferOrderSnEntity queryObject(String materialCode){
-		return wmsTransferOrderSnDao.queryObject(materialCode);
+	public WmsTransferOrderSnEntity queryObject(Long toSnId){
+		return wmsTransferOrderSnDao.queryObject(toSnId);
 	}
 
 	@Override
@@ -43,11 +43,11 @@ public class WmsTransferOrderSnServiceImpl implements WmsTransferOrderSnService 
 	}
 
 	@Override
-	public void delete(String materialCode,Long userId){
-		wmsTransferOrderSnDao.delete(materialCode,userId);
+	public void delete(Long toSnId,Long userId){
+		wmsTransferOrderSnDao.delete(toSnId,userId);
 	}
 
 	@Override
-	public void deleteBatch(String[] materialCodes,Long userId){	wmsTransferOrderSnDao.deleteBatch(materialCodes,userId);}
+	public void deleteBatch(Long[] toSnIds,Long userId){	wmsTransferOrderSnDao.deleteBatch(toSnIds,userId);}
 
 }

@@ -27,7 +27,7 @@ import com.ltsznh.modules.wms.service.WmsTransferOrderService;
  *
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 14:14:53
+ * @date 2017-12-25 17:43:16
  */
 @RestController
 @RequestMapping("wmstransferorder")
@@ -56,10 +56,10 @@ public class WmsTransferOrderController  extends AbstractController {
 	/**
 	 * 信息
 	 */
-	@RequestMapping("/info/{toId}")
+	@RequestMapping("/info/{warehouseCode}")
 	@RequiresPermissions("wmstransferorder:info")
-	public R info(@PathVariable("toId") Long toId){
-		WmsTransferOrderEntity wmsTransferOrder = wmsTransferOrderService.queryObject(toId);
+	public R info(@PathVariable("warehouseCode") String warehouseCode){
+		WmsTransferOrderEntity wmsTransferOrder = wmsTransferOrderService.queryObject(warehouseCode);
 
 		return R.ok().put("wmsTransferOrder", wmsTransferOrder);
 	}
@@ -100,8 +100,8 @@ public class WmsTransferOrderController  extends AbstractController {
 	@SysLog("删除仓库入出库单")
 	@RequestMapping("/delete")
 	@RequiresPermissions("wmstransferorder:delete")
-	public R delete(@RequestBody Long[] toIds){
-		wmsTransferOrderService.deleteBatch(toIds,getUserId());
+	public R delete(@RequestBody String[] warehouseCodes){
+		wmsTransferOrderService.deleteBatch(warehouseCodes,getUserId());
 
 		return R.ok();
 	}

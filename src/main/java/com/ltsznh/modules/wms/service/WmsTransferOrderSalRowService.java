@@ -1,4 +1,4 @@
-package com.ltsznh.modules.sal.service;
+package com.ltsznh.modules.wms.service;
 
 import com.ltsznh.modules.sal.entity.WmsTransferOrderSalRowEntity;
 
@@ -10,7 +10,7 @@ import java.util.Map;
  * 
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 10:46:27
+ * @date 2017-12-25 17:43:17
  */
 public interface WmsTransferOrderSalRowService {
 	

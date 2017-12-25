@@ -27,7 +27,7 @@ import com.ltsznh.modules.sal.service.WmsTransferOrderSalService;
  *
  * @author liutao
  * @email ltsznh@gmail.com
- * @date 2017-12-22 10:46:27
+ * @date 2017-12-25 17:43:17
  */
 @RestController
 @RequestMapping("wmstransferordersal")
