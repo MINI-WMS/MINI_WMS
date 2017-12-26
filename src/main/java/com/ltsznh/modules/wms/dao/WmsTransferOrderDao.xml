@@ -42,8 +42,8 @@
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
         ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
-        ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.sour_warehouse_code = wms_warehouse.warehouse_code) as sour_warehouse_name
-        ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.dest_warehouse_code = wms_warehouse.warehouse_code) as dest_warehouse_name
+        ,sour_warehouse_code + ' - ' + (SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.sour_warehouse_code = wms_warehouse.warehouse_code) as sour_warehouse_name
+        ,dest_warehouse_code + ' - ' + (SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.dest_warehouse_code = wms_warehouse.warehouse_code) as dest_warehouse_name
 		from wms_transfer_order
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
@@ -99,7 +99,7 @@
 		SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId}
 		FROM      wms_transfer_order AS a INNER JOIN
 		wms_transfer_order_row ON a.to_no = wms_transfer_order_row.to_no
-		WHERE   (a.to_sal_id in
+		WHERE   (a.to_id in
 		<foreach item="toId" collection="array" open="(" separator="," close=")">
 			#{toId}
 		</foreach>);

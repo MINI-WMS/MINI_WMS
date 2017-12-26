@@ -1,5 +1,7 @@
 package com.ltsznh.modules.wms.entity;
 
+import com.ltsznh.common.utils.DateUtils;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,7 +19,7 @@ public class WmsTransferOrderRowEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//转储单编号
-	private Long toId;
+	private Long toRowId;
 	//colName
 	private Long sourToId;
 	//转储单日期
@@ -65,17 +67,23 @@ public class WmsTransferOrderRowEntity implements Serializable {
 	private String creatorName;
 	private String modifierName;
 
+
+	private String sourEngineerName;
+	private String destEngineerName;
+	private String materialDesc;
+	private String supplierName;
+
 	/**
 	 * 设置：转储单编号
 	 */
-	public void setToId(Long toId) {
-		this.toId = toId;
+	public void setToRowId(Long toRowId) {
+		this.toRowId = toRowId;
 	}
 	/**
 	 * 获取：转储单编号
 	 */
-	public Long getToId() {
-		return toId;
+	public Long getToRowId() {
+		return toRowId;
 	}
 	/**
 	 * 设置：colName
@@ -98,8 +106,8 @@ public class WmsTransferOrderRowEntity implements Serializable {
 	/**
 	 * 获取：转储单日期
 	 */
-	public Date getToDate() {
-		return toDate;
+	public String getToDate() {
+		return DateUtils.formatToDate(toDate);
 	}
 	/**
 	 * 设置：转储单号
@@ -344,5 +352,37 @@ public class WmsTransferOrderRowEntity implements Serializable {
 
 	public void setModifierName(String modifierName) {
 		this.modifierName = modifierName;
+	}
+
+	public String getSourEngineerName() {
+		return sourEngineerName;
+	}
+
+	public void setSourEngineerName(String sourEngineerName) {
+		this.sourEngineerName = sourEngineerName;
+	}
+
+	public String getDestEngineerName() {
+		return destEngineerName;
+	}
+
+	public void setDestEngineerName(String destEngineerName) {
+		this.destEngineerName = destEngineerName;
+	}
+
+	public String getMaterialDesc() {
+		return materialDesc;
+	}
+
+	public void setMaterialDesc(String materialDesc) {
+		this.materialDesc = materialDesc;
+	}
+
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
 	}
 }

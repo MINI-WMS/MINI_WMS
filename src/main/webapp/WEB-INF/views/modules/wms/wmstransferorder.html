@@ -33,7 +33,7 @@
 									<div class="form-group">
 			   	<div class="col-sm-2 control-label">移库单日期</div>
 			   	<div class="col-sm-10">
-			      <input type="date" class="form-control" v-model="wmsTransferOrder.toDate" placeholder="移库单日期"/>
+			      <input type="date" class="form-control" v-model="wmsTransferOrder.toDate" placeholder="移库单日期" :disabled="!addNew"/>
 			    </div>
 			</div>
 
@@ -67,9 +67,18 @@
 </div>
 
 <div v-show="showRow">
+	<div v-show="!showSn">
 	<h4>移库单明细</h4>
 	<div class="grid-btn">
-
+			<div class="col-sm-2">
+				<input type="text" class="form-control" v-model="wmsTransferOrderRow.toNo" placeholder="移库单号" readonly="true"/>
+			</div>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" v-model="wmsTransferOrderRow.sourWarehouseName" placeholder="移出仓库" readonly="true"/>
+			</div>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" v-model="wmsTransferOrderRow.destWarehouseName" placeholder="移入仓库" readonly="true"/>
+			</div>
 		<a class="btn btn-primary" @click="backToTransfer"><i class="fa fa-angle-left" aria-hidden="true"></i>&nbsp;返回</a>
 		<#if shiro.hasPermission("wmstransferorderrow:save")>
 		<a class="btn btn-primary" @click="addRow"><i class="fa fa-plus"></i>&nbsp;新增</a>
@@ -77,13 +86,14 @@
 	<#if shiro.hasPermission("wmstransferorderrow:delete")>
 	<a class="btn btn-danger" @click="delRow"><i class="fa fa-trash-o"></i>&nbsp;作废</a>
 </#if>
+<#if shiro.hasPermission("wmstransferordersn:save")>
+<a class="btn btn-primary" @click="showSnList"><i class="fa fa-plus"></i>&nbsp;串号维护</a>
+</#if>
 </div>
 <table id="jqGridRow"></table>
 <div id="jqGridPagerRow"></div>
 
 <div id="addRowLayer" style="display: none;">
-
-	<div class="panel-heading">{{title}}</div>
 	<div class="row">
 		<div class="col-md-6">
 			<form class="form-horizontal">
@@ -163,6 +173,68 @@
 
 	</div>
 </div>
+</div>
+
+<div v-show="showSn" id="addSnLayer" style="display: none;">
+
+	<div class="row">
+		<div class="col-md-8">
+			<table id="jqGridSn"></table>
+			<div id="jqGridPagerSn"></div>
+		</div>
+
+		<div class="col-md-2">
+			<form class="form-horizontal">
+				<a class="btn btn-primary" @click="backToRow"><i class="fa fa-angle-left" aria-hidden="true"></i>&nbsp;返回</a>
+
+				<#if shiro.hasPermission("wmstransferordersn:delete")>
+				<a class="btn btn-danger" @click="delSn"><i class="fa fa-trash-o"></i>&nbsp;作废</a>
+			</#if>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">单据日期</div>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" v-model="wmsTransferOrderSn.toDate" placeholder="单据日期" disabled="true"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">单据号</div>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" v-model="wmsTransferOrderSn.toNo" placeholder="单据号" disabled="true"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">序号</div>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" v-model="wmsTransferOrderSn.toSeq" placeholder="序号" disabled="true"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">商品代码</div>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" v-model="wmsTransferOrderSn.materialCode" placeholder="商品代码" disabled="true"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">串号</div>
+					<div class="col-sm-4">
+						<input id="materialSn" type="text" class="form-control" v-model="wmsTransferOrderSn.materialSn" placeholder="串号"/>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label"></div>
+					<#if shiro.hasPermission("wmstransferordersn:save")>
+					<a class="btn btn-warning" @click="saveOrUpdateSn"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;保存并继续添加</a>
+				</#if>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</div>
+
 
 </div>
 <script src="${request.contextPath}/statics/js/modules/wms/wmstransferorder.js?_${.now?long}"></script>
