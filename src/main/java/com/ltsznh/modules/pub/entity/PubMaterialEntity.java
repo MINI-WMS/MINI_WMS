@@ -54,6 +54,13 @@ public class PubMaterialEntity implements Serializable {
 
 	private String materialTypeDesc;
 
+	private Long brandId;
+	private String brandName;
+
+	private Long salesman;
+	private String salesmanName;
+
+
 	/**
 	 * 设置：物料代码
 	 */
@@ -269,5 +276,37 @@ public class PubMaterialEntity implements Serializable {
 
 	public void setMaterialTypeDesc(String materialTypeDesc) {
 		this.materialTypeDesc = materialTypeDesc;
+	}
+
+	public Long getBrandId() {
+		return brandId;
+	}
+
+	public void setBrandId(Long brandId) {
+		this.brandId = brandId;
+	}
+
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
+
+	public Long getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(Long salesman) {
+		this.salesman = salesman;
+	}
+
+	public String getSalesmanName() {
+		return salesmanName;
+	}
+
+	public void setSalesmanName(String salesmanName) {
+		this.salesmanName = salesmanName;
 	}
 }

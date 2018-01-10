@@ -9,11 +9,19 @@ $(function () {
 			{label: '所属部门', name: 'deptName', index: 'dept_id', width: 75},
 			{label: '邮箱', name: 'email', width: 150},
 			{
+				label: '类型', name: 'userType', index: 'user_type', width: 60, formatter: function (value, options, row) {
+					if (value === 1) return '<span class="label label-success">用户</span>'
+					if (value === 2) return '<span class="label label-danger">管理员</span>';
+					if (value === 3) return '<span class="label label-success">工程师</span>';
+					if (value === 4) return '<span class="label label-success">营业员</span>';
+				}
+			},
+			{
 				label: '状态', name: 'isEnabled', index: 'is_enabled', width: 60, formatter: function (value, options, row) {
-				return value === 0 ?
-					'<span class="label label-danger">禁用</span>' :
-					'<span class="label label-success">正常</span>';
-			}
+					return value === 0 ?
+						'<span class="label label-danger">禁用</span>' :
+						'<span class="label label-success">正常</span>';
+				}
 			},
 			{label: '创建用户', name: 'creatorName', index: 'creator', width: 80},
 			{label: '创建时间', name: 'createDate', index: 'create_date', width: 150},
@@ -76,7 +84,8 @@ var vm = new Vue({
 			isEnabled: 1,
 			deptId: 0,
 			deptName: null,
-			roleIdList: []
+			roleIdList: [],
+			userType: 1
 		}
 	},
 	methods: {
@@ -145,7 +154,7 @@ var vm = new Vue({
 		},
 		saveOrUpdate: function () {
 			var url = vm.user.userId == null ? "sys/user/save" : "sys/user/update";
-			if(vm.user.password != null && vm.user.password.length>0){
+			if (vm.user.password != null && vm.user.password.length > 0) {
 				vm.user.password = hex_sha1(hex_sha1(vm.user.password))
 			}
 			$.ajax({

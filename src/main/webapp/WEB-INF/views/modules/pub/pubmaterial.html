@@ -59,12 +59,48 @@
 								<input type="text" class="form-control" v-model="pubMaterial.materialDesc" placeholder="商品名称"/>
 							</div>
 						</div>
+						<!--<div class="form-group">-->
+							<!--<div class="col-sm-2 control-label">商品类型</div>-->
+							<!--<div class="col-sm-10">-->
+								<!--<input type="text" class="form-control" v-model="pubMaterial.materialTypeCode" placeholder="商品类型"/>-->
+							<!--</div>-->
+						<!--</div>-->
+
 						<div class="form-group">
 							<div class="col-sm-2 control-label">商品类型</div>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" v-model="pubMaterial.materialTypeCode" placeholder="商品类型"/>
+								<select class="form-control" v-model="pubMaterial.materialTypeCode">
+									<optgroup label="商品类型">
+										<!--<option value="1">正常</option>-->
+										<!--<option value="0">禁用</option>-->
+										<option v-for="option in pubMaterialType" v-bind:value="option.materialTypeCode">
+											{{ option.materialTypeDesc }}
+										</option>
+									</optgroup>
+								</select>
 							</div>
 						</div>
+
+						<div class="form-group">
+							<div class="col-sm-2 control-label">品牌</div>
+							<div class="col-sm-10">
+								<select class="form-control" v-model="pubMaterial.brandId">
+									<optgroup label="品牌">
+										<!--<option value="1">正常</option>-->
+										<!--<option value="0">禁用</option>-->
+										<option v-for="option in pubBrand" v-bind:value="option.brandId">
+											{{ option.brandName }}
+										</option>
+									</optgroup>
+								</select>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+				<div class="col-md-6 ">
+					<div class="form-horizontal">
 						<div class="form-group">
 							<div class="col-sm-2 control-label">条码</div>
 							<div class="col-sm-10">
@@ -78,21 +114,17 @@
 							</div>
 						</div>
 						<!--<div class="form-group">-->
-							<!--<div class="col-sm-2 control-label">采购单位</div>-->
-							<!--<div class="col-sm-10">-->
-								<!--<input type="text" class="form-control" v-model="pubMaterial.purchaseUnit" placeholder="采购单位"/>-->
-							<!--</div>-->
+						<!--<div class="col-sm-2 control-label">采购单位</div>-->
+						<!--<div class="col-sm-10">-->
+						<!--<input type="text" class="form-control" v-model="pubMaterial.purchaseUnit" placeholder="采购单位"/>-->
+						<!--</div>-->
 						<!--</div>-->
 						<!--<div class="form-group">-->
-							<!--<div class="col-sm-2 control-label">销售单位</div>-->
-							<!--<div class="col-sm-10">-->
-								<!--<input type="text" class="form-control" v-model="pubMaterial.saleUnit" placeholder="销售单位"/>-->
-							<!--</div>-->
+						<!--<div class="col-sm-2 control-label">销售单位</div>-->
+						<!--<div class="col-sm-10">-->
+						<!--<input type="text" class="form-control" v-model="pubMaterial.saleUnit" placeholder="销售单位"/>-->
 						<!--</div>-->
-					</div>
-				</div>
-				<div class="col-md-6 ">
-					<div class="form-horizontal">
+						<!--</div>-->
 						<!--<div class="form-group">-->
 							<!--<div class="col-sm-2 control-label">采购库存单位转换比</div>-->
 							<!--<div class="col-sm-10">-->
@@ -106,7 +138,7 @@
 							<!--</div>-->
 						<!--</div>-->
 						<div class="form-group">
-							<div class="col-sm-2 control-label">指导单价</div>
+							<div class="col-sm-2 control-label">采购指导单价</div>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" v-model="pubMaterial.guidanceUnitPrice" placeholder="指导单价"/>
 							</div>

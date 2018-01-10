@@ -6,12 +6,13 @@ $(function () {
 			{ label: '商品代码', name: 'materialCode', index: 'material_code', width: 80, key: true },
 			{ label: '商品描述', name: 'materialDesc', index: 'material_desc', width: 110 },
 			{ label: '商品类型', name: 'materialTypeDesc', index: 'material_type_code', width: 80 },
+			{ label: '品牌', name: 'brandName', index: 'brand_id', width: 80 },
 			{ label: '条码', name: 'barcode', index: 'barcode', width: 120 },
 			{ label: '库存单位', name: 'inventoryUnit', index: 'inventory_unit', width: 80 }, 
-			{ label: '采购单位', name: 'purchaseUnit', index: 'purchase_unit', width: 80 }, 
-			{ label: '销售单位', name: 'saleUnit', index: 'sale_unit', width: 80 }, 
-			{ label: '采购库存单位转换比', name: 'purchaseToInventory', index: 'purchase_to_inventory', width: 150 },
-			{ label: '销售库存单位转换比', name: 'saleToInventory', index: 'sale_to_inventory', width: 150 },
+			// { label: '采购单位', name: 'purchaseUnit', index: 'purchase_unit', width: 80 },
+			// { label: '销售单位', name: 'saleUnit', index: 'sale_unit', width: 80 },
+			// { label: '采购库存单位转换比', name: 'purchaseToInventory', index: 'purchase_to_inventory', width: 150 },
+			// { label: '销售库存单位转换比', name: 'saleToInventory', index: 'sale_to_inventory', width: 150 },
 			{ label: '指导单价', name: 'guidanceUnitPrice', index: 'guidance_unit_price', width: 80 }, 
 			{ label: '税率', name: 'taxRate', index: 'tax_rate', width: 80 },
 			{
@@ -66,7 +67,9 @@ var vm = new Vue({
 		showList: true,
 		title: null,
 		addNew:false,
-		pubMaterial: {}
+		pubMaterial: {},
+		pubMaterialType:null,
+		pubBrand:null
 	},
 	methods: {
 		query: function () {
@@ -77,6 +80,10 @@ var vm = new Vue({
 			vm.title = "新增";
 			vm.addNew = true;
 			vm.pubMaterial = {};
+
+			vm.getPubMaterialType();
+			vm.getPubBrand();
+
 		},
 		update: function (event) {
 			var materialCode = getSelectedRow();
@@ -86,6 +93,9 @@ var vm = new Vue({
 			vm.showList = false;
             vm.title = "修改";
 			vm.addNew = false;
+
+			vm.getPubMaterialType();
+			vm.getPubBrand();
 
             vm.getInfo(materialCode)
 		},
@@ -142,6 +152,36 @@ var vm = new Vue({
 			$("#jqGrid").jqGrid('setGridParam',{
                 page:page
             }).trigger("reloadGrid");
+		},
+		getPubMaterialType: function (event) {
+			$.ajax({
+				type: "POST",
+				url: baseURL + 'pubmaterialtype/list',
+				contentType: "application/json",
+				data: {'isEnabled': 1},
+				success: function(r){
+					if(r.code == 0){
+						vm.pubMaterialType = r.page.list;
+					}else{
+						alert(r.msg);
+					}
+				}
+			});
+		},
+		getPubBrand: function (event) {
+			$.ajax({
+				type: "POST",
+				url: baseURL + 'pubbrand/list',
+				contentType: "application/json",
+				data: {'isEnabled': 1},
+				success: function(r){
+					if(r.code == 0){
+						vm.pubBrand = r.page.list;
+					}else{
+						alert(r.msg);
+					}
+				}
+			});
 		}
 	}
 });

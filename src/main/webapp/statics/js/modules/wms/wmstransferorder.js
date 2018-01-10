@@ -66,7 +66,9 @@ var vm = new Vue({
 		qSn: {
 			toNo: null,
 			toSeq: null,
-		}
+		},
+		defaultToDate: getCurrentDate(),
+		defaultWarehouseCode: null
 	},
 	methods: {
 		query: function () {
@@ -76,7 +78,7 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.addNew = true;
-			vm.wmsTransferOrder = {};
+			vm.wmsTransferOrder = {toDate:vm.defaultToDate,sourWarehouseCode:vm.defaultWarehouseCode};
 		},
 		update: function (event) {
 			var toId = getSelectedRow();
@@ -526,3 +528,13 @@ $(function () {
 
 	});
 })
+
+/* 当前日期 */
+function getCurrentDate() {
+	var date = new Date();
+	var mon = date.getMonth() + 1;
+	var day = date.getDate();
+	var currentDate = date.getFullYear() + "-" + (mon < 10 ? "0" + mon : mon) + "-" + (day < 10 ? "0" + day : day);
+	// console.log(currentDate);
+	return currentDate;
+}

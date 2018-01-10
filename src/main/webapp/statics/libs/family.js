@@ -21,3 +21,13 @@ $(function () {
     });
 })
 
+/* 当前日期 */
+function getCurrentDate() {
+	var date = new Date();
+	var mon = date.getMonth() + 1;
+	var day = date.getDate();
+	var currentDate = date.getFullYear() + "-" + (mon<10?"0"+mon:mon) + "-" +(day<10?"0"+day:day);
+	console.log(currentDate);
+	// return currentDate;
+}
+

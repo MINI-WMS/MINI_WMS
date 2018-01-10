@@ -60,7 +60,10 @@ var vm = new Vue({
 		wmsTransferOrderSalRow: {},
 		qRow: {
 			toNo: null
-		}
+		},
+		defaultToDate: getCurrentDate(),
+		defaultWarehouseCode: null,
+		defaultCustomerCode: 'lskh'
 	},
 	methods: {
 		query: function () {
@@ -70,7 +73,12 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.addNew = true;
-			vm.wmsTransferOrderSal = {};
+
+			vm.wmsTransferOrderSal = {
+				toDate: vm.defaultToDate,
+				warehouseCode: vm.defaultWarehouseCode,
+				customerCode: vm.defaultCustomerCode
+			};
 		},
 		update: function (event) {
 			var toSalId = getSelectedRow();
@@ -157,7 +165,7 @@ var vm = new Vue({
 			vm.wmsTransferOrderSal = {};
 			vm.reload();
 
-			vm.qRow.toNo="aaa";
+			vm.qRow.toNo = "aaa";
 			vm.reloadRow();
 		},
 		resetRow: function () {
@@ -172,15 +180,15 @@ var vm = new Vue({
 //以下是行项信息
 		reloadRow: function (event) {
 			vm.showList = true;
-			var page = $("#jqGridRow").jqGrid('getGridParam','page');
-			$("#jqGridRow").jqGrid('setGridParam',{
-				page:page,
+			var page = $("#jqGridRow").jqGrid('getGridParam', 'page');
+			$("#jqGridRow").jqGrid('setGridParam', {
+				page: page,
 				postData: {
 					'toNo': vm.qRow.toNo
 				},
 			}).trigger("reloadGrid");
 		},
-		addRow: function(){
+		addRow: function () {
 			vm.addNew = true;
 			vm.resetRow();
 			layer.open({
@@ -200,14 +208,14 @@ var vm = new Vue({
 				url: baseURL + url,
 				contentType: "application/json",
 				data: JSON.stringify(vm.wmsTransferOrderSalRow),
-				success: function(r){
-					if(r.code === 0){
-						alert('操作成功', function(index){
+				success: function (r) {
+					if (r.code === 0) {
+						alert('操作成功', function (index) {
 							vm.reloadRow();
 							vm.resetRow();
 							$("#materialCodeRow").focus();
 						});
-					}else{
+					} else {
 						alert(r.msg);
 					}
 				}
@@ -226,18 +234,18 @@ var vm = new Vue({
 				return;
 			}
 
-			confirm('确定要作废选中的记录？', function(){
+			confirm('确定要作废选中的记录？', function () {
 				$.ajax({
 					type: "POST",
 					url: baseURL + "wmstransferordersalrow/delete",
 					contentType: "application/json",
 					data: JSON.stringify(toSalRowIds),
-					success: function(r){
-						if(r.code == 0){
-							alert('操作成功', function(index){
+					success: function (r) {
+						if (r.code == 0) {
+							alert('操作成功', function (index) {
 								$("#jqGridRow").trigger("reloadGrid");
 							});
-						}else{
+						} else {
 							alert(r.msg);
 						}
 					}
@@ -252,17 +260,19 @@ $(function () {
 		url: baseURL + 'wmstransferordersalrow/list',
 		datatype: "json",
 		colModel: [
-			{ label: 'toSalRowId', name: 'toSalRowId', index: 'to_sal_row_id', width: 50, key: true,hidden:true},
-			{ label: '销售日期', name: 'toDate', index: 'to_date', width: 120 },
-			{ label: '销售单号', name: 'toNo', index: 'to_no', width: 150 },
-			{ label: '序号', name: 'toSeq', index: 'to_seq', width: 80 },
-			{ label: '商品代码', name: 'materialCode', index: 'material_code', width: 120 },
-			{ label: '商品', name: 'materialName', index: 'material_code', width: 150 },
-			{ label: '指导单价', name: 'guidanceUnitPrice', index: 'guidance_unit_price', width: 80 },
-			{ label: '单价', name: 'unitPrice', index: 'unit_price', width: 80 },
-			{ label: '数量', name: 'qty', index: 'qty', width: 80 },
-			{ label: '总金额', name: 'totalAmount', index: 'total_amount', width: 80 },
-			{label: '工程师编号', name: 'engineer', index: 'engineer', width: 90},
+			{label: 'toSalRowId', name: 'toSalRowId', index: 'to_sal_row_id', width: 50, key: true, hidden: true},
+			{label: '销售日期', name: 'toDate', index: 'to_date', width: 120},
+			{label: '销售单号', name: 'toNo', index: 'to_no', width: 150},
+			{label: '序号', name: 'toSeq', index: 'to_seq', width: 80},
+			{label: '商品代码', name: 'materialCode', index: 'material_code', width: 120},
+			{label: '商品', name: 'materialName', index: 'material_code', width: 150},
+			{label: '指导单价', name: 'guidanceUnitPrice', index: 'guidance_unit_price', width: 80},
+			{label: '单价', name: 'unitPrice', index: 'unit_price', width: 80},
+			{label: '数量', name: 'qty', index: 'qty', width: 80},
+			{label: '总金额', name: 'totalAmount', index: 'total_amount', width: 80},
+			// {label: '营业员编号', name: 'salesman', index: 'salesman', width: 90},
+			{label: '营业员', name: 'salesmanName', index: 'salesman', width: 90},
+			// {label: '工程师编号', name: 'engineer', index: 'engineer', width: 90},
 			{label: '工程师', name: 'engineerName', index: 'engineer', width: 90},
 			{
 				label: '状态', name: 'dataStatus', width: 60, index: 'dataStatus', formatter: function (value, options, row) {
@@ -279,25 +289,25 @@ $(function () {
 		viewrecords: true,
 		height: 385,
 		rowNum: 10,
-		rowList : [10,30,50],
+		rowList: [10, 30, 50],
 		rownumbers: true,
 		rownumWidth: 25,
-		autowidth:true,
+		autowidth: true,
 		multiselect: true,
 		shrinkToFit: false,
 		pager: "#jqGridPagerRow",
-		jsonReader : {
+		jsonReader: {
 			root: "page.list",
 			page: "page.currPage",
 			total: "page.totalPage",
 			records: "page.totalCount"
 		},
-		prmNames : {
-			page:"page",
-			rows:"limit",
+		prmNames: {
+			page: "page",
+			rows: "limit",
 			order: "order"
 		},
-		gridComplete:function(){
+		gridComplete: function () {
 			$(window).resize();
 		}
 	});
@@ -317,3 +327,14 @@ $(function () {
 
 	});
 })
+
+/* 当前日期 */
+function getCurrentDate() {
+	var date = new Date();
+	var mon = date.getMonth() + 1;
+	var day = date.getDate();
+	var currentDate = date.getFullYear() + "-" + (mon < 10 ? "0" + mon : mon) + "-" + (day < 10 ? "0" + day : day);
+	// console.log(currentDate);
+	return currentDate;
+}
+

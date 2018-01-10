@@ -86,6 +86,8 @@ public class SysUserEntity implements Serializable {
 	private Long modifierId;
 	private String modifierName;
 
+	private Integer userType;
+
 	/**
 	 * 设置：
 	 * @param userId
@@ -260,5 +262,13 @@ public class SysUserEntity implements Serializable {
 
 	public void setModifierName(String modifierName) {
 		this.modifierName = modifierName;
+	}
+
+	public Integer getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
 	}
 }

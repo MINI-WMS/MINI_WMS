@@ -49,6 +49,23 @@ $(function () {
 	});
 });
 
+//仓库结构树
+var wh_ztree;
+var wh_setting = {
+	data: {
+		simpleData: {
+			enable: true,
+			idKey: "warehouseCode",
+			pIdKey: "warehouseCode1",
+			rootPId: -1
+		},
+		key: {
+			name: "warehouseName",
+			url: "nourl"
+		}
+	}
+};
+
 var vm = new Vue({
 		el: '#familyApp',
 		data: {
@@ -56,11 +73,15 @@ var vm = new Vue({
 			showRow: false,
 			title: null,
 			addNew: false,
-			wmsTransferOrderPur: {},
+			wmsTransferOrderPur: {
+				toDate: new Date()
+			},
 			wmsTransferOrderPurRow: {},
 			qRow: {
 				toNo: null
-			}
+			},
+			defaultToDate: getCurrentDate(),
+			defaultWarehouseCode: null,
 		},
 		methods: {
 			query: function () {
@@ -70,7 +91,10 @@ var vm = new Vue({
 				vm.showList = false;
 				vm.title = "新增";
 				vm.addNew = true;
-				vm.wmsTransferOrderPur = {};
+				vm.wmsTransferOrderPur = {toDate: vm.defaultToDate, warehouseCode: vm.defaultWarehouseCode};
+
+				vm.getDefalutWarehouse();
+				vm.getWarehouse();
 			},
 			update: function (event) {
 				var toPurId = getSelectedRow();
@@ -250,6 +274,59 @@ var vm = new Vue({
 						}
 					});
 				});
+			},
+			getDefalutWarehouse: function () {
+				//获取默认仓库
+				$.get(baseURL + "wmswarehouseuser/list", function (r) {
+					if (r.code === 0) {
+						vm.wmsTransferOrderPur.warehouseCode = r.page.list[0].warehouseCode;
+						vm.wmsTransferOrderPur.warehouseName = r.page.list[0].warehouseName;
+					} else {
+						alert(r.msg);
+					}
+				})
+			},
+			getWarehouse: function () {
+				//加载仓库树
+				$.get(baseURL + "wmswarehouseuser/myWarehouse", function (r) {
+					wh_ztree = $.fn.zTree.init($("#whTree"), wh_setting, r.page.list);
+					var node = wh_ztree.getNodeByParam("warehouseCode", vm.wmsTransferOrderPur.warehouseCode);
+					if (node != null) {
+						wh_ztree.selectNode(node);
+
+						vm.wmsTransferOrderPur.warehouseName = node.warehouseName;
+					}
+				})
+			},
+			whTree: function () {
+				layer.open({
+					type: 1,
+					offset: '50px',
+					skin: 'layui-layer-molv',
+					title: "选择仓库",
+					area: ['300px', '450px'],
+					shade: 0,
+					shadeClose: false,
+					content: jQuery("#whLayer"),
+					btn: ['确定', '取消'],
+					btn1: function (index) {
+						var node = wh_ztree.getSelectedNodes();
+						if (node === null) {
+							vm.wmsTransferOrderPur.warehouseCode = null;
+							vm.wmsTransferOrderPur.warehouseName = null;
+
+							layer.close(index);
+							return;
+						}
+						//选择上级部门
+						vm.wmsTransferOrderPur.warehouseCode = node[0].warehouseCode;
+						vm.wmsTransferOrderPur.warehouseName = node[0].warehouseName;
+
+						layer.close(index);
+
+						vm.getUser();
+					}
+				});
 			}
 		}
 	})
@@ -327,3 +404,14 @@ $(function () {
 
 	});
 })
+
+/* 当前日期 */
+function getCurrentDate() {
+	var date = new Date();
+	var mon = date.getMonth() + 1;
+	var day = date.getDate();
+	var currentDate = date.getFullYear() + "-" + (mon < 10 ? "0" + mon : mon) + "-" + (day < 10 ? "0" + day : day);
+	// console.log(currentDate);
+	return currentDate;
+}
+

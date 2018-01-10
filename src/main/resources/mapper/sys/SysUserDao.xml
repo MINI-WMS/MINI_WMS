@@ -35,6 +35,9 @@
             <if test="isEnabled != null and isEnabled.trim() != ''">
                 and u.is_enabled = #{isEnabled}
             </if>
+            <if test="userType != null and userType.trim() != ''">
+                and u.user_type = #{userType}
+            </if>
             <!--  数据过滤  -->
             ${filterSql}
         </where>
@@ -51,7 +54,18 @@
             <if test="username != null and username.trim() != ''">
                 and u.username like concat('%',#{username},'%')
             </if>
-
+            <if test="phone != null and phone.trim() != ''">
+                and u.phone like concat('%',#{phone},'%')
+            </if>
+            <if test="deptId != null and deptId.trim() != ''">
+                and u.dept_id = #{deptId}
+            </if>
+            <if test="isEnabled != null and isEnabled.trim() != ''">
+                and u.is_enabled = #{isEnabled}
+            </if>
+            <if test="userType != null and userType.trim() != ''">
+                and u.user_type = #{userType}
+            </if>
             <!--  数据过滤  -->
             ${filterSql}
         </where>
@@ -89,6 +103,7 @@
 			salt,
 			email,
 			phone,
+			user_type,
 			is_enabled,
 			dept_id,
 			creator
@@ -100,6 +115,7 @@
 			#{salt},
 			#{email}, 
 			#{phone},
+			#{userType},
 			#{isEnabled},
 			#{deptId},
 			#{creatorId}
@@ -110,6 +126,7 @@
         update sys_user
         <set>modify_date = getdate(),
             <if test="modifierId != null">modifier = #{modifierId},</if>
+            <if test="userType != null">user_type = #{userType},</if>
             <if test="isEnabled != null">is_enabled = #{isEnabled},</if>
             <if test="username != null">username = #{username},</if>
             <if test="password != null">password = #{password},</if>

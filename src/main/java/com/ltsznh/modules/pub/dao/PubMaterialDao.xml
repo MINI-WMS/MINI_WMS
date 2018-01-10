@@ -41,6 +41,8 @@
 		*
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+        ,(SELECT material_type_desc FROM pub_material_type where pub_material_type.material_type_code = material_type_code) as material_type_desc
+        ,(SELECT brand_name FROM pub_brand where pub_brand.brand_id = pub_material.brand_id) as brand_name
 		from pub_material
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
@@ -60,7 +62,8 @@
 			[material_desc], 
 			[material_type_code], 
 			[barcode], 
-			[inventory_unit], 
+			[brand_id],
+			[inventory_unit],
 			[purchase_unit], 
 			[sale_unit], 
 			[purchase_to_inventory], 
@@ -79,7 +82,8 @@
 			#{materialDesc}, 
 			#{materialTypeCode}, 
 			#{barcode}, 
-			#{inventoryUnit}, 
+			#{brandId},
+			#{inventoryUnit},
 			#{purchaseUnit}, 
 			#{saleUnit}, 
 			#{purchaseToInventory}, 
@@ -100,6 +104,7 @@
 			<if test="materialDesc != null">[material_desc] = #{materialDesc}, </if>
 			<if test="materialTypeCode != null">[material_type_code] = #{materialTypeCode}, </if>
 			<if test="barcode != null">[barcode] = #{barcode}, </if>
+			<if test="brandId != null">[brand_id] = #{brandId}, </if>
 			<if test="inventoryUnit != null">[inventory_unit] = #{inventoryUnit}, </if>
 			<if test="purchaseUnit != null">[purchase_unit] = #{purchaseUnit}, </if>
 			<if test="saleUnit != null">[sale_unit] = #{saleUnit}, </if>
@@ -117,11 +122,11 @@
 	</update>
 	
 	<delete id="delete">
-		delete from pub_material where material_code = #{value}
+		UPDATE pub_material set is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where material_code = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from pub_material where material_code in 
+		update pub_material set is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where material_code in
 		<foreach item="materialCode" collection="array" open="(" separator="," close=")">
 			#{materialCode}
 		</foreach>

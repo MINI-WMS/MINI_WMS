@@ -119,14 +119,40 @@
     <!--</update>-->
 
     <delete id="delete">
-		UPDATE wms_transfer_order_pur_row set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_row_id = #{value};
+		DELETE FROM wms_transfer_order_pur_row where to_pur_row_id = #{value};
+
+		DELETE FROM wms_transfer_order_sn
+        FROM      wms_transfer_order_sn INNER JOIN
+                        wms_transfer_order_pur_row AS b ON wms_transfer_order_sn.to_no = b.to_no AND
+                        wms_transfer_order_sn.to_seq = b.to_seq
+        WHERE   (b.to_pur_row_id = #{value})
 	</delete>
 
     <delete id="deleteBatch">
-        UPDATE wms_transfer_order_pur_row set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_row_id in
+        DELETE FROM wms_transfer_order_pur_row where to_pur_row_id in
+        <foreach item="toPurRowId" collection="array" open="(" separator="," close=")">
+            #{toPurRowId}
+        </foreach>;
+
+        DELETE FROM wms_transfer_order_sn
+        FROM      wms_transfer_order_sn INNER JOIN
+        wms_transfer_order_pur_row AS b ON wms_transfer_order_sn.to_no = b.to_no AND
+        wms_transfer_order_sn.to_seq = b.to_seq
+        WHERE   b.to_pur_row_id in
         <foreach item="toPurRowId" collection="array" open="(" separator="," close=")">
             #{toPurRowId}
         </foreach>;
     </delete>
+
+    <!--<delete id="delete">-->
+		<!--UPDATE wms_transfer_order_pur_row set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_row_id = #{value};-->
+	<!--</delete>-->
+
+    <!--<delete id="deleteBatch">-->
+        <!--UPDATE wms_transfer_order_pur_row set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_row_id in-->
+        <!--<foreach item="toPurRowId" collection="array" open="(" separator="," close=")">-->
+            <!--#{toPurRowId}-->
+        <!--</foreach>;-->
+    <!--</delete>-->
 
 </mapper>

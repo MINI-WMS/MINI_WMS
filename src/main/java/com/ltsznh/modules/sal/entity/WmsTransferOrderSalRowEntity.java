@@ -58,6 +58,9 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 	private String materialDesc;
 	private String engineerName;
 
+	private Long salesman;
+	private String salesmanName;
+
 	/**
 	 * 设置：转储单编号
 	 */
@@ -281,5 +284,21 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 
 	public void setEngineerName(String engineerName) {
 		this.engineerName = engineerName;
+	}
+
+	public Long getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(Long salesman) {
+		this.salesman = salesman;
+	}
+
+	public String getSalesmanName() {
+		return salesmanName;
+	}
+
+	public void setSalesmanName(String salesmanName) {
+		this.salesmanName = salesmanName;
 	}
 }

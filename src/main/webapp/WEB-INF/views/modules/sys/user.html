@@ -71,6 +71,23 @@
 					</label>
 				</div>
 			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">类型</div>
+				<label class="radio-inline">
+					<input type="radio" name="userType" value="1" v-model="user.userType"/> 用户
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="userType" value="2" v-model="user.userType"/> 管理员
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="userType" value="3" v-model="user.userType"/> 工程师
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="userType" value="4" v-model="user.userType"/> 营业员
+				</label>
+			</div>
+
 			<div class="form-group">
 				<div class="col-sm-2 control-label">状态</div>
 				<label class="radio-inline">

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.pub.dao.PubBrandDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.pub.entity.PubBrandEntity" id="pubBrandMap">
+        <result property="brandId" column="brand_id"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="isEnabled" column="is_enabled"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="modifyDate" column="modify_date"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.pub.entity.PubBrandEntity">
+		select * from pub_brand where brand_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.pub.entity.PubBrandEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by brand_id desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		from pub_brand
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from pub_brand 
+	</select>
+	 
+	<insert id="save" parameterType="com.ltsznh.modules.pub.entity.PubBrandEntity">
+		insert into pub_brand
+		(
+			[brand_name],
+			[creator_id],
+			[create_date]
+		)
+		values
+		(
+			#{brandName},
+			#{creatorId},
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.ltsznh.modules.pub.entity.PubBrandEntity">
+		update pub_brand 
+		<set>
+			<if test="brandName != null">[brand_name] = #{brandName}, </if>
+			<if test="isEnabled != null">[is_enabled] = #{isEnabled}, </if>
+			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
+			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+		</set>
+		where brand_id = #{brandId}
+	</update>
+	
+	<delete id="delete">
+		update pub_brand set is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where brand_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		UPDATE pub_brand set is_enabled = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where brand_id in
+		<foreach item="brandId" collection="array" open="(" separator="," close=")">
+			#{brandId}
+		</foreach>
+	</delete>
+
+</mapper>

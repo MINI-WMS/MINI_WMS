@@ -183,9 +183,9 @@ var vm = new Vue({
 				});
 			});
 		},
-		getInfo: function (userId) {
-			$.get(baseURL + "wmswarehouseuser/info/" + userId, function (r) {
-				vm.wmsWarehouseUser = r.wmsWarehouseUser;
+		getInfo: function (wmsUserId) {
+			$.get(baseURL + "wmswarehouseuser/info/" + wmsUserId, function (r) {
+				vm.wmsWarehouseUser = r;
 
 				vm.getDept();
 				vm.getWarehouseTree();
@@ -208,6 +208,7 @@ var vm = new Vue({
 
 				//勾选角色所拥有的部门数据权限
 				var warehouseCodeList = vm.wmsWarehouseUser.warehouseCodeList;
+				if(warehouseCodeList === undefined)return;
 				for (var i = 0; i < warehouseCodeList.length; i++) {
 					var node = data_ztree.getNodeByParam("warehouseCode", warehouseCodeList[i]);
 					data_ztree.checkNode(node, true, false);
@@ -253,6 +254,13 @@ var vm = new Vue({
 				btn: ['确定', '取消'],
 				btn1: function (index) {
 					var node = dept_ztree.getSelectedNodes();
+					if(node === null){
+						vm.wmsWarehouseUser.deptId = null;
+						vm.wmsWarehouseUser.deptName = null;
+
+						layer.close(index);
+						return;
+					}
 					//选择上级部门
 					vm.wmsWarehouseUser.deptId = node[0].deptId;
 					vm.wmsWarehouseUser.deptName = node[0].deptName;
@@ -276,7 +284,13 @@ var vm = new Vue({
 				btn: ['确定', '取消'],
 				btn1: function (index) {
 					var node = user_ztree.getSelectedNodes();
-					//选择上级部门
+					if(node === null) {
+						vm.wmsWarehouseUser.userId = null;
+						vm.wmsWarehouseUser.username = null;
+						layer.close(index);
+						return;
+					}
+					//选择用户
 					vm.wmsWarehouseUser.userId = node[0].userId;
 					vm.wmsWarehouseUser.username = node[0].username;
 
