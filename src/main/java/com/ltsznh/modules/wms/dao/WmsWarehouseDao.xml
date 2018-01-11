@@ -35,6 +35,14 @@
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
 		,(SELECT dept_name FROM sys_dept where wms_warehouse.dept_id = sys_dept.dept_id) as dept_name
 		from wms_warehouse
+		<where>
+			<if test="isEnabled != null and isEnabled.trim() != ''">
+				and is_enabled = #{isEnabled}
+			</if>
+
+			<!--  数据过滤  -->
+			${filterSql}
+		</where>
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
             OFFSET #{offset} ROWS

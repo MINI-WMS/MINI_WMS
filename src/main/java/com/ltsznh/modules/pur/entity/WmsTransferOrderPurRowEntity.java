@@ -61,6 +61,7 @@ public class WmsTransferOrderPurRowEntity implements Serializable {
 	private String materialDesc;
 	private String engineerName;
 
+	private String remark;
 
 
 	/**
@@ -310,5 +311,13 @@ public class WmsTransferOrderPurRowEntity implements Serializable {
 
 	public void setEngineerName(String engineerName) {
 		this.engineerName = engineerName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

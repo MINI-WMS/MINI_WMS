@@ -49,6 +49,11 @@ public interface SysUserService {
 	 * 查询用户列表
 	 */
 	List<SysUserEntity> queryList(Map<String, Object> map);
+
+	/**
+	 * 查询用户列表不限制机构权限的所有用户
+	 */
+	List<SysUserEntity> queryAllStaff(Map<String, Object> map);
 	
 	/**
 	 * 查询总数

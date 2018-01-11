@@ -1,6 +1,7 @@
 package com.ltsznh.modules.sys.dao;
 
 import com.ltsznh.modules.sys.entity.SysUserEntity;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,13 @@ public interface SysUserDao extends BaseDao<SysUserEntity> {
 	 * @param userId  用户ID
 	 */
 	List<String> queryAllPerms(Long userId);
+
+	/**
+	 * 查询用户，不限制用户机构权限
+	 * @param map
+	 * @return
+	 */
+	List<SysUserEntity> queryAllStaff(Map<String, Object> map);
 	
 	/**
 	 * 查询用户的所有菜单ID

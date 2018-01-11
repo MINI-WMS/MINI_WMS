@@ -38,6 +38,16 @@ public class WmsWarehouseController  extends AbstractController {
 	/**
 	 * 列表
 	 */
+	@RequestMapping("/allWarehouse")
+	public R all(@RequestParam Map<String, Object> params){
+		//查询列表数据
+		if(!params.containsKey("isEnabled"))params.put("isEnabled","1");
+		return  list(params);
+	}
+
+	/**
+	 * 列表
+	 */
 	@RequestMapping("/list")
 	@RequiresPermissions("wmswarehouse:list")
 	public R list(@RequestParam Map<String, Object> params){

@@ -48,6 +48,8 @@ public class WmsTransferOrderEntity implements Serializable {
 	private String sourWarehouseName;
 	private String destWarehouseName;
 
+	private String remark;
+
 	/**
 	 * 设置：转储单编号
 	 */
@@ -220,5 +222,13 @@ public class WmsTransferOrderEntity implements Serializable {
 
 	public void setDestWarehouseName(String destWarehouseName) {
 		this.destWarehouseName = destWarehouseName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

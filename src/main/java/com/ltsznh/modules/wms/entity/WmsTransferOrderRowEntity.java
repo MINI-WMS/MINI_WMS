@@ -73,6 +73,8 @@ public class WmsTransferOrderRowEntity implements Serializable {
 	private String materialDesc;
 	private String supplierName;
 
+	private String remark;
+
 	/**
 	 * 设置：转储单编号
 	 */
@@ -384,5 +386,13 @@ public class WmsTransferOrderRowEntity implements Serializable {
 
 	public void setSupplierName(String supplierName) {
 		this.supplierName = supplierName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

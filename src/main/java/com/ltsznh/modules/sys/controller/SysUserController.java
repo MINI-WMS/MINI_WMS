@@ -38,6 +38,28 @@ public class SysUserController extends AbstractController {
 	private SysUserRoleService sysUserRoleService;
 
 	/**
+	 * 所有用户列表，不限制机构权限
+	 */
+	@RequestMapping("/getAllStaff")
+//	@RequiresPermissions("sys:user:list")
+	public R allStaff(@RequestParam Map<String, Object> params) {
+		//查询列表数据，不需要员工列表权限即可查询员工。
+		if(!params.containsKey("isEnabled"))params.put("isEnabled","1");
+		return list(params);
+	}
+
+	/**
+	 * 所有用户列表
+	 */
+	@RequestMapping("/getStaff")
+//	@RequiresPermissions("sys:user:list")
+	public R staff(@RequestParam Map<String, Object> params) {
+		//查询列表数据，不需要员工列表权限即可查询员工。
+		if(!params.containsKey("isEnabled"))params.put("isEnabled","1");
+		return list(params);
+	}
+
+	/**
 	 * 所有用户列表
 	 */
 	@RequestMapping("/list")

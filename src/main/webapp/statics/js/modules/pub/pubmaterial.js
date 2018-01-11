@@ -150,6 +150,7 @@ var vm = new Vue({
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{
+				postData: {'materialCode': vm.q.materialCode, 'materialDesc': vm.q.materialDesc,'isEnabled':vm.q.isEnabled},
                 page:page
             }).trigger("reloadGrid");
 		},

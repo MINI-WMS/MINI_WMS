@@ -1,5 +1,7 @@
 package com.ltsznh.modules.wms.entity;
 
+import com.ltsznh.common.utils.DateUtils;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -42,6 +44,8 @@ public class WmsTransferOrderSnEntity implements Serializable {
 	private String creatorName;
 	private String modifierName;
 
+	private String materialDesc;
+
 	/**
 	 * 设置：colName
 	 */
@@ -63,8 +67,8 @@ public class WmsTransferOrderSnEntity implements Serializable {
 	/**
 	 * 获取：转储单日期
 	 */
-	public Date getToDate() {
-		return toDate;
+	public String getToDate() {
+		return DateUtils.formatToDate(toDate);
 	}
 	/**
 	 * 设置：转储单号
@@ -189,5 +193,13 @@ public class WmsTransferOrderSnEntity implements Serializable {
 
 	public void setModifierName(String modifierName) {
 		this.modifierName = modifierName;
+	}
+
+	public String getMaterialDesc() {
+		return materialDesc;
+	}
+
+	public void setMaterialDesc(String materialDesc) {
+		this.materialDesc = materialDesc;
 	}
 }

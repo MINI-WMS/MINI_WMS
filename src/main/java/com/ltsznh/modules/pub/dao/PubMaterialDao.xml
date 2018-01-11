@@ -44,6 +44,17 @@
         ,(SELECT material_type_desc FROM pub_material_type where pub_material_type.material_type_code = material_type_code) as material_type_desc
         ,(SELECT brand_name FROM pub_brand where pub_brand.brand_id = pub_material.brand_id) as brand_name
 		from pub_material
+		<where>
+			<if test="materialCode != null and materialCode.trim() != ''">
+				and material_code like concat('%',#{materialCode},'%')
+			</if>
+			<if test="materialDesc != null and materialDesc.trim() != ''">
+				and material_desc like concat('%',#{materialDesc},'%')
+			</if>
+			<if test="isEnabled != null and isEnabled.trim() != ''">
+				and is_enabled like concat('%',#{isEnabled},'%')
+			</if>
+		</where>
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
             OFFSET #{offset} ROWS

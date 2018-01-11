@@ -75,8 +75,9 @@
 			[qty], 
 			[total_amount], 
 			[move_type_code],
+			[remark],
 			[engineer],
-			[creator_id], 
+			[creator_id],
 			[create_date]
 		)
 		values
@@ -90,8 +91,9 @@
 			#{qty}, 
 			#{unitPrice}*#{qty},
 			#{moveTypeCode},
-			#{engineer}, 
-			#{creatorId}, 
+			#{remark},
+			#{engineer},
+			#{creatorId},
 			#{createDate}
 		)
 	</insert>

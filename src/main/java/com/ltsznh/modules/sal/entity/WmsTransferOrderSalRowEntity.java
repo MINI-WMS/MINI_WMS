@@ -61,6 +61,8 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 	private Long salesman;
 	private String salesmanName;
 
+	private String remark;
+
 	/**
 	 * 设置：转储单编号
 	 */
@@ -300,5 +302,13 @@ public class WmsTransferOrderSalRowEntity implements Serializable {
 
 	public void setSalesmanName(String salesmanName) {
 		this.salesmanName = salesmanName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

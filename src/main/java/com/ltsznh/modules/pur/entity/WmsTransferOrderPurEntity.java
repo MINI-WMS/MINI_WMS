@@ -43,6 +43,9 @@ public class WmsTransferOrderPurEntity implements Serializable {
 	private String creatorName;
 	private String modifierName;
 	private String supplierName;
+
+	private String remark;
+
 	/**
 	 * 设置：转储单编号
 	 */
@@ -186,5 +189,13 @@ public class WmsTransferOrderPurEntity implements Serializable {
 
 	public void setDataStatus(Integer dataStatus) {
 		this.dataStatus = dataStatus;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

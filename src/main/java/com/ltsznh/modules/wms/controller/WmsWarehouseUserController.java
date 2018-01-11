@@ -63,7 +63,7 @@ public class WmsWarehouseUserController extends AbstractController {
 	 * 信息
 	 */
 	@RequestMapping("/myWarehouse")
-	@RequiresPermissions("wmswarehouseuser:info")
+//	@RequiresPermissions("wmswarehouseuser:info")
 	public R myWarehouse() {
 		return userWarehouse(getUserId());
 	}

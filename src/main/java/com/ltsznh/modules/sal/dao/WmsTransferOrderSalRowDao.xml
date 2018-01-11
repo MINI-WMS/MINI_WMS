@@ -75,6 +75,7 @@
 			[total_amount], 
 			[move_type_code],
 			[salesman],
+			[remark],
 			[engineer],
 			[creator_id],
 			[create_date]
@@ -91,6 +92,7 @@
 			#{unitPrice}*#{qty},
 			#{moveTypeCode},
 			#{salesman},
+			#{remark},
 			#{engineer},
 			#{creatorId},
 			#{createDate}

@@ -45,6 +45,8 @@ public class WmsTransferOrderSalEntity implements Serializable {
 	private String warehouseName;
 	private String customerName;
 
+	private String remark;
+
 
 	/**
 	 * 设置：转储单编号
@@ -197,5 +199,13 @@ public class WmsTransferOrderSalEntity implements Serializable {
 
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

@@ -44,6 +44,12 @@
 			<if test="toPurId != null and toPurId.trim() != ''">
 				and to_pur_id = #{toPurId}
 			</if>
+			<if test="toDate != null and toDate.trim() != ''">
+				and to_date = #{toDate}
+			</if>
+			<if test="toNo != null and toNo.trim() != ''">
+				and to_no like concat('%',#{toNo},'%')
+			</if>
 		</where>
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
@@ -61,53 +67,93 @@
 			@to_date = #{toDate},
 			@supplier_code = #{supplierCode},
 			@creator_id = #{creatorId},
-			@warehouse_code = #{warehouseCode}
+			@warehouse_code = #{warehouseCode},
+			@remark = #{remark}
 	</insert>
 	 
 	<update id="update" parameterType="com.ltsznh.modules.pur.entity.WmsTransferOrderPurEntity">
 		update wms_transfer_order_pur 
 		<set>
-			<if test="toDate != null">[to_date] = #{toDate}, </if>
+			<!--<if test="toDate != null">[to_date] = #{toDate}, </if>-->
+			<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode}, </if>
 			<if test="supplierCode != null">[supplier_code] = #{supplierCode}, </if>
 			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
 			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
+			<if test="remark != null">[remark] = #{remark}</if>
 		</set>
 		where to_pur_id = #{toPurId};
-		update wms_transfer_order_pur_row
-		<set>
-			<if test="toDate != null">[to_date] = #{toDate}, </if>
-			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
-			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
-		</set>
-		where to_no = #{toNo};
+		<!--update wms_transfer_order_pur_row-->
+		<!--<set>-->
+			<!--<if test="toDate != null">[to_date] = #{toDate}, </if>-->
+			<!--<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>-->
+			<!--<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>-->
+		<!--</set>-->
+		<!--where to_no = #{toNo};-->
 	</update>
 	
 	<delete id="delete">
-		UPDATE wms_transfer_order_pur set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_id = #{value};
-		UPDATE  wms_transfer_order_pur_row
-		SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId}
+		DELETE FROM wms_transfer_order_pur where to_pur_id = #{value};
+
+		DELETE FROM wms_transfer_order_pur_row
 		FROM      wms_transfer_order_pur AS a INNER JOIN
 						wms_transfer_order_pur_row ON a.to_no = wms_transfer_order_pur_row.to_no
 		WHERE   (a.to_pur_id = #{value});
 
--- 		UPDATE wms_transfer_order_pur_row set data_status = 0
--- 		FROM  to_pur_id = #{value}
+		DELETE FROM wms_transfer_order_sn
+		FROM      wms_transfer_order_pur AS a INNER JOIN
+						wms_transfer_order_sn ON a.to_no = wms_transfer_order_sn.to_no
+		WHERE   (a.to_pur_id = #{value});
 	</delete>
 	
 	<delete id="deleteBatch">
-		UPDATE wms_transfer_order_pur set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_id in
+		DELETE FROM wms_transfer_order_pur where to_pur_id in
 		<foreach item="toPurId" collection="array" open="(" separator="," close=")">
 			#{toPurId}
 		</foreach>;
 
-		UPDATE  wms_transfer_order_pur_row
-		SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId}
+		DELETE FROM wms_transfer_order_pur_row
 		FROM      wms_transfer_order_pur AS a INNER JOIN
 		wms_transfer_order_pur_row ON a.to_no = wms_transfer_order_pur_row.to_no
-		WHERE   (a.to_pur_id in
+		where a.to_pur_id in
 		<foreach item="toPurId" collection="array" open="(" separator="," close=")">
 			#{toPurId}
-		</foreach>);
+		</foreach>;
+
+		DELETE FROM wms_transfer_order_sn
+		FROM      wms_transfer_order_pur AS a INNER JOIN
+		wms_transfer_order_sn ON a.to_no = wms_transfer_order_sn.to_no
+		where a.to_pur_id in
+		<foreach item="toPurId" collection="array" open="(" separator="," close=")">
+			#{toPurId}
+		</foreach>;
 	</delete>
+	<!--<delete id="delete">-->
+		<!--UPDATE wms_transfer_order_pur set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_id = #{value};-->
+
+		<!--UPDATE  wms_transfer_order_pur_row-->
+		<!--SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId}-->
+		<!--FROM      wms_transfer_order_pur AS a INNER JOIN-->
+						<!--wms_transfer_order_pur_row ON a.to_no = wms_transfer_order_pur_row.to_no-->
+		<!--WHERE   (a.to_pur_id = #{value});-->
+
+<!--&#45;&#45; 		UPDATE wms_transfer_order_pur_row set data_status = 0-->
+<!--&#45;&#45; 		FROM  to_pur_id = #{value}-->
+	<!--</delete>-->
+
+	<!--<delete id="deleteBatch">-->
+		<!--UPDATE wms_transfer_order_pur set data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where to_pur_id in-->
+		<!--<foreach item="toPurId" collection="array" open="(" separator="," close=")">-->
+			<!--#{toPurId}-->
+		<!--</foreach>;-->
+
+		<!--UPDATE  wms_transfer_order_pur_row-->
+		<!--SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId}-->
+		<!--FROM      wms_transfer_order_pur AS a INNER JOIN-->
+		<!--wms_transfer_order_pur_row ON a.to_no = wms_transfer_order_pur_row.to_no-->
+		<!--WHERE   (a.to_pur_id in-->
+		<!--<foreach item="toPurId" collection="array" open="(" separator="," close=")">-->
+			<!--#{toPurId}-->
+		<!--</foreach>);-->
+	<!--</delete>-->
 
 </mapper>

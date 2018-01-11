@@ -10,6 +10,7 @@ $(function () {
 			{label: '移出仓库', name: 'sourWarehouseName', index: 'sour_warehouse_code', width: 150},
 			// {label: '目标仓库代码', name: 'destWarehouseCode', index: 'dest_warehouse_code', width: 120},
 			{label: '移入仓库', name: 'destWarehouseName', index: 'dest_warehouse_code', width: 150},
+			{label: '备注', name: 'remark', index: 'remark', width: 150},
 			{
 				label: '状态', name: 'dataStatus', width: 60, index: 'dataStatus', formatter: function (value, options, row) {
 					return value === 0 ?
@@ -49,6 +50,42 @@ $(function () {
 	});
 });
 
+
+//仓库结构树
+var wh_ztree;
+var wh_setting = {
+	data: {
+		simpleData: {
+			enable: true,
+			idKey: "warehouseCode",
+			pIdKey: "warehouseCode1",
+			rootPId: -1
+		},
+		key: {
+			name: "warehouseName",
+			url: "nourl"
+		}
+	}
+};
+
+
+//仓库结构树
+var dest_wh_ztree;
+var dest_wh_setting = {
+	data: {
+		simpleData: {
+			enable: true,
+			idKey: "warehouseCode",
+			pIdKey: "warehouseCode1",
+			rootPId: -1
+		},
+		key: {
+			name: "warehouseName",
+			url: "nourl"
+		}
+	}
+};
+
 var vm = new Vue({
 	el: '#familyApp',
 	data: {
@@ -67,8 +104,8 @@ var vm = new Vue({
 			toNo: null,
 			toSeq: null,
 		},
-		defaultToDate: getCurrentDate(),
-		defaultWarehouseCode: null
+		engineers: null,
+		destEngineers:null
 	},
 	methods: {
 		query: function () {
@@ -78,7 +115,14 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.addNew = true;
-			vm.wmsTransferOrder = {toDate:vm.defaultToDate,sourWarehouseCode:vm.defaultWarehouseCode};
+			vm.wmsTransferOrder = {toDate: getCurrentDate(),sourWarehouseCode:null,sourWarehouseName:null,
+				destWarehouseCode:null,destWarehouseName:null};
+
+
+			vm.getDefalutWarehouse();
+			vm.getWarehouse();
+
+			vm.getDestWarehouse();
 		},
 		update: function (event) {
 			var toId = getSelectedRow();
@@ -88,6 +132,11 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "修改";
 			vm.addNew = false;
+
+			vm.getDefalutWarehouse();
+			vm.getWarehouse();
+
+			vm.getDestWarehouse();
 
 			vm.getInfo(toId)
 		},
@@ -201,6 +250,9 @@ var vm = new Vue({
 				content: jQuery("#addRowLayer")
 			});
 			$("#materialCodeRow").focus();
+
+			vm.getEngineer();
+			vm.getDestEngineer();
 		},
 		saveOrUpdateRow: function (event) {
 			vm.wmsTransferOrderRow.toDate = vm.wmsTransferOrder.toDate;
@@ -333,11 +385,12 @@ var vm = new Vue({
 				data: JSON.stringify(vm.wmsTransferOrderSn),
 				success: function (r) {
 					if (r.code === 0) {
-						alert('操作成功', function (index) {
-							vm.reloadSn();
-							vm.resetSn();
-							$("#materialSn").focus();
-						});
+						// alert('操作成功', function (index) {
+						vm.reloadSn();
+						vm.resetSn();
+						$("#materialSn").focus();
+						// });
+						msg('操作成功');
 					} else {
 						alert(r.msg);
 					}
@@ -385,6 +438,137 @@ var vm = new Vue({
 					'toSeq': vm.qSn.toSeq
 				},
 			}).trigger("reloadGrid");
+		}
+
+		,
+		getDefalutWarehouse: function () {
+			//获取默认仓库
+			$.get(baseURL + "wmswarehouseuser/list", function (r) {
+				if (r.code === 0) {
+					// if (r.page.list.size() > 0) {
+					vm.wmsTransferOrder.sourWarehouseCode = r.page.list[0].warehouseCode;
+					vm.wmsTransferOrder.sourWarehouseName = r.page.list[0].warehouseName;
+					// }
+				} else {
+					alert(r.msg);
+				}
+			})
+		},
+		getWarehouse: function () {
+			//加载仓库树
+			$.get(baseURL + "wmswarehouseuser/myWarehouse", function (r) {
+				wh_ztree = $.fn.zTree.init($("#whTree"), wh_setting, r.page.list);
+				var node = wh_ztree.getNodeByParam("warehouseCode", vm.wmsTransferOrder.warehouseCode);
+				if (node != null) {
+					wh_ztree.selectNode(node);
+
+					vm.wmsTransferOrder.warehouseName = node.warehouseName;
+				}
+			})
+		},
+		whTree: function () {
+			layer.open({
+				type: 1,
+				offset: '50px',
+				skin: 'layui-layer-molv',
+				title: "选择移出仓库",
+				area: ['300px', '450px'],
+				shade: 0,
+				shadeClose: false,
+				content: jQuery("#whLayer"),
+				btn: ['确定', '取消'],
+				btn1: function (index) {
+					var node = wh_ztree.getSelectedNodes();
+					if (node === null) {
+						vm.wmsTransferOrder.sourWarehouseCode = null;
+						vm.wmsTransferOrder.sourWarehouseName = null;
+
+						layer.close(index);
+						return;
+					}
+					//选择
+					vm.wmsTransferOrder.sourWarehouseCode = node[0].warehouseCode;
+					vm.wmsTransferOrder.sourWarehouseName = node[0].warehouseName;
+
+					layer.close(index);
+				}
+			});
+		},
+		getDestWarehouse: function () {
+			//加载仓库树
+			$.get(baseURL + "wmswarehouse/allWarehouse", function (r) {
+				dest_wh_ztree = $.fn.zTree.init($("#destWhTree"), dest_wh_setting, r.page.list);
+				var node = dest_wh_ztree.getNodeByParam("warehouseCode", vm.wmsTransferOrder.destWarehouseCode);
+				if (node != null) {
+					dest_wh_ztree.selectNode(node);
+
+					vm.wmsTransferOrder.destwarehouseName = node.warehouseName;
+				}
+			})
+		},
+		destWhTree: function () {
+			layer.open({
+				type: 1,
+				offset: '50px',
+				skin: 'layui-layer-molv',
+				title: "选择移入仓库",
+				area: ['300px', '450px'],
+				shade: 0,
+				shadeClose: false,
+				content: jQuery("#destWhLayer"),
+				btn: ['确定', '取消'],
+				btn1: function (index) {
+					var node = dest_wh_ztree.getSelectedNodes();
+					if (node === null) {
+						vm.wmsTransferOrder.destWarehouseCode = null;
+						vm.wmsTransferOrder.destWarehouseName = null;
+
+						layer.close(index);
+						return;
+					}
+					//选择上级部门
+					vm.wmsTransferOrder.destWarehouseCode = node[0].warehouseCode;
+					vm.wmsTransferOrder.destWarehouseName = node[0].warehouseName;
+
+					layer.close(index);
+				}
+			});
+		},
+		getEngineer: function () {
+			//加载工程师
+			$.get(baseURL + "sys/user/getStaff?userType=3", function (r) {//3工程师；4营业员
+				// engineer_ztree = $.fn.zTree.init($("#engineerTree"), engineer_setting, r.page.list);
+				// var node = engineer_ztree.getNodeByParam("userId", vm.wmsTransferOrderPurRow.engineer);
+				// if (node != null) {
+				// 	engineer_ztree.selectNode(node);
+				//
+				// 	vm.wmsTransferOrderPurRow.engineer = node.userId;
+				// 	vm.wmsTransferOrderPurRow.engineerName = node.username;
+				// }
+				if (r.code === 0) {
+					vm.engineers = r.page.list;
+				} else {
+					alert(r.msg);
+				}
+			})
+		},
+		getDestEngineer: function () {
+			//加载工程师
+			$.get(baseURL + "sys/user/getAllStaff?userType=3", function (r) {//3工程师；4营业员
+				// engineer_ztree = $.fn.zTree.init($("#engineerTree"), engineer_setting, r.page.list);
+				// var node = engineer_ztree.getNodeByParam("userId", vm.wmsTransferOrderPurRow.engineer);
+				// if (node != null) {
+				// 	engineer_ztree.selectNode(node);
+				//
+				// 	vm.wmsTransferOrderPurRow.engineer = node.userId;
+				// 	vm.wmsTransferOrderPurRow.engineerName = node.username;
+				// }
+				if (r.code === 0) {
+					vm.engineers = r.page.list;
+				} else {
+					alert(r.msg);
+				}
+			})
 		}
 	}
 });

@@ -37,18 +37,41 @@
 			    </div>
 			</div>
 
-													<div class="form-group">
-			   	<div class="col-sm-2 control-label">移出仓库</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsTransferOrder.sourWarehouseCode" placeholder="移出仓库"/>
-			    </div>
+													<!--<div class="form-group">-->
+			   	<!--<div class="col-sm-2 control-label">移出仓库</div>-->
+			   	<!--<div class="col-sm-10">-->
+			      <!--<input type="text" class="form-control" v-model="wmsTransferOrder.sourWarehouseCode" placeholder="移出仓库"/>-->
+			    <!--</div>-->
+			<!--</div>-->
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">移出仓库</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" style="cursor:pointer;" v-model="wmsTransferOrder.sourWarehouseName" @click="whTree" readonly="readonly" placeholder="移出仓库"/>
+				</div>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">移入仓库</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsTransferOrder.destWarehouseCode" placeholder="移入仓库"/>
-			    </div>
+
+			<!--<div class="form-group">-->
+			   	<!--<div class="col-sm-2 control-label">移入仓库</div>-->
+			   	<!--<div class="col-sm-10">-->
+			      <!--<input type="text" class="form-control" v-model="wmsTransferOrder.destWarehouseCode" placeholder="移入仓库"/>-->
+			    <!--</div>-->
+			<!--</div>-->
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">移入仓库</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" style="cursor:pointer;" v-model="wmsTransferOrder.destWarehouseName" @click="destWhTree" readonly="readonly" placeholder="移入仓库"/>
+				</div>
 			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">备注</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="wmsTransferOrder.remark" placeholder="备注"/>
+				</div>
+			</div>
+
 			<div v-if="!addNew" class="form-group">
 				<div class="col-sm-2 control-label">移库单号</div>
 				<div class="col-sm-10">
@@ -84,7 +107,7 @@
 		<a class="btn btn-primary" @click="addRow"><i class="fa fa-plus"></i>&nbsp;新增</a>
 	</#if>
 	<#if shiro.hasPermission("wmstransferorderrow:delete")>
-	<a class="btn btn-danger" @click="delRow"><i class="fa fa-trash-o"></i>&nbsp;作废</a>
+	<a class="btn btn-danger" @click="delRow"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 </#if>
 <#if shiro.hasPermission("wmstransferordersn:save")>
 <a class="btn btn-primary" @click="showSnList"><i class="fa fa-plus"></i>&nbsp;串号维护</a>
@@ -139,18 +162,7 @@
 						<!--<input type="text" class="form-control" v-model="wmsTransferOrderRow.supplierCode" placeholder="供应商代码"/>-->
 					<!--</div>-->
 				<!--</div>-->
-				<div class="form-group">
-					<div class="col-sm-2 control-label">移出工程师</div>
-					<div class="col-sm-4">
-						<input type="text" class="form-control" v-model="wmsTransferOrderRow.sourEngineer" placeholder="来源工程师"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-2 control-label">移入工程师</div>
-					<div class="col-sm-4">
-						<input type="text" class="form-control" v-model="wmsTransferOrderRow.destEngineer" placeholder="目标工程师"/>
-					</div>
-				</div>
+
 				<div class="form-group">
 					<div class="col-sm-2 control-label">单价</div>
 					<div class="col-sm-4">
@@ -161,6 +173,50 @@
 					<div class="col-sm-2 control-label">数量</div>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" v-model="wmsTransferOrderRow.qty" placeholder="数量"/>
+					</div>
+				</div>
+
+				<!--<div class="form-group">-->
+					<!--<div class="col-sm-2 control-label">移出工程师</div>-->
+					<!--<div class="col-sm-4">-->
+						<!--<input type="text" class="form-control" v-model="wmsTransferOrderRow.sourEngineer" placeholder="来源工程师"/>-->
+					<!--</div>-->
+				<!--</div>-->
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">移出工程师</div>
+					<div class="col-sm-4">
+						<select class="form-control" v-model="wmsTransferOrderRow.engineer" id="engineer">
+							<optgroup label="移出工程师">
+								<!--<option value="1">正常</option>-->
+								<!--<option value="0">禁用</option>-->
+								<option v-for="option in engineers" v-bind:value="option.userId">
+									{{ option.username }}
+								</option>
+							</optgroup>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">移入工程师</div>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" v-model="wmsTransferOrderRow.destEngineer" placeholder="目标工程师"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">移入工程师</div>
+					<div class="col-sm-4">
+						<select class="form-control" v-model="wmsTransferOrderRow.engineer" id="destEngineer">
+							<optgroup label="移入工程师">
+								<!--<option value="1">正常</option>-->
+								<!--<option value="0">禁用</option>-->
+								<option v-for="option in destEngineers" v-bind:value="option.userId">
+									{{ option.username }}
+								</option>
+							</optgroup>
+						</select>
 					</div>
 				</div>
 
@@ -188,7 +244,7 @@
 				<a class="btn btn-primary" @click="backToRow"><i class="fa fa-angle-left" aria-hidden="true"></i>&nbsp;返回</a>
 
 				<#if shiro.hasPermission("wmstransferordersn:delete")>
-				<a class="btn btn-danger" @click="delSn"><i class="fa fa-trash-o"></i>&nbsp;作废</a>
+				<a class="btn btn-danger" @click="delSn"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 			</#if>
 
 				<div class="form-group">
@@ -236,6 +292,19 @@
 </div>
 
 
+
+</div>
+
+
+<!-- 选择仓库 -->
+<div id="whLayer" style="display: none;padding:10px;">
+	<ul id="whTree" class="ztree"></ul>
+</div>
+
+
+<!-- 选择仓库 -->
+<div id="destWhLayer" style="display: none;padding:10px;">
+	<ul id="destWhTree" class="ztree"></ul>
 </div>
 <script src="${request.contextPath}/statics/js/modules/wms/wmstransferorder.js?_${.now?long}"></script>
 </body>

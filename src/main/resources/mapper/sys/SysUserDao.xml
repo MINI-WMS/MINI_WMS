@@ -6,6 +6,46 @@
 		select *,creator as creator_id,modifier as modifier_id from sys_user where user_id = #{value}
 	</select>
 
+    <select id="queryAllStaff" resultType="com.ltsznh.modules.sys.entity.SysUserEntity">
+        select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by u.${sidx} ${order}
+            </when>
+            <otherwise>
+                order by u.user_id desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+        u.*,(select d.dept_name from sys_dept d where d.dept_id = u.dept_id) deptName
+        ,creator as creator_id,modifier as modifier_id
+        ,(SELECT username FROM sys_user where u.creator = user_id) as creator_name
+        ,(SELECT username FROM sys_user where u.modifier = user_id) as modifier_name
+        from sys_user u
+        <where>
+            <if test="username != null and username.trim() != ''">
+                and u.username like concat('%',#{username},'%')
+            </if>
+            <if test="phone != null and phone.trim() != ''">
+                and u.phone like concat('%',#{phone},'%')
+            </if>
+            <if test="deptId != null and deptId.trim() != ''">
+                and u.dept_id = #{deptId}
+            </if>
+            <if test="isEnabled != null and isEnabled.trim() != ''">
+                and u.is_enabled = #{isEnabled}
+            </if>
+            <if test="userType != null and userType.trim() != ''">
+                and u.user_type = #{userType}
+            </if>
+        </where>
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+    </select>
+
     <select id="queryList" resultType="com.ltsznh.modules.sys.entity.SysUserEntity">
         select ROW_NUMBER() OVER(
         <choose>
