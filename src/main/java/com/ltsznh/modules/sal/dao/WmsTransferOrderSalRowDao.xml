@@ -34,7 +34,7 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by to_seq
+                order by to_seq desc
             </otherwise>
         </choose>
         ) AS ROW_NUM,

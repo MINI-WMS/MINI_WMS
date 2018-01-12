@@ -158,7 +158,7 @@ var vm = new Vue({
 					return;
 				}
 
-				confirm('确定要作废选中的记录？', function () {
+				confirm('确定要删除选中的记录？', function () {
 					$.ajax({
 						type: "POST",
 						url: baseURL + "wmstransferorderpur/delete",
@@ -289,7 +289,7 @@ var vm = new Vue({
 					return;
 				}
 
-				confirm('确定要作废选中的记录？', function () {
+				confirm('确定要删除选中的记录？', function () {
 					$.ajax({
 						type: "POST",
 						url: baseURL + "wmstransferorderpurrow/delete",
@@ -511,7 +511,7 @@ var vm = new Vue({
 					return;
 				}
 
-				confirm('确定要作废选中的记录？', function () {
+				confirm('确定要删除选中的记录？', function () {
 					$.ajax({
 						type: "POST",
 						url: baseURL + "wmstransferordersn/delete",
@@ -553,11 +553,11 @@ $(function () {
 		datatype: "json",
 		colModel: [
 			{label: 'toPurRowId', name: 'toPurRowId', index: 'to_pur_row_id', width: 50, key: true, hidden: true},
-			{label: '转储单日期', name: 'toDate', index: 'to_date', width: 100},
-			{label: '转储单号', name: 'toNo', index: 'to_no', width: 150},
+			{label: '采购单日期', name: 'toDate', index: 'to_date', width: 100},
+			{label: '采购单号', name: 'toNo', index: 'to_no', width: 150},
 			{label: '序号', name: 'toSeq', index: 'to_seq', width: 50},
 			{label: '商品代码', name: 'materialCode', index: 'material_code', width: 80},
-			{label: '商品', name: 'materialName', index: 'material_code', width: 80},
+			{label: '商品', name: 'materialDesc', index: 'material_code', width: 80},
 			{label: '指导单价', name: 'guidanceUnitPrice', index: 'guidance_unit_price', width: 80},
 			{label: '单价', name: 'unitPrice', index: 'unit_price', width: 80},
 			{label: '数量', name: 'qty', index: 'qty', width: 80},

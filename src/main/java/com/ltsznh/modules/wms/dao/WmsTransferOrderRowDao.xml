@@ -39,7 +39,7 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by material_code desc
+                order by to_seq desc
             </otherwise>
         </choose>
         ) AS ROW_NUM,
@@ -152,7 +152,7 @@
 	</delete>
 
     <delete id="deleteBatch">
-        UPDATE wms_transfer_order_row SET data_status = 0,modify_date = GETDATE(),modifier_id = #{modifierId} where
+        DELETE FROM wms_transfer_order_row where where
         to_row_id in
         <foreach item="roRowId" collection="array" open="(" separator="," close=")">
             #{roRowId}

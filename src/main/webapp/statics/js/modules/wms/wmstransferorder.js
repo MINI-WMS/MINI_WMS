@@ -290,7 +290,7 @@ var vm = new Vue({
 				return;
 			}
 
-			confirm('确定要作废选中的记录？', function () {
+			confirm('确定要删除选中的记录？', function () {
 				$.ajax({
 					type: "POST",
 					url: baseURL + "wmstransferorderrow/delete",
@@ -410,7 +410,7 @@ var vm = new Vue({
 				return;
 			}
 
-			confirm('确定要作废选中的记录？', function () {
+			confirm('确定要删除选中的记录？', function () {
 				$.ajax({
 					type: "POST",
 					url: baseURL + "wmstransferordersn/delete",
@@ -564,7 +564,7 @@ var vm = new Vue({
 				// 	vm.wmsTransferOrderPurRow.engineerName = node.username;
 				// }
 				if (r.code === 0) {
-					vm.engineers = r.page.list;
+					vm.destEngineers = r.page.list;
 				} else {
 					alert(r.msg);
 				}
@@ -582,18 +582,19 @@ $(function () {
 			{label: '移库单日期', name: 'toDate', index: 'to_date', width: 120},
 			{label: '移库单号', name: 'toNo', index: 'to_no', width: 150},
 			{label: '序号', name: 'toSeq', index: 'to_seq', width: 80},
-			// {label: '来源工程师', name: 'sourEngineer', index: 'sour_engineer', width: 90},
-			{label: '来源工程师', name: 'sourEngineerName', index: 'sour_engineer', width: 90},
-			// {label: '目标工程师', name: 'destEngineer', index: 'dest_engineer', width: 90},
-			{label: '目标工程师', name: 'destEngineerName', index: 'dest_engineer', width: 90},
+			// {label: '移入工程师', name: 'sourEngineer', index: 'sour_engineer', width: 90},
+			{label: '移出工程师', name: 'sourEngineerName', index: 'sour_engineer', width: 90},
+			// {label: '移入工程师', name: 'destEngineer', index: 'dest_engineer', width: 90},
+			{label: '移入工程师', name: 'destEngineerName', index: 'dest_engineer', width: 90},
 			// {label: '商品代码', name: 'materialCode', index: 'material_code', width: 100},
 			{label: '商品', name: 'materialDesc', index: 'material_code', width: 120},
 			// {label: '供应商代码', name: 'supplierCode', index: 'supplier_code', width: 90},
-			{label: '供应商', name: 'supplierName', index: 'supplier_code', width: 120},
+			// {label: '供应商', name: 'supplierName', index: 'supplier_code', width: 120},
 			// {label: '指导单价', name: 'guidanceUnitPrice', index: 'guidance_unit_price', width: 80},
 			{label: '单价', name: 'unitPrice', index: 'unit_price', width: 80},
 			{label: '数量', name: 'qty', index: 'qty', width: 80},
 			{label: '总金额', name: 'totalAmount', index: 'total_amount', width: 80},
+			{label: '备注', name: 'remark', index: 'remark', width: 80},
 			{
 				label: '状态', name: 'dataStatus', width: 60, index: 'dataStatus', formatter: function (value, options, row) {
 					return value === 0 ?
