@@ -21,8 +21,9 @@ public class ConfigParam {
 	private static String APP_NAME = "";//部署项目名称
 
 	private static String DOWNLOAD_PATH = "";
-
 	private static String DOWNLOAD_EXCEL_PATH = "";
+	private static String TEMPLATE_EXCEL_PATH = "";
+	private static String TEMPLATE_HTML_PATH = "";
 
 	public static String getTomcatPath() {
 		return TOMCAT_PATH;
@@ -54,5 +55,11 @@ public class ConfigParam {
 		if (DOWNLOAD_EXCEL_PATH != null && !DOWNLOAD_EXCEL_PATH.equals("")) return DOWNLOAD_EXCEL_PATH;
 		DOWNLOAD_EXCEL_PATH = getDownloadPath() + File.separator + "excel";
 		return DOWNLOAD_EXCEL_PATH;
+	}
+
+	public static String getExcelTemplatePath() {
+		if (TEMPLATE_EXCEL_PATH != null && !TEMPLATE_EXCEL_PATH.equals("")) return TEMPLATE_EXCEL_PATH;
+		TEMPLATE_EXCEL_PATH = getTomcatPath() + File.separator + getAppDataDir() + File.separator + getAppName() + File.separator + "template"+ File.separator + "excel";
+		return TEMPLATE_EXCEL_PATH;
 	}
 }

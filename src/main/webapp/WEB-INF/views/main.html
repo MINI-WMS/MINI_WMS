@@ -1,15 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>欢迎页</title>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap.min.css">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>欢迎页</title>
+	<#include "/header.html">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap.min.css">
 </head>
 <body>
 <div class="panel panel-default">
 
 </div>
+
+
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#familyApp',
+		data: {
+			phone: '',
+			password: '',
+		},
+		methods: {
+			test: function (event) {
+				// var data = "phone=" + vm.phone + "&password=" +  hex_sha1(hex_sha1(vm.password));
+				$.ajax({
+					type: "POST",
+					url: "test/excelTemplate",
+					// data: data,
+					dataType: "json",
+					success: function (result) {
+						if (result.code == 0) {//测试成功返回正确结果
+								msg(result.html)
+						} else {
+							layer.msg(result.msg, {offset: 't', anim: 6});
+						}
+					}
+				});
+			}
+		}
+	});
+	vm.test();
+
+</script>
 </body>
 </html>

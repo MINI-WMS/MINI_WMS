@@ -41,7 +41,7 @@
 		*
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
-        ,(SELECT material_type_desc FROM pub_material_type where pub_material_type.material_type_code = material_type_code) as material_type_desc
+        ,(SELECT material_type_desc FROM pub_material_type where pub_material_type.material_type_code = pub_material.material_type_code) as material_type_desc
         ,(SELECT brand_name FROM pub_brand where pub_brand.brand_id = pub_material.brand_id) as brand_name
 		from pub_material
 		<where>
