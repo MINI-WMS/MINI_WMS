@@ -253,10 +253,20 @@ var vm = new Vue({
 
 			vm.getEngineer();
 			vm.getDestEngineer();
+
+            getPubMaterialSelect2($("#materialCodeRow"));
 		},
 		saveOrUpdateRow: function (event) {
 			vm.wmsTransferOrderRow.toDate = vm.wmsTransferOrder.toDate;
 			vm.wmsTransferOrderRow.toNo = vm.wmsTransferOrder.toNo;
+
+            //先取商品代码
+            if ($('#materialCodeRow').select2('data').length <= 0) {
+                msg("请选择商品！");
+                return;
+            } else {
+                vm.wmsTransferOrderRow.materialCode = $('#materialCodeRow').select2('data')[0].id;
+            }
 
 			var url = vm.addNew ? "wmstransferorderrow/save" : "wmstransferorderrow/update";
 			$.ajax({

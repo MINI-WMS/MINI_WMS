@@ -17,7 +17,9 @@ public interface PurSupplierService {
 	PurSupplierEntity queryObject(String supplierCode);
 	
 	List<PurSupplierEntity> queryList(Map<String, Object> map);
-	
+
+	List<PurSupplierEntity> querySelect2(Map<String, Object> map);
+
 	int queryTotal(Map<String, Object> map);
 	
 	void save(PurSupplierEntity purSupplier);

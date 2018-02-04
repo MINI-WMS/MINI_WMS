@@ -241,9 +241,20 @@ var vm = new Vue({
 
 			vm.getEngineer();
 			vm.getSalesman();
+
+            getPubMaterialSelect2($("#materialCodeRow"));
 		},
 		saveOrUpdateRow: function (event) {
 			var url = vm.addNew ? "wmstransferordersalrow/save" : "wmstransferordersalrow/update";
+
+            //先取商品代码
+            if ($('#materialCodeRow').select2('data').length <= 0) {
+                msg("请选择商品！");
+                return;
+            } else {
+                vm.wmsTransferOrderSalRow.materialCode = $('#materialCodeRow').select2('data')[0].id;
+            }
+
 			$.ajax({
 				type: "POST",
 				url: baseURL + url,

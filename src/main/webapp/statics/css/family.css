@@ -49,3 +49,6 @@ jqgrid text ellipsis
 .login-box, .register-box {
     margin: 2% auto;
 }
+
+.select2-dropdown {
+    z-index: 20000000000 !important; }

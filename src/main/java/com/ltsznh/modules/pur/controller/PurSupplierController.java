@@ -52,6 +52,22 @@ public class PurSupplierController  extends AbstractController {
 		return R.ok().put("page", pageUtil);
 	}
 
+	/**
+	 * select2的建议数据
+	 */
+	@RequestMapping("/select2")
+	public R select2(@RequestParam Map<String, Object> params){
+		//查询列表数据
+		Query query = new Query(params);
+
+		List<PurSupplierEntity> purSupplierList = purSupplierService.querySelect2(query);
+//		int total = purSupplierService.queryTotal(query);
+
+		PageUtils pageUtil = new PageUtils(purSupplierList, 0, query.getLimit(), query.getPage());
+
+		return R.ok().put("page", pageUtil);
+	}
+
 
 	/**
 	 * 信息

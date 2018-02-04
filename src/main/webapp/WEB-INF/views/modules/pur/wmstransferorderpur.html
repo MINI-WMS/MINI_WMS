@@ -10,6 +10,11 @@
 <!--<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>-->
 <!--<script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>-->
 <!--<script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>-->
+
+	<link href="https://cdn.bootcss.com/select2/4.0.6-rc.1/css/select2.min.css" rel="stylesheet">
+	<!--<script src="https://cdn.bootcss.com/select2/4.0.6-rc.1/js/i18n/zh-CN.js"></script>-->
+	<script src="https://cdn.bootcss.com/select2/4.0.6-rc.1/js/select2.full.min.js"></script>
+	<script src="https://cdn.bootcss.com/select2/4.0.6-rc.1/js/select2.min.js"></script>
 </head>
 <div>
 <div id="familyApp" v-cloak  >
@@ -63,7 +68,8 @@
 						 <div class="form-group">
 			   	<div class="col-sm-2 control-label">供应商代码</div>
 			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsTransferOrderPur.supplierCode" placeholder="供应商代码"/>
+			      <input type="text" class="form-control" v-model="wmsTransferOrderPur.supplierCode" placeholder="供应商代码" id="supplierCode"style="width: 120px;"/>
+			      <input type="text" class="form-control" placeholder="供应商代码" v-show="false"/>
 			    </div>
 			</div>
 

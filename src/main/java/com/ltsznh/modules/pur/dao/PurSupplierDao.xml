@@ -47,6 +47,35 @@
             FETCH NEXT #{limit} ROWS ONLY
         </if>
 	</select>
+
+	<select id="querySelect2" resultType="com.ltsznh.modules.pur.entity.PurSupplierEntity">
+		select ROW_NUMBER() OVER(
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
+			<otherwise>
+				order by supplier_code desc
+			</otherwise>
+		</choose>
+		) AS ROW_NUM,
+		*
+		,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+		,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+		,(SELECT area_name FROM pub_area where pur_supplier.area_code = pub_area.area_code) as area_name
+		,(SELECT supplier_type_desc FROM pur_supplier_type where pur_supplier.supplier_type_code = pur_supplier_type.supplier_type_code) as supplier_type_desc
+		from pur_supplier
+		<where>
+			<if test="select != null and select.trim() != ''">
+				and supplier_code like concat('%',#{select},'%') OR  supplier_name like concat('%',#{select},'%')
+			</if>
+		</where>
+		ORDER BY ROW_NUM
+		<if test="offset != null and limit != null">
+			OFFSET #{offset} ROWS
+			FETCH NEXT #{limit} ROWS ONLY
+		</if>
+	</select>
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from pur_supplier 

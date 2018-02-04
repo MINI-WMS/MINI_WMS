@@ -28,6 +28,11 @@ public class PurSupplierServiceImpl implements PurSupplierService {
 	}
 
 	@Override
+	public List<PurSupplierEntity> querySelect2(Map<String, Object> map) {
+		return purSupplierDao.querySelect2(map);
+	}
+
+	@Override
 	public int queryTotal(Map<String, Object> map){
 		return purSupplierDao.queryTotal(map);
 	}

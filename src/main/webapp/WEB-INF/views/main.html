@@ -31,7 +31,7 @@
 					dataType: "json",
 					success: function (result) {
 						if (result.code == 0) {//测试成功返回正确结果
-								msg(result.html)
+							Console.log(result.html);
 						} else {
 							layer.msg(result.msg, {offset: 't', anim: 6});
 						}

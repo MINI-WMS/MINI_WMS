@@ -28,6 +28,6 @@ function getCurrentDate() {
 	var day = date.getDate();
 	var currentDate = date.getFullYear() + "-" + (mon<10?"0"+mon:mon) + "-" +(day<10?"0"+day:day);
 	console.log(currentDate);
-	// return currentDate;
+	return currentDate;
 }
 
