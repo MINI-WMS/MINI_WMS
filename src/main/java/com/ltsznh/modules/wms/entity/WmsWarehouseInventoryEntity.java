@@ -1,5 +1,7 @@
 package com.ltsznh.modules.wms.entity;
 
+import com.ltsznh.common.utils.DateUtils;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,6 +30,8 @@ public class WmsWarehouseInventoryEntity implements Serializable {
 	private Long qty;
 	//总金额
 	private BigDecimal totalAmount;
+    //工程师
+    private Long engineer;
 	//状态
 	private Integer dataStatus;
 	//创建用户
@@ -39,6 +43,13 @@ public class WmsWarehouseInventoryEntity implements Serializable {
 	//修改时间
 	private Date modifyDate;
 
+    private String creatorName;
+    private String modifierName;
+
+    //物料代码
+    private String materialDesc;
+    private String warehouseName;
+    private String engineerName;
 	/**
 	 * 设置：仓库结存编号
 	 */
@@ -60,8 +71,8 @@ public class WmsWarehouseInventoryEntity implements Serializable {
 	/**
 	 * 获取：结存日期
 	 */
-	public Date getInventoryDate() {
-		return inventoryDate;
+	public String getInventoryDate() {
+        return DateUtils.formatToDate(inventoryDate);
 	}
 	/**
 	 * 设置：仓库编号
@@ -111,7 +122,16 @@ public class WmsWarehouseInventoryEntity implements Serializable {
 	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
-	/**
+
+    public Long getEngineer() {
+        return engineer;
+    }
+
+    public void setEngineer(Long engineer) {
+        this.engineer = engineer;
+    }
+
+    /**
 	 * 设置：状态
 	 */
 	public void setDataStatus(Integer dataStatus) {
@@ -171,4 +191,44 @@ public class WmsWarehouseInventoryEntity implements Serializable {
 	public Date getModifyDate() {
 		return modifyDate;
 	}
+
+    public String getMaterialDesc() {
+        return materialDesc;
+    }
+
+    public void setMaterialDesc(String materialDesc) {
+        this.materialDesc = materialDesc;
+    }
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+
+    public String getModifierName() {
+        return modifierName;
+    }
+
+    public void setModifierName(String modifierName) {
+        this.modifierName = modifierName;
+    }
+
+    public String getEngineerName() {
+        return engineerName;
+    }
+
+    public void setEngineerName(String engineerName) {
+        this.engineerName = engineerName;
+    }
 }

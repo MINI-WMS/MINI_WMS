@@ -1,5 +1,6 @@
 package com.ltsznh.common.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,6 +20,9 @@ public class DateUtils {
 	public static String formatToDate(Date date) {
         return format(date, DATE_PATTERN);
     }
+	public static Date formatToDate(String date) {
+        return format(date, DATE_PATTERN);
+    }
 
 	public static String formatToDateTime(Date date) {
 		return format(date, DATE_TIME_PATTERN);
@@ -28,6 +32,17 @@ public class DateUtils {
         if(date != null){
             SimpleDateFormat df = new SimpleDateFormat(pattern);
             return df.format(date);
+        }
+        return null;
+    }
+    public static Date format(String date, String pattern) {
+        if(date != null){
+            SimpleDateFormat df = new SimpleDateFormat(pattern);
+            try {
+                return df.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

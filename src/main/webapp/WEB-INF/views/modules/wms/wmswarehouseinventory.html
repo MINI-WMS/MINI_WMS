@@ -1,100 +1,114 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>仓库库存</title>
-<#include "/header.html">
+	<title>仓库库存</title>
+	<#include "/header.html">
+
+	<link href="https://cdn.bootcss.com/select2/4.0.6-rc.1/css/select2.min.css" rel="stylesheet">
+	<!--<script src="https://cdn.bootcss.com/select2/4.0.6-rc.1/js/i18n/zh-CN.js"></script>-->
+	<script src="https://cdn.bootcss.com/select2/4.0.6-rc.1/js/select2.full.min.js"></script>
+	<script src="https://cdn.bootcss.com/select2/4.0.6-rc.1/js/select2.min.js"></script>
+	<script src="../../../../statics/libs/ajaxupload.js"></script>
+
+	<!--<script src="https://cdn.bootcss.com/blueimp-file-upload/9.21.0/js/jquery.fileupload.min.js"></script>-->
+	<!--<script src="https://cdn.bootcss.com/blueimp-file-upload/9.21.0/js/jquery.fileupload-process.min.js"></script>-->
+	<!--<script src="https://cdn.bootcss.com/blueimp-file-upload/9.21.0/js/jquery.fileupload-validate.min.js"></script>-->
+
 </head>
 <body>
 <div id="familyApp" v-cloak>
 	<div v-show="showList">
 		<div class="grid-btn">
-		  <a class="btn btn-default" @click="reload"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;刷新</a>
-		  <a class="btn btn-default" @click="query"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;查询</a>
+			<div class="form-group col-md-2">
+				<input type="date" class="form-control" style="cursor:pointer;" v-model="q.inventoryDate" placeholder="结存日期"/>
+			</div>
+			<div class="form-group col-md-2">
+				<input type="text" class="form-control" style="cursor:pointer;" v-model="q.warehouseName" @click="whTreeQ"
+				       readonly="readonly" placeholder="仓库"/>
+			</div>
+			<div class="form-group col-md-3">
+				<input type="text" id="materialCodeQ" class="form-control" v-model="q.materialCode" @keyup.enter="query"
+				       placeholder="商品">
+			</div>
+			<div class="form-group col-md-3">
+				<input type="text" id="engineerQ" class="form-control" v-model="q.engineer" @keyup.enter="query"
+				       placeholder="工程师">
+			</div>
+			<a class="btn btn-default" @click="query"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;查询</a>
 			<#if shiro.hasPermission("wmswarehouseinventory:save")>
-            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			</#if>
-			<#if shiro.hasPermission("wmswarehouseinventory:update")>
-            <a class="btn btn-warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			</#if>
-			<#if shiro.hasPermission("wmswarehouseinventory:delete")>
-            <a class="btn btn-danger" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if>
-		</div>
-	    <table id="jqGrid"></table>
-	    <div id="jqGridPager"></div>
-    </div>
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a class="btn btn-primary" id="uploadFile"><i class="fa fa-plus"></i>&nbsp;导入EXCEL</a>
+			<a class="btn btn-primary" id="downloadTemplate" @click="downloadTemplate"><i class="fa fa-plus"></i>&nbsp;下载EXCEL模板</a>
+		</#if>
+		<!--<#if shiro.hasPermission("wmswarehouseinventory:update")>-->
+		<!--<a class="btn btn-warning" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
+		<!--</#if>-->
+		<#if shiro.hasPermission("wmswarehouseinventory:delete")>
+		<a class="btn btn-danger" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+	</#if>
+</div>
 
-    <div v-show="!showList" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
-											<div class="form-group">
-			   	<div class="col-sm-2 control-label">结存日期</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.inventoryDate" placeholder="结存日期"/>
-			    </div>
+<table id="jqGrid"></table>
+<div id="jqGridPager"></div>
+</div>
+
+<div v-show="!showList" class="panel panel-default">
+	<div class="panel-heading">{{title}}</div>
+	<form class="form-horizontal">
+		<div class="form-group">
+			<div class="col-sm-2 control-label">结存日期</div>
+			<div class="col-sm-10">
+				<input type="date" class="form-control" v-model="wmsWarehouseInventory.inventoryDate" placeholder="结存日期"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">仓库编号</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.warehouseCode" placeholder="仓库编号"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">仓库编号</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" style="cursor:pointer;" v-model="wmsWarehouseInventory.warehouseName"
+				       @click="whTree" readonly="readonly" placeholder="仓库"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">商品代码</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.materialCode" placeholder="商品代码"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">工程师</div>
+			<div class="col-sm-10">
+				<input id="engineer" type="text" class="form-control" v-model="wmsWarehouseInventory.engineer"
+				       placeholder="工程师"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">数量</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.qty" placeholder="数量"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">商品代码</div>
+			<div class="col-sm-10">
+				<input id="materialCode" type="text" class="form-control" v-model="wmsWarehouseInventory.materialCode"
+				       placeholder="商品代码"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">总金额</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.totalAmount" placeholder="总金额"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">数量</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="wmsWarehouseInventory.qty" placeholder="数量"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">状态</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.dataStatus" placeholder="状态"/>
-			    </div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label">总金额</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" v-model="wmsWarehouseInventory.totalAmount" placeholder="总金额"/>
 			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">创建用户</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.creatorId" placeholder="创建用户"/>
-			    </div>
-			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">创建时间</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.createDate" placeholder="创建时间"/>
-			    </div>
-			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">修改用户</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.modifierId" placeholder="修改用户"/>
-			    </div>
-			</div>
-									<div class="form-group">
-			   	<div class="col-sm-2 control-label">修改时间</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="wmsWarehouseInventory.modifyDate" placeholder="修改时间"/>
-			    </div>
-			</div>
-							<div class="form-group">
-				<div class="col-sm-2 control-label"></div>
-			  <a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;确定</a>
-              &nbsp;&nbsp;
-              <a class="btn btn-info" @click="reload"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;返回</a>
-			</div>
-		</form>
-	</div>
+		</div>
+
+
+		<div class="form-group">
+			<div class="col-sm-2 control-label"></div>
+			<a class="btn btn-warning" @click="saveOrUpdate"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;确定</a>
+			&nbsp;&nbsp;
+			<a class="btn btn-info" @click="reload"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;返回</a>
+		</div>
+	</form>
+</div>
+</div>
+
+<!-- 选择仓库 -->
+<div id="whLayer" style="display: none;padding:10px;">
+	<ul id="whTree" class="ztree"></ul>
 </div>
 
 <script src="${request.contextPath}/statics/js/modules/wms/wmswarehouseinventory.js?_${.now?long}"></script>

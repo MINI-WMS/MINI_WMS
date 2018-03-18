@@ -6,15 +6,15 @@ function getPurSupplierSelect2(item) {
         dataType: "json",
         success: function(result){
             if(result.code == 0){
-                var supplierList   =  result.page.list;
-                for (var i=0;i<supplierList.length;i++)
+                var materialList   =  result.page.list;
+                for (var i=0;i<materialList.length;i++)
                 {
-                    supplierList[i].id = supplierList[i].supplierCode;
-                    supplierList[i].text = supplierList[i].supplierCode + " - " + supplierList[i].supplierName;
+                    materialList[i].id = materialList[i].supplierCode;
+                    materialList[i].text = materialList[i].supplierCode + " - " + materialList[i].supplierName;
 
                 }
                 item.select2({
-                    data: supplierList,
+                    data: materialList,
                     placeholder:'请选择客户',
                     allowClear:true
                 })
@@ -33,16 +33,41 @@ function getPubMaterialSelect2(item) {
         dataType: "json",
         success: function(result){
             if(result.code == 0){
-                var supplierList   =  result.page.list;
-                for (var i=0;i<supplierList.length;i++)
+                var materialList   =  result.page.list;
+                for (var i=0;i<materialList.length;i++)
                 {
-                    supplierList[i].id = supplierList[i].materialCode;
-                    supplierList[i].text = supplierList[i].materialCode + " - "+ supplierList[i].brandName + " - " + supplierList[i].materialDesc;
-
+                    materialList[i].id = materialList[i].materialCode;
+                    materialList[i].text = materialList[i].materialCode + " - "+ materialList[i].brandName + " - " + materialList[i].materialDesc;
                 }
                 item.select2({
-                    data: supplierList,
+                    data: materialList,
                     placeholder:'请选择商品',
+                    allowClear:true
+                })
+            }else{
+                layer.alert(result.msg);
+            }
+        }
+    });
+}
+
+//获取工程师
+function getEngineerSelect2(item) {
+    $.ajax({
+        type: "POST",
+        url: baseURL + "sys/user/getStaff?userType=3",//3工程师；4营业员
+        dataType: "json",
+        success: function(result){
+            if(result.code == 0){
+                var engineerList   =  result.page.list;
+                for (var i=0;i<engineerList.length;i++)
+                {
+                    engineerList[i].id = engineerList[i].userId;
+                    engineerList[i].text = engineerList[i].deptName + " - " + engineerList[i].username;
+                }
+                item.select2({
+                    data: engineerList,
+                    placeholder:'请选择工程师',
                     allowClear:true
                 })
             }else{

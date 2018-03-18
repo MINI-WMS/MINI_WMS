@@ -19,7 +19,11 @@
     </resultMap>
 
 	<select id="queryObject" resultType="com.ltsznh.modules.wms.entity.WmsWarehouseInventoryEntity">
-		select * from wms_warehouse_inventory where wi_id = #{value}
+		select *
+		,(SELECT warehouse_name FROM wms_warehouse where wms_warehouse_inventory.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
+        ,(SELECT material_desc FROM pub_material where wms_warehouse_inventory.material_code = pub_material.material_code) as material_desc
+        ,(SELECT username FROM sys_user where engineer = user_id) as engineer_name
+        from wms_warehouse_inventory where wi_id = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.ltsznh.modules.wms.entity.WmsWarehouseInventoryEntity">
@@ -36,6 +40,9 @@
 		*
         ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
         ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_warehouse_inventory.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
+        ,(SELECT material_desc FROM pub_material where wms_warehouse_inventory.material_code = pub_material.material_code) as material_desc
+        ,(SELECT username FROM sys_user where wms_warehouse_inventory.engineer = user_id) as engineer_name
 		from wms_warehouse_inventory
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
@@ -53,27 +60,23 @@
 		(
 			[inventory_date], 
 			[warehouse_code], 
-			[material_code], 
-			[qty], 
-			[total_amount], 
-			[data_status], 
+			[engineer],
+			[material_code],
+			[qty],
+			[total_amount],
 			[creator_id], 
-			[create_date], 
-			[modifier_id], 
-			[modify_date]
+			[create_date]
 		)
 		values
 		(
 			#{inventoryDate}, 
 			#{warehouseCode}, 
-			#{materialCode}, 
-			#{qty}, 
-			#{totalAmount}, 
-			#{dataStatus}, 
+			#{engineer},
+			#{materialCode},
+			#{qty},
+			#{totalAmount},
 			#{creatorId}, 
-			#{createDate}, 
-			#{modifierId}, 
-			#{modifyDate}
+			#{createDate}
 		)
 	</insert>
 	 
@@ -82,12 +85,10 @@
 		<set>
 			<if test="inventoryDate != null">[inventory_date] = #{inventoryDate}, </if>
 			<if test="warehouseCode != null">[warehouse_code] = #{warehouseCode}, </if>
+			<if test="engineer != null">[engineer] = #{engineer}, </if>
 			<if test="materialCode != null">[material_code] = #{materialCode}, </if>
 			<if test="qty != null">[qty] = #{qty}, </if>
 			<if test="totalAmount != null">[total_amount] = #{totalAmount}, </if>
-			<if test="dataStatus != null">[data_status] = #{dataStatus}, </if>
-			<if test="creatorId != null">[creator_id] = #{creatorId}, </if>
-			<if test="createDate != null">[create_date] = #{createDate}, </if>
 			<if test="modifierId != null">[modifier_id] = #{modifierId}, </if>
 			<if test="modifyDate != null">[modify_date] = #{modifyDate}</if>
 		</set>
@@ -99,7 +100,7 @@
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from wms_warehouse_inventory where wi_id in 
+		delete from wms_warehouse_inventory where wi_id in
 		<foreach item="wiId" collection="array" open="(" separator="," close=")">
 			#{wiId}
 		</foreach>

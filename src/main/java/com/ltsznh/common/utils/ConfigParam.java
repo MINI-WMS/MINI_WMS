@@ -21,7 +21,9 @@ public class ConfigParam {
 	private static String APP_NAME = "";//部署项目名称
 
 	private static String DOWNLOAD_PATH = "";
+	private static String UPLOAD_PATH = "";
 	private static String DOWNLOAD_EXCEL_PATH = "";
+	private static String UPLOAD_EXCEL_PATH = "";
 	private static String TEMPLATE_EXCEL_PATH = "";
 	private static String TEMPLATE_HTML_PATH = "";
 
@@ -51,6 +53,12 @@ public class ConfigParam {
 		return DOWNLOAD_PATH;
 	}
 
+    public static String getUploadPath() {
+        if (UPLOAD_PATH != null && !UPLOAD_PATH.equals("")) return UPLOAD_PATH;
+        UPLOAD_PATH = getTomcatPath() + File.separator + getAppDataDir() + File.separator + getAppName() + File.separator + "upload";
+        return UPLOAD_PATH;
+    }
+
 	public static String getDownloadExcelPath() {
 		if (DOWNLOAD_EXCEL_PATH != null && !DOWNLOAD_EXCEL_PATH.equals("")) return DOWNLOAD_EXCEL_PATH;
 		DOWNLOAD_EXCEL_PATH = getDownloadPath() + File.separator + "excel";
@@ -62,4 +70,10 @@ public class ConfigParam {
 		TEMPLATE_EXCEL_PATH = getTomcatPath() + File.separator + getAppDataDir() + File.separator + getAppName() + File.separator + "template"+ File.separator + "excel";
 		return TEMPLATE_EXCEL_PATH;
 	}
+
+    public static String getUploadExcelPath() {
+        if (UPLOAD_EXCEL_PATH != null && !UPLOAD_EXCEL_PATH.equals("")) return UPLOAD_EXCEL_PATH;
+        UPLOAD_EXCEL_PATH = getUploadPath() + File.separator + "excel";
+        return UPLOAD_EXCEL_PATH;
+    }
 }

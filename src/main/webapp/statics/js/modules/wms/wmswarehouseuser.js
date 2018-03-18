@@ -185,7 +185,7 @@ var vm = new Vue({
 		},
 		getInfo: function (wmsUserId) {
 			$.get(baseURL + "wmswarehouseuser/info/" + wmsUserId, function (r) {
-				vm.wmsWarehouseUser = r;
+				vm.wmsWarehouseUser = r.wmsWarehouseUser;
 
 				vm.getDept();
 				vm.getWarehouseTree();
