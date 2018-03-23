@@ -45,6 +45,7 @@ public class WmsWarehouseInventoryController extends AbstractController {
     @RequiresPermissions("wmswarehouseinventory:list")
     public R list(@RequestParam Map<String, Object> params) {
         //查询列表数据
+        params.put("userId",getUserId());
         Query query = new Query(params);
 
         List<WmsWarehouseInventoryEntity> wmsWarehouseInventoryList = wmsWarehouseInventoryService.queryList(query);

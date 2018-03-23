@@ -37,13 +37,28 @@
             </otherwise>
         </choose>
         ) AS ROW_NUM,
-		*
-        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
-        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
-        ,(SELECT warehouse_name FROM wms_warehouse where wms_warehouse_inventory.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
-        ,(SELECT material_desc FROM pub_material where wms_warehouse_inventory.material_code = pub_material.material_code) as material_desc
-        ,(SELECT username FROM sys_user where wms_warehouse_inventory.engineer = user_id) as engineer_name
-		from wms_warehouse_inventory
+        a.*
+        ,(SELECT username FROM sys_user where a.creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where a.modifier_id = user_id) as modifier_name
+        ,(SELECT warehouse_name FROM wms_warehouse where a.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
+        ,(SELECT material_desc FROM pub_material where a.material_code = pub_material.material_code) as material_desc
+        ,(SELECT username FROM sys_user where a.engineer = user_id) as engineer_name
+		from wms_warehouse_inventory as a inner join wms_warehouse_user as b on a.warehouse_code = b.warehouse_code
+        <where>
+            b.user_id = #{userId}
+            <if test="inventoryDate != null and inventoryDate.trim() != ''">
+                and a.inventory_date = #{inventoryDate}
+            </if>
+            <if test="warehouseCode != null and warehouseCode.trim() != ''">
+                and a.warehouse_code = #{warehouseCode}
+            </if>
+            <if test="materialCode != null and materialCode.trim() != ''">
+                and a.material_code = #{materialCode}
+            </if>
+            <if test="engineer != null and engineer.trim() != ''">
+                and a.engineer = #{engineer}
+            </if>
+        </where>
         ORDER BY ROW_NUM
         <if test="offset != null and limit != null">
             OFFSET #{offset} ROWS
@@ -52,7 +67,23 @@
 	</select>
 	
  	<select id="queryTotal" resultType="int">
-		select count(*) from wms_warehouse_inventory 
+		select count(*)
+        from wms_warehouse_inventory as a inner join wms_warehouse_user as b on a.warehouse_code = b.warehouse_code
+        <where>
+            b.user_id = #{userId}
+            <if test="inventoryDate != null and inventoryDate.trim() != ''">
+                and a.inventory_date = #{inventoryDate}
+            </if>
+            <if test="warehouseCode != null and warehouseCode.trim() != ''">
+                and a.warehouse_code = #{warehouseCode}
+            </if>
+            <if test="materialCode != null and materialCode.trim() != ''">
+                and a.material_code = #{materialCode}
+            </if>
+            <if test="engineer != null and engineer.trim() != ''">
+                and a.engineer = #{engineer}
+            </if>
+        </where>
 	</select>
 	 
 	<insert id="save" parameterType="com.ltsznh.modules.wms.entity.WmsWarehouseInventoryEntity" useGeneratedKeys="true" keyProperty="wiId">

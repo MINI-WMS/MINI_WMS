@@ -173,9 +173,13 @@ var vm = new Vue({
         reload: function (event) {
             if ($('#materialCodeQ').select2('data').length > 0) {
                 vm.q.materialCode = $('#materialCodeQ').select2('data')[0].id;
+            }else{
+                vm.q.materialCode ="";
             }
             if ($('#engineerQ').select2('data').length > 0) {
                 vm.q.engineer = $('#engineerQ').select2('data')[0].id;
+            }else {
+                vm.q.engineer = "";
             }
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
