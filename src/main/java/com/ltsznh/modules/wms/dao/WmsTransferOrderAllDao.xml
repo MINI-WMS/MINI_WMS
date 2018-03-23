@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ltsznh.modules.wms.dao.WmsTransferOrderAllDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.ltsznh.modules.wms.entity.WmsTransferOrderAllEntity" id="wmsTransferOrderAllMap">
+        <result property="inventoryDate" column="inventory_date"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="materialCode" column="material_code"/>
+        <result property="qty" column="qty"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="engineer" column="engineer"/>
+        <result property="dataStatus" column="data_status"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.ltsznh.modules.wms.entity.WmsTransferOrderAllEntity">
+		select * from V_V_wms_transfer_order_all where warehouse_code = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.ltsznh.modules.wms.entity.WmsTransferOrderAllEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by a.warehouse_code desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		a.*
+        ,(SELECT warehouse_name FROM wms_warehouse where a.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
+        ,(SELECT material_desc FROM pub_material where a.material_code = pub_material.material_code) as material_desc
+        ,(SELECT username FROM sys_user where a.engineer = user_id) as engineer_name
+		from F_wms_transfer_order_all(#{warehouseCode},#{inventoryDate}) as a INNER JOIN wms_warehouse_user as b on a.warehouse_code = b.warehouse_code
+        <where>
+            b.user_id = #{userId}
+            <if test="materialCode != null and materialCode.trim() != ''">
+                and a.material_code = #{materialCode}
+            </if>
+            <if test="engineer != null and engineer.trim() != ''">
+                and a.engineer = #{engineer}
+            </if>
+        </where>
+        ORDER BY ROW_NUM
+        <if test="offset != null and limit != null">
+            OFFSET #{offset} ROWS
+            FETCH NEXT #{limit} ROWS ONLY
+        </if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from F_wms_transfer_order_all(#{warehouseCode},#{inventoryDate})
+        as a INNER JOIN wms_warehouse_user as b on a.warehouse_code = b.warehouse_code
+        <where>
+            b.user_id = #{userId}
+            <if test="materialCode != null and materialCode.trim() != ''">
+                and a.material_code = #{materialCode}
+            </if>
+            <if test="engineer != null and engineer.trim() != ''">
+                and a.engineer = #{engineer}
+            </if>
+        </where>
+	</select>
+	 
+
+
+</mapper>
