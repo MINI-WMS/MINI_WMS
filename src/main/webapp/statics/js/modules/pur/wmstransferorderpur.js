@@ -154,7 +154,15 @@ var vm = new Vue({
                     contentType: "application/json",
                     data: JSON.stringify(vm.wmsTransferOrderPur),
                     success: function (r) {
-                        if (r.code === 0) {
+                        if (r.code === 0 && vm.addNew) {
+                            var toNo = r.toNo;
+                            alert('操作成功，请维护采购单明细！' + '采购单号：' + toNo, function (index) {
+                                msg(toNo);
+
+                                vm.showRow = true;
+                                vm.getInfoForRow(r.toId);
+                            });
+                        } else if (!vm.addNew) {
                             alert('操作成功', function (index) {
                                 vm.reload();
                             });

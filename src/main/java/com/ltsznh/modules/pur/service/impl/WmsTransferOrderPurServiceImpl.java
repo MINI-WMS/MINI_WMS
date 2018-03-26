@@ -27,6 +27,11 @@ public class WmsTransferOrderPurServiceImpl implements WmsTransferOrderPurServic
 		return wmsTransferOrderPurDao.queryList(map);
 	}
 
+    @Override
+    public List<WmsTransferOrderPurEntity> queryLatest(Map<String, Object> map){
+        return wmsTransferOrderPurDao.queryLatest(map);
+    }
+
 	@Override
 	public int queryTotal(Map<String, Object> map){
 		return wmsTransferOrderPurDao.queryTotal(map);

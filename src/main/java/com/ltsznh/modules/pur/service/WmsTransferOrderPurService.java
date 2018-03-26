@@ -17,6 +17,8 @@ public interface WmsTransferOrderPurService {
 	WmsTransferOrderPurEntity queryObject(Long toPurId);
 	
 	List<WmsTransferOrderPurEntity> queryList(Map<String, Object> map);
+
+    List<WmsTransferOrderPurEntity> queryLatest(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);
 	

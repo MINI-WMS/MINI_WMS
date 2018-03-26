@@ -281,7 +281,7 @@ var vm = new Vue({
             // });
             // $.post(baseURL + "download/template/excel?fileName=导入-仓库库存.xlsx", function (r) {
             // })
-            window.open(url);
+            window.open(encodeURI(url));
         }
     }
 });
