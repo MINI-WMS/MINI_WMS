@@ -156,9 +156,7 @@ var vm = new Vue({
                     success: function (r) {
                         if (r.code === 0 && vm.addNew) {
                             var toNo = r.toNo;
-                            alert('操作成功，请维护采购单明细！' + '采购单号：' + toNo, function (index) {
-                                msg(toNo);
-
+                            alert('操作成功，请维护采购单明细！' + '\n采购单号：' + toNo, function (index) {
                                 vm.showRow = true;
                                 vm.getInfoForRow(r.toId);
                             });

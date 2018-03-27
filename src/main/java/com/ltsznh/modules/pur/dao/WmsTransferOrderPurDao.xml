@@ -65,7 +65,7 @@
                 order by ${sidx} ${order}
             </when>
             <otherwise>
-                order by create_date desc
+                order by create_date desc,to_pur_id desc
             </otherwise>
         </choose>
         ) AS ROW_NUM,

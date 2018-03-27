@@ -62,7 +62,43 @@
             FETCH NEXT #{limit} ROWS ONLY
         </if>
 	</select>
-	
+	<select id="queryLatest" resultType="com.ltsznh.modules.wms.entity.WmsTransferOrderEntity">
+		select ROW_NUMBER() OVER(
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by create_date desc,to_id desc
+            </otherwise>
+        </choose>
+        ) AS ROW_NUM,
+		*
+        ,(SELECT username FROM sys_user where creator_id = user_id) as creator_name
+        ,(SELECT username FROM sys_user where modifier_id = user_id) as modifier_name
+        ,(SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.warehouse_code = wms_warehouse.warehouse_code) as warehouse_name
+        ,sour_warehouse_code + ' - ' + (SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.sour_warehouse_code = wms_warehouse.warehouse_code) as sour_warehouse_name
+        ,dest_warehouse_code + ' - ' + (SELECT warehouse_name FROM wms_warehouse where wms_transfer_order.dest_warehouse_code = wms_warehouse.warehouse_code) as dest_warehouse_name
+		from wms_transfer_order
+		<where>
+			<if test="toId != null and toId.trim() != ''">
+				and to_id = #{toId}
+			</if>
+			<if test="toDate != null and toDate.trim() != ''">
+				and to_date = #{toDate}
+			</if>
+			<if test="toNo != null and toNo.trim() != ''">
+				and to_no like concat('%',#{toNo},'%')
+			</if>
+            <if test="creatorId != null">
+                and creator_id = #{creatorId}
+            </if>
+		</where>
+        ORDER BY ROW_NUM
+            OFFSET 0 ROWS
+            FETCH NEXT 1 ROWS ONLY
+	</select>
+
  	<select id="queryTotal" resultType="int">
 		select count(*) from wms_transfer_order 
 	</select>

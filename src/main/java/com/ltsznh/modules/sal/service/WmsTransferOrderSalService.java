@@ -17,7 +17,9 @@ public interface WmsTransferOrderSalService {
 	WmsTransferOrderSalEntity queryObject(Long toSalId);
 	
 	List<WmsTransferOrderSalEntity> queryList(Map<String, Object> map);
-	
+
+	List<WmsTransferOrderSalEntity> queryLatest(Map<String, Object> map);
+
 	int queryTotal(Map<String, Object> map);
 	
 	void save(WmsTransferOrderSalEntity wmsTransferOrderSal);

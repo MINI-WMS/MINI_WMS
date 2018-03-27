@@ -87,7 +87,17 @@ public class WmsTransferOrderSalController  extends AbstractController {
 
 		wmsTransferOrderSalService.save(wmsTransferOrderSal);
 
-		return R.ok();
+        Map<String, Object> params = new HashMap<>();
+        params.put("creatorId",getUserId());
+        Query  query = new Query(params);
+
+        List<WmsTransferOrderSalEntity> wmsTransferOrderSalList = wmsTransferOrderSalService.queryLatest(query);
+
+        if(wmsTransferOrderSalList!=null &&!wmsTransferOrderSalList.isEmpty()&& wmsTransferOrderSalList.size()>0){
+            return R.ok().put("toNo",wmsTransferOrderSalList.get(0).getToNo()).put("toId",wmsTransferOrderSalList.get(0).getToSalId());
+        }
+
+		return R.error("系统未知异常!");
 	}
 
 	/**

@@ -28,6 +28,11 @@ public class WmsTransferOrderSalServiceImpl implements WmsTransferOrderSalServic
 	}
 
 	@Override
+	public List<WmsTransferOrderSalEntity> queryLatest(Map<String, Object> map){
+		return wmsTransferOrderSalDao.queryLatest(map);
+	}
+
+	@Override
 	public int queryTotal(Map<String, Object> map){
 		return wmsTransferOrderSalDao.queryTotal(map);
 	}

@@ -28,6 +28,11 @@ public class WmsTransferOrderServiceImpl implements WmsTransferOrderService {
 	}
 
 	@Override
+	public List<WmsTransferOrderEntity> queryLatest(Map<String, Object> map){
+		return wmsTransferOrderDao.queryLatest(map);
+	}
+
+	@Override
 	public int queryTotal(Map<String, Object> map){
 		return wmsTransferOrderDao.queryTotal(map);
 	}

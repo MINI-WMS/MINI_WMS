@@ -17,7 +17,9 @@ public interface WmsTransferOrderService {
 	WmsTransferOrderEntity queryObject(String warehouseCode);
 	
 	List<WmsTransferOrderEntity> queryList(Map<String, Object> map);
-	
+
+	List<WmsTransferOrderEntity> queryLatest(Map<String, Object> map);
+
 	int queryTotal(Map<String, Object> map);
 	
 	void save(WmsTransferOrderEntity wmsTransferOrder);

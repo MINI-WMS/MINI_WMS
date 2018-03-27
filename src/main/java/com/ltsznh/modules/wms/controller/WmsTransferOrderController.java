@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Date;
 
 import com.ltsznh.modules.pur.entity.WmsTransferOrderPurEntity;
+import com.ltsznh.modules.sal.entity.WmsTransferOrderSalEntity;
 import com.ltsznh.modules.sys.controller.AbstractController;
 import com.ltsznh.common.annotation.SysLog;
 import com.ltsznh.modules.wms.entity.PubSnEntity;
@@ -86,7 +87,17 @@ public class WmsTransferOrderController  extends AbstractController {
 
 		wmsTransferOrderService.save(wmsTransferOrder);
 
-		return R.ok();
+        Map<String, Object> params = new HashMap<>();
+        params.put("creatorId",getUserId());
+        Query  query = new Query(params);
+
+        List<WmsTransferOrderEntity> wmsTransferOrderList = wmsTransferOrderService.queryLatest(query);
+
+        if(wmsTransferOrderList!=null &&!wmsTransferOrderList.isEmpty()&& wmsTransferOrderList.size()>0){
+            return R.ok().put("toNo",wmsTransferOrderList.get(0).getToNo()).put("toId",wmsTransferOrderList.get(0).getToId());
+        }
+
+        return R.error("系统未知异常!");
 	}
 
 	/**

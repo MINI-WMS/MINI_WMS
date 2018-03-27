@@ -104,6 +104,10 @@ var vm = new Vue({
 			toNo: null,
 			toSeq: null,
 		},
+        q: {
+            toDate: getCurrentDate(),
+            toNo: null
+        },
 		engineers: null,
 		destEngineers:null
 	},
@@ -141,6 +145,10 @@ var vm = new Vue({
 			vm.getInfo(toId)
 		},
 		saveOrUpdate: function (event) {
+		    if(vm.wmsTransferOrder.destWarehouseCode ==null || vm.wmsTransferOrder.destWarehouseCode=='' ){
+		        msg("请选择移入仓库!")
+                return;
+            }
 			var url = vm.wmsTransferOrder.toId == null ? "wmstransferorder/save" : "wmstransferorder/update";
 			$.ajax({
 				type: "POST",
@@ -148,13 +156,19 @@ var vm = new Vue({
 				contentType: "application/json",
 				data: JSON.stringify(vm.wmsTransferOrder),
 				success: function (r) {
-					if (r.code === 0) {
-						alert('操作成功', function (index) {
-							vm.reload();
-						});
-					} else {
-						alert(r.msg);
-					}
+                    if (r.code === 0 && vm.addNew) {
+                        var toNo = r.toNo;
+                        alert('操作成功，请维护移库单明细！' + '</<br>\n移库单号：' + toNo, function (index) {
+                            vm.showRow = true;
+                            vm.getInfoForRow(r.toId);
+                        });
+                    } else if (!vm.addNew) {
+                        alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    } else {
+                        alert(r.msg);
+                    }
 				}
 			});
 		},
@@ -191,6 +205,7 @@ var vm = new Vue({
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam', 'page');
 			$("#jqGrid").jqGrid('setGridParam', {
+                postData: {'toDate': vm.q.toDate, 'toNo': vm.q.toNo},
 				page: page
 			}).trigger("reloadGrid");
 		},
