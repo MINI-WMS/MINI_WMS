@@ -83,3 +83,12 @@ function getSelectedRows() {
 function isBlank(value) {
     return !value || !/\S/.test(value)
 }
+
+//url下载文件
+function downloadFile(url) {
+    var $form = $('<form method="POST"></form>');
+    $form.attr('action', encodeURI(encodeURI(url, "utf-8"), "utf-8"));
+    $form.appendTo($('body'));
+    $form.submit();
+    $form.remove();
+}

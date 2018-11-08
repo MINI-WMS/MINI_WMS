@@ -173,12 +173,12 @@ var vm = new Vue({
         reload: function (event) {
             if ($('#materialCodeQ').select2('data').length > 0) {
                 vm.q.materialCode = $('#materialCodeQ').select2('data')[0].id;
-            }else{
-                vm.q.materialCode ="";
+            } else {
+                vm.q.materialCode = "";
             }
             if ($('#engineerQ').select2('data').length > 0) {
                 vm.q.engineer = $('#engineerQ').select2('data')[0].id;
-            }else {
+            } else {
                 vm.q.engineer = "";
             }
             vm.showList = true;
@@ -281,7 +281,8 @@ var vm = new Vue({
             // });
             // $.post(baseURL + "download/template/excel?fileName=导入-仓库库存.xlsx", function (r) {
             // })
-            window.open(encodeURI(url));
+            // window.open(encodeURI(url));
+            downloadFile(url);
         }
     }
 });

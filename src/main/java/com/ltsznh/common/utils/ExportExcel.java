@@ -17,6 +17,8 @@ import java.util.Random;
 import java.util.UUID;
 
 public class ExportExcel {
+
+    //下载Excel文件
 	public void Export(String filename, Workbook book, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		try {
